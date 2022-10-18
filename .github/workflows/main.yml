@@ -1,0 +1,37 @@
+name: Android CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  java_version: 11
+
+jobs:
+  package:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java_version }}
+
+      - name: Run Lint
+        run: ./gradlew ktlintCheck  --build-cache --stacktrace
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ar-treasure-hunt.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
