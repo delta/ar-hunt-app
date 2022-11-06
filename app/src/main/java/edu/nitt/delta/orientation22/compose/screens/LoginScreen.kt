@@ -74,12 +74,11 @@ fun LoginScreen(
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
     Orientation22androidTheme{
-        LoginScreen(painterResource(id = R.drawable.background_image),"background")
+        //LoginScreen(painterResource(id = R.drawable.background_image),"background")
+        DashboardScreen()
     }
 }
