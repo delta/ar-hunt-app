@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -42,6 +43,8 @@ fun LoginScreen(
     val fontFamily= FontFamily(
         Font(R.font.montserrat_regular)
     )
+    val configuration= LocalConfiguration.current
+    val screenHeight=configuration.screenHeightDp
     Box(modifier = modifier.fillMaxSize())
     {
         Image(painter = painter, contentDescription = contentDescription,modifier=Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
@@ -57,10 +60,10 @@ fun LoginScreen(
                     , fontWeight = FontWeight(400), fontFamily = fontFamily, shadow = Shadow(color = Color.hsl(54f,1f,0.61f,0.15f),offset= Offset(0f,12f),
                         blurRadius = 3f
                     ), letterSpacing = 0.1.em
-                ),modifier=Modifier.padding(top=170.dp).blur(0.5.dp)
+                ),modifier=Modifier.padding(top=(screenHeight/5).dp).blur(0.5.dp)
             )
                 }
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height((screenHeight/7).dp))
             Button(modifier=Modifier.height(70.dp).width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
             = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
             ),onClick = { mContext.toast("Works")}) {
