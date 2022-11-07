@@ -43,6 +43,7 @@ fun LoginScreen(
     val fontFamily= FontFamily(
         Font(R.font.montserrat_regular)
     )
+
     val configuration= LocalConfiguration.current
     val screenHeight=configuration.screenHeightDp
     Box(modifier = modifier.fillMaxSize())
@@ -60,6 +61,7 @@ fun LoginScreen(
                     , fontWeight = FontWeight(400), fontFamily = fontFamily, shadow = Shadow(color = Color.hsl(54f,1f,0.61f,0.15f),offset= Offset(0f,12f),
                         blurRadius = 3f
                     ), letterSpacing = 0.1.em
+
                 ),modifier=Modifier.padding(top=(screenHeight/5).dp).blur(0.5.dp)
             )
                 }
