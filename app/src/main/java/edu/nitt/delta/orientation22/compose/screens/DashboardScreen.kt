@@ -63,8 +63,8 @@ fun DashboardScreen(
                 ) {
                 Text(
                     text = "AR HUNT",
-                    fontSize = 50.sp,
-                    letterSpacing = 0.2.em,
+                    fontSize = 45.sp,
+                    letterSpacing = 0.15.em,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(all = 30.dp),
                     color = brightYellow,
@@ -73,8 +73,8 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = "Team Name",
-                    fontSize = 35.sp,
-                    letterSpacing = 0.1.em,
+                    fontSize = 30.sp,
+                    letterSpacing = 0.08.em,
                     fontWeight = FontWeight.Light,
                     modifier = Modifier.padding(all = 15.dp),
                     color = brightYellow,
