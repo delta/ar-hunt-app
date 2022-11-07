@@ -40,11 +40,11 @@ fun DashboardScreen(
     modifier: Modifier = Modifier
 ) {
     Orientation22androidTheme() {
-        val painter = painterResource(id = R.drawable.background)
+        val painter = painterResource(id = R.drawable.background_image)
         Box(modifier = modifier.fillMaxSize()) {
             Image(
                 painter = painter,
-                contentDescription = "",
+                contentDescription = "background",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -56,7 +56,7 @@ fun DashboardScreen(
                         Color.hsl(
                             0f, 0f, 0f, 0.3f
                         ),
-                        RoundedCornerShape(6, 6)
+                        RoundedCornerShape(4, 4)
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -108,7 +108,7 @@ fun Card(index: Int, name: String) {
                 Color.hsl(
                     0f, 0f, 0f, 0.2f
                 ),
-                RoundedCornerShape(50, 50, 50, 50)
+                RoundedCornerShape(35, 35, 35, 35)
             ),
             verticalAlignment = Alignment.CenterVertically,
         )
@@ -117,7 +117,7 @@ fun Card(index: Int, name: String) {
             text = index.toString(),
             fontSize = 15.sp,
             fontWeight = FontWeight.Normal,
-            modifier = Modifier.padding(all = 15.dp).padding(start = 15.dp),
+            modifier = Modifier.padding(all = 20.dp).padding(start = 20.dp),
             color = white,
             fontFamily = FontFamily(Font(R.font.montserrat_regular))
         )
