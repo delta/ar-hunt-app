@@ -5,4 +5,5 @@ sealed class NavigationRoutes(val route: String) {
     object Dashboard : NavigationRoutes("dashboard")
     object Map : NavigationRoutes("maps")
     object LeaderBoard : NavigationRoutes("leaderBoard")
+    object TeamDetails : NavigationRoutes("teamDetails")
 }

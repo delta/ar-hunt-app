@@ -19,16 +19,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.gson.Gson
 import edu.nitt.delta.orientation22.R
-import edu.nitt.delta.orientation22.fragments.DashboardFragment
-import edu.nitt.delta.orientation22.fragments.LeaderBoardFragment
-import edu.nitt.delta.orientation22.fragments.LoginFragment
-import edu.nitt.delta.orientation22.fragments.MapFragment
+import edu.nitt.delta.orientation22.fragments.*
+import edu.nitt.delta.orientation22.models.Team
+import edu.nitt.delta.orientation22.models.TeamMember
 import edu.nitt.delta.orientation22.ui.theme.black
 import edu.nitt.delta.orientation22.ui.theme.peach
 import edu.nitt.delta.orientation22.ui.theme.white
@@ -42,10 +41,19 @@ fun Navigation(navController: NavHostController){
         startDestination = NavigationRoutes.Login.route,
     ) {
         composable(route = NavigationRoutes.Login.route){
-            LoginFragment()
+            LoginFragment(navController)
         }
         composable(route = NavigationRoutes.Dashboard.route){
-            DashboardFragment()
+
+            var data = Gson().fromJson(it.arguments!!.getString("Team"), Team::class.java)
+            if (data == null){
+                data = Team(leader = TeamMember("Leader", 106121000, true), members = mutableListOf(
+                    TeamMember("Member - 1", 106121000),
+                    TeamMember("Member - 2", 106121000),
+                    TeamMember("Member - 3", 106121000),
+                ))
+            }
+            DashboardFragment(data)
         }
         composable(route = NavigationRoutes.Map.route){
             MapFragment()
@@ -53,9 +61,11 @@ fun Navigation(navController: NavHostController){
         composable(route = NavigationRoutes.LeaderBoard.route){
             LeaderBoardFragment()
         }
+        composable(route = NavigationRoutes.TeamDetails.route){
+            TeamDetailsFragment(navController)
+        }
     }
 }
-
 
 @Composable
 fun BottomNavBar (

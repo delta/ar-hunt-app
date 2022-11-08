@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import edu.nitt.delta.orientation22.ui.theme.brightYellow
 import edu.nitt.delta.orientation22.ui.theme.white
@@ -37,7 +38,8 @@ import kotlin.text.Typography
 
 @Composable
 fun DashboardScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    team: Team,
 ) {
     Orientation22androidTheme() {
         val painter = painterResource(id = R.drawable.background_image)
@@ -89,10 +91,10 @@ fun DashboardScreen(
                         )
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                Card(1, "Sarvesh")
-                Card(2, "Sarvesh")
-                Card(3, "Sarvesh")
-                Card(4, "Sarvesh")
+                Card(1, team.leader.name)
+                Card(2, team.members[0].name)
+                Card(3, team.members[1].name)
+                Card(4, team.members[2].name)
             }
         }
     }
