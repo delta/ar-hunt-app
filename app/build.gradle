@@ -50,6 +50,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.4.0'
     def lifecycle_version="2.5.1"
     def dagger_hilt_version="2.44"
     def retrofit_version="2.9.0"

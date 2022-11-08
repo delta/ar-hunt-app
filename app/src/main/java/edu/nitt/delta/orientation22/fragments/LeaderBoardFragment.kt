@@ -8,7 +8,8 @@ import androidx.compose.ui.Modifier
 import edu.nitt.delta.orientation22.compose.screens.LeaderBoardScreen
 
 @Composable
-fun LeaderBoardFragment(){
+fun LeaderBoardFragment(
+){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
