@@ -27,6 +27,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".ArActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Orientation22android"/>
     </application>
 
 </manifest>
