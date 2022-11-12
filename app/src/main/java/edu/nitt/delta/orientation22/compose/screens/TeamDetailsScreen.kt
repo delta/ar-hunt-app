@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.compose.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,12 +37,50 @@ import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
 import edu.nitt.delta.orientation22.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@SuppressLint("MutableCollectionMutableState")
+@Composable
+fun TeamDetails(
+    mContext: Context,
+) {
+    var nameLeader by rememberSaveable { mutableStateOf("Rajesh") }
+    var rollNumberLeader by rememberSaveable {mutableStateOf("106121000")}
+    var teamName by rememberSaveable { mutableStateOf("") }
+
+    var nameMember1 by rememberSaveable { mutableStateOf("") }
+    var rollNumberMember1 by rememberSaveable {mutableStateOf("")}
+    var nameMember2 by rememberSaveable { mutableStateOf("") }
+    var rollNumberMember2 by rememberSaveable {mutableStateOf("")}
+    var nameMember3 by rememberSaveable { mutableStateOf("") }
+    var rollNumberMember3 by rememberSaveable {mutableStateOf("")}
+
+    TeamNameHeader(teamName = teamName, onValueChange = {teamName = it})
+
+    TextInput(title = "Team Leader", isEnabled = false, data = nameLeader, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameLeader = it})
+    TextInput(title = "Team Leader", isEnabled = false, data = rollNumberLeader, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberLeader = it})
+
+    TextInput(title = "Member - 1", isEnabled = true, data = nameMember1, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember1 = it})
+    TextInput(title = "Member - 1", isEnabled = true, data = rollNumberMember1, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember1 = it})
+    TextInput(title = "Member - 2", isEnabled = true, data = nameMember2, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember2 = it})
+    TextInput(title = "Member - 2", isEnabled = true, data = rollNumberMember2, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember2 = it})
+    TextInput(title = "Member - 3", isEnabled = true, data = nameMember3, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember3 = it})
+    TextInput(title = "Member - 3", isEnabled = true, data = rollNumberMember3, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember3 = it})
+
+    SubmitButton(
+        teamName = teamName,
+        nameLeader = nameLeader,
+        rollNumberLeader = rollNumberLeader,
+        nameMembers = listOf(nameMember1, nameMember2, nameMember3),
+        rollNumberMembers = listOf(rollNumberMember1, rollNumberMember2, rollNumberMember3),
+        mContext = mContext,
+    )
+}
+
 @Composable
 fun TeamDetailsScreen(
     modifier: Modifier = Modifier,
 ){
-    Orientation22androidTheme() {
+    Orientation22androidTheme {
         val mContext = LocalContext.current
         val painter = painterResource(id = R.drawable.background_image)
         Box(modifier = modifier.fillMaxSize()) {
@@ -87,85 +127,8 @@ fun TeamDetailsScreen(
                         )
                 )
                 Spacer(modifier = Modifier.height(30.dp))
-                val nameLeader = remember { mutableStateOf("Rajesh") }
-                val rollNumberLeader = remember {mutableStateOf("106121000")}
-                val teamName = remember { mutableStateOf("") }
-                val nameMembers = remember {
-                    listOf(mutableStateOf(""), mutableStateOf(""), mutableStateOf(""))
-                }
-                val rollNumberMembers = remember {
-                    listOf(mutableStateOf(""), mutableStateOf(""), mutableStateOf(""))
-                }
-                Text(
-                    text = "Team Name",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
-                    color = brightYellow,
-                    fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                )
-                TextField(
-                    value = teamName.value,
-                    onValueChange = { teamName.value = it },
-                    label = { Text("Team Name") },
-                    maxLines = 1,
-                    enabled = true,
-                    singleLine = true,
-                    textStyle = TextStyle(color = white, fontWeight = FontWeight.Normal,
-                        fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                    ),
-                    shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(0.85f),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = translucentBox,
-                        focusedIndicatorColor = transparent,
-                        unfocusedIndicatorColor = transparent,
-                        disabledIndicatorColor = transparent,
-                        textColor = yellow,
-                        cursorColor = yellow,
-                        focusedLabelColor = yellow,
-                        unfocusedLabelColor = peach,
-                    )
-                )
-                TextInput(title = "Team Leader", isEnabled = false, name = nameLeader, rollNumber = rollNumberLeader)
-                for (i in 1..3){
-                    TextInput(title = "Member - $i", isEnabled = true, name = nameMembers[i-1], rollNumber = rollNumberMembers[i-1])
-                }
-                Button(
-                    onClick = {
-                        val leader = TeamMember(nameLeader.value, rollNumberLeader.value, true)
-                        val members = mutableListOf<TeamMember>()
-                        for (i in 0..2){
-                            members.add(TeamMember(nameMembers[i].value, rollNumberMembers[i].value))
-                        }
-                        val team = Team(leader = leader, members = members, teamName = teamName.value)
 
-                        if (validate(team, mContext)){
-                            val bundle = Bundle()
-                            bundle.putString("Team", Gson().toJson(team).toString())
-                            val intent = Intent(mContext, MainActivity::class.java)
-                            mContext.startActivity(intent)
-                        }
-                    },
-                    content = {
-                        Text(
-                            text = "Submit",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(5.dp),
-                            color = brightYellow,
-                            fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = black,
-                        contentColor = brightYellow,
-                    ),
-                    modifier = Modifier
-                        .padding(20.dp)
-                )
+                TeamDetails(mContext = mContext)
             }
         }
     }
@@ -173,14 +136,12 @@ fun TeamDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInput(
-    title: String,
-    isEnabled : Boolean,
-    name: MutableState<String>,
-    rollNumber: MutableState<String>,
-) {
+fun TeamNameHeader(
+    teamName: String,
+    onValueChange: (String) -> Unit,
+){
     Text(
-        text = title,
+        text = "Team Name",
         fontSize = 20.sp,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
@@ -188,15 +149,15 @@ fun TextInput(
         fontFamily = FontFamily(Font(R.font.montserrat_regular))
     )
     TextField(
-        value = name.value,
-        onValueChange = { name.value = it },
-        label = { Text("Name") },
+        value = teamName,
+        onValueChange = onValueChange,
+        label = { Text("Team Name") },
         maxLines = 1,
-        enabled = isEnabled,
+        enabled = true,
         singleLine = true,
-        textStyle = TextStyle(color = peach, fontWeight = FontWeight.Normal,
+        textStyle = TextStyle(color = white, fontWeight = FontWeight.Normal,
             fontFamily = FontFamily(Font(R.font.montserrat_regular))
-            ),
+        ),
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .padding(10.dp)
@@ -212,17 +173,83 @@ fun TextInput(
             unfocusedLabelColor = peach,
         )
     )
+}
+
+@Composable
+fun SubmitButton(
+    teamName: String,
+    nameLeader: String,
+    rollNumberLeader: String,
+    nameMembers: List<String>,
+    rollNumberMembers: List<String>,
+    mContext: Context,
+){
+    Button(
+        onClick = {
+            val leader = TeamMember(nameLeader, rollNumberLeader, true)
+            val members = mutableListOf<TeamMember>()
+            for (i in nameMembers.indices){
+                members.add(TeamMember(nameMembers[i], rollNumberMembers[i]))
+            }
+            val team = Team(leader = leader, members = members, teamName = teamName)
+
+            if (validate(team, mContext)){
+                val bundle = Bundle()
+                bundle.putString("Team", Gson().toJson(team).toString())
+                val intent = Intent(mContext, MainActivity::class.java)
+                mContext.startActivity(intent)
+            }
+        },
+        content = {
+            Text(
+                text = "Submit",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(5.dp),
+                color = brightYellow,
+                fontFamily = FontFamily(Font(R.font.montserrat_regular))
+            )
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = black,
+            contentColor = brightYellow,
+        ),
+        modifier = Modifier
+            .padding(20.dp)
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextInput(
+    title: String,
+    isEnabled : Boolean,
+    data: String,
+    header: String,
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions,
+) {
+    if (header == "Name"){
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
+            color = brightYellow,
+            fontFamily = FontFamily(Font(R.font.montserrat_regular))
+        )
+    }
     TextField(
-        value = rollNumber.value,
-        onValueChange = { rollNumber.value = it },
-        label = { Text("Roll Number") },
+        value = data,
+        onValueChange = onValueChange,
+        label = { Text(header) },
         maxLines = 1,
         enabled = isEnabled,
         singleLine = true,
         textStyle = TextStyle(color = peach, fontWeight = FontWeight.Normal,
             fontFamily = FontFamily(Font(R.font.montserrat_regular))
-        ),
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            ),
+        keyboardOptions = keyboardOptions,
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .padding(10.dp)
@@ -241,36 +268,37 @@ fun TextInput(
 }
 
 fun validate(team: Team, mContext: Context): Boolean {
-    if (team.teamName == ""){
+    if (team.teamName.trim() == ""){
         mContext.toast("Team Name is empty!")
         return false
     }
-    else if (team.teamName.count() < 3){
+    else if (team.teamName.trim().count() < 3){
         mContext.toast("Team Name is too short!")
         return false
     }
     for (member in team.members){
-        val regex = "^[A-Za-z ]+$".toRegex()
-        if (!regex.matches(member.name)){
-            if (!regex.matches(member.name.replace('.', ' '))){
-                mContext.toast("Member - ${team.members.indexOf(member) + 1}'s Name is invalid!")
-                return false
-            }
+        if (member.name.trim() == ""){
+            mContext.toast("Member - ${team.members.indexOf(member) + 1}'s Name is empty!")
+            return false
+        }
+        else if (member.name.trim().count() < 3){
+            mContext.toast("Member - ${team.members.indexOf(member) + 1}'s Name is too short!")
+            return false
         }
         if (!(member.rollNo.isDigitsOnly() && member.rollNo.count() == 9)){
             mContext.toast("Member - ${team.members.indexOf(member) + 1}'s Roll Number is invalid!")
             return false
         }
     }
-    var count = 0
+    var countMembers = 0
     for (member1 in team.members){
         for (member2 in team.members){
             if (member1.rollNo == member2.rollNo){
-                count ++
+                countMembers ++
             }
         }
     }
-    if (count == 3){
+    if (countMembers == team.members.size){
         for (member in team.members){
             if (member.rollNo == team.leader.rollNo){
                 mContext.toast("Roll Numbers must be unique!")
