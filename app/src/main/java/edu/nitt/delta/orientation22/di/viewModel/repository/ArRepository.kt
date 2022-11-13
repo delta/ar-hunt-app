@@ -38,6 +38,33 @@ class ArRepository@Inject constructor(
         }
     }
 
+    fun resolveAnchor(cloudAnchorNode: ArModelNode?,code : String):Result<String> = try {
+        var isResolved = false
+        cloudAnchorNode?.resolveCloudAnchor(code){ _, success: Boolean ->
+            if(success){
+                cloudAnchorNode.isVisible = true
+                isResolved = true
+            }
+        }
+        if (!isResolved)
+            Result.build { throw Exception("Error occurred while resolving cloud anchor") }
+        Result.build{ "Cloud Anchor resolved successfully" }
+        } catch (e: Exception) {
+            Result.build<String> { throw e }
+    }
+
+
+    fun resetAnchor(cloudAnchorNode: ArModelNode?): Result<String> = try {
+        if(cloudAnchorNode!!.isAnchored) {
+            cloudAnchorNode.detachAnchor()
+        } else {
+            Result.build { throw Exception("Cloud anchor is not anchored") }
+        }
+            Result.build { "Cloud anchor detached successfully" }
+        }catch (e:Exception){
+            Result.build<String> { throw e }
+    }
+
     fun loadModel(
         arSceneView:ArSceneView?,
         cloudAnchorNode: ArModelNode,

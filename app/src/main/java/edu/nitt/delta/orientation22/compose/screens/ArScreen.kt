@@ -9,7 +9,7 @@ import io.github.sceneview.ar.ArSceneView
 @Composable
 fun ArScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
-    updateSceneView:(ArSceneView)->Unit
+    updateSceneView:(ArSceneView)->Unit,
 ){
     AndroidView(factory = {
         context ->
@@ -21,3 +21,4 @@ fun ArScreen(
     }
     )
 }
+

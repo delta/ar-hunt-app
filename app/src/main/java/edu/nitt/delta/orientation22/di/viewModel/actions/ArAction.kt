@@ -10,6 +10,8 @@ import io.github.sceneview.renderable.Renderable
 sealed class ArAction {
     data class HostAnchor(val sceneView: ArSceneView,
     val cloudAnchorNode: ArModelNode): ArAction()
+    data class ResolveAnchor(val cloudAnchorNode: ArModelNode,val code:String) : ArAction()
+    data class ResetAnchor(val cloudAnchorNode: ArModelNode) : ArAction()
     data class LoadModel(
         val context: Context,
         val lifecycle: Lifecycle?,

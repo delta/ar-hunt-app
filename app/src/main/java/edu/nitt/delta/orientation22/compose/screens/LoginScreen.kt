@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.compose.screens
 
+import android.content.Intent
 import android.widget.Toast
 import edu.nitt.delta.orientation22.R
 import androidx.compose.foundation.Image
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import edu.nitt.delta.orientation22.ArActivity
 import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 
@@ -63,7 +65,9 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(120.dp))
             Button(modifier=Modifier.height(70.dp).width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
             = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
-            ),onClick = { mContext.toast("Works")}) {
+            ),onClick = { val intent : Intent = Intent(mContext,ArActivity::class.java)
+                mContext.startActivity(intent)
+            }) {
                     Text(text = "LOGIN WITH \n DAUTH", fontSize = 20.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), textAlign = TextAlign.Center, letterSpacing = 0.09.em, lineHeight = 24.sp)
             }
         }

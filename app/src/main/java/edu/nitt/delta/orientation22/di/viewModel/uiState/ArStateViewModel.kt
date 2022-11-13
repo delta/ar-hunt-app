@@ -26,6 +26,8 @@ class ArStateViewModel @Inject constructor(
 
     override fun doAction(action: ArAction): Any = when(action){
         is ArAction.HostAnchor -> hostModel(action.sceneView,action.cloudAnchorNode)
+        is ArAction.ResolveAnchor -> resolveModel(action.cloudAnchorNode,action.code)
+        is ArAction.ResetAnchor -> resetModel(action.cloudAnchorNode)
         is ArAction.LoadModel -> loadModel(action.onTapModel,
             action.context,
             action.lifecycle,
@@ -41,6 +43,19 @@ class ArStateViewModel @Inject constructor(
         }
     }
 
+    private fun resolveModel(cloudAnchorNode: ArModelNode,code:String) = launch {
+        when(val res =  arRepository.resolveAnchor(cloudAnchorNode,code)){
+            is Result.Value -> mutableSuccess.value = res.value
+            is Result.Error -> mutableError.value = res.exception.message
+        }
+    }
+
+    private fun resetModel(cloudAnchorNode: ArModelNode) = launch {
+        when(val res =  arRepository.resetAnchor(cloudAnchorNode)){
+            is Result.Value -> mutableSuccess.value = res.value
+            is Result.Error -> mutableError.value = res.exception.message
+        }
+    }
     private fun loadModel(
         onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         context: Context,
