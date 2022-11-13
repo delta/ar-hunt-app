@@ -7,15 +7,18 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.navigation.NavigationOuter
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
+import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            NavigationOuter(navController = navController)
-            navController.navigate(NavigationRoutes.Login.route)
+            Orientation22androidTheme() {
+                val navController = rememberNavController()
+                NavigationOuter(navController = navController)
+                navController.navigate(NavigationRoutes.Login.route)
+            }
         }
     }
 }
