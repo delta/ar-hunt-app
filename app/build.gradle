@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "edu.nitt.delta.orientation22"
-        minSdk 21
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -87,6 +87,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+    //ARSceneView
+    implementation("io.github.sceneview:arsceneview:0.9.0")
 }
 
 kapt {
