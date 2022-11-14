@@ -6,13 +6,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import edu.nitt.delta.orientation22.compose.screens.DashboardScreen
+import edu.nitt.delta.orientation22.models.Team
 
 @Composable
-fun DashboardFragment(){
+fun DashboardFragment(team: Team) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ){
-        DashboardScreen()
+        DashboardScreen(team = team)
     }
 }

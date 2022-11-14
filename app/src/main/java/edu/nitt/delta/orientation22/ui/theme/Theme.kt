@@ -17,14 +17,20 @@ import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
+    onPrimary = brightYellow,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    onSecondary = black,
+    tertiary = Pink80,
+    onTertiary = yellow
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
+    onPrimary = brightYellow,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    onSecondary = white,
+    tertiary = Pink40,
+    onTertiary = yellow,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -55,7 +61,7 @@ fun Orientation22androidTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
+            (view.context as Activity).window.statusBarColor = brown.toArgb()
             ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
         }
     }
