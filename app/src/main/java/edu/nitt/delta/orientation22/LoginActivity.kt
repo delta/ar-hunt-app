@@ -17,7 +17,6 @@ class LoginActivity : ComponentActivity() {
             Orientation22androidTheme() {
                 val navController = rememberNavController()
                 NavigationOuter(navController = navController)
-                navController.navigate(NavigationRoutes.Login.route)
             }
         }
     }
