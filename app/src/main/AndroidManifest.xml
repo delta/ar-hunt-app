@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name=".OrientationApplication"
@@ -18,10 +22,7 @@
             android:exported="true"
             android:noHistory="true"
             >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -31,6 +32,10 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Orientation22android">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -39,6 +44,9 @@
             android:name=".ArActivity"
             android:exported="true"
             android:theme="@style/Theme.Orientation22android"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR KEY" />
     </application>
 
 </manifest>
