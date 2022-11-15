@@ -90,7 +90,6 @@ fun BottomBar(
 
         IconToggleButton(
             checked = checkedState.value,
-            enabled = navController.currentBackStackEntry?.destination?.route != NavigationRoutes.Map.route,
             onCheckedChange = {
                 if (!checkedState.value){
                     checkedState.value = !checkedState.value
