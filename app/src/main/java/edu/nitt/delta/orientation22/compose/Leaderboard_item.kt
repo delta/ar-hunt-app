@@ -30,20 +30,23 @@ Row(modifier = Modifier
     .fillMaxWidth()
     .background(
         color = Color.hsl(0f, 0f, 0f, 0.2f),
-        shape = RoundedCornerShape(17.dp, 17.dp, 17.dp, 17.dp)
+        shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp)
     ), verticalAlignment = Alignment.CenterVertically){
     Image(painter = painterResource(id = person.level), contentDescription = "level", contentScale = ContentScale.Fit,modifier = Modifier
-        .fillMaxWidth(0.15f).scale(2f))
+        .fillMaxWidth(0.18f)
+        .scale(2f))
 
 Text(text = "${person.position}", modifier = Modifier
-    .fillMaxWidth(0.1f)
-    .padding(top = (screenHeight / 60).dp, bottom = (screenHeight / 60).dp), textAlign = TextAlign.Center,
+    .fillMaxWidth(0.07f)
+    .padding(top = 12.dp, bottom = 12.dp), textAlign = TextAlign.Center,
 fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400)
 )
-    Image(painter = painterResource(id = person.profile), contentDescription = "profile", modifier=Modifier.fillMaxWidth(0.3f).scale(1.5f),
+    Image(painter = painterResource(id = person.profile), contentDescription = "profile", modifier= Modifier
+        .fillMaxWidth(0.38f)
+        .scale(1.5f),
         contentScale = ContentScale.Fit)
-    Text(text="${person.name}",modifier=Modifier.fillMaxWidth(0.4f), textAlign = TextAlign.Center,fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400))
-    Text(text="${person.points}  pts.", modifier = Modifier.fillMaxWidth(),fontSize = 13.sp, textAlign = TextAlign.Center, color = Color.White,fontWeight = FontWeight(400))
+    MarqueeText(text = "${person.name}",modifier=Modifier.fillMaxWidth(0.4f), textAlign = TextAlign.Center,fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400))
+    Text(text="${person.points}", modifier = Modifier.fillMaxWidth(),fontSize = 13.sp, textAlign = TextAlign.Center, color = Color.White,fontWeight = FontWeight(400))
 }
 }
 @Preview(showBackground = true)
@@ -51,4 +54,5 @@ fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400)
 fun CustomItemPreview()
 {
     CustomItem(person = Person(R.drawable.up,24,R.drawable.item2,"Kunal",300))
+
 }

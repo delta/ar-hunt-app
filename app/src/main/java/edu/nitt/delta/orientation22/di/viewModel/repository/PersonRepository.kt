@@ -14,7 +14,7 @@ fun getalldata(): List<Person>{
         Person(level = R.drawable.down,
             position = 2,
             profile = R.drawable.item2,
-            name="Vivek",
+            name="Vivek Venkataraman",
             points=1932),
         Person(level = R.drawable.down,
             position = 3,
@@ -39,8 +39,9 @@ fun getalldata(): List<Person>{
         Person(level = R.drawable.up,
             position = 7,
             profile = R.drawable.item1,
-            name="Satya",
+            name="Satyamurthi Doddini",
             points=750),
     )
 }
+
 }

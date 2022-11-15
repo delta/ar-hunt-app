@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import edu.nitt.delta.orientation22.MainActivity
-import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
+import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
 fun LoginScreen(
@@ -55,12 +55,12 @@ fun LoginScreen(
             Box(){Text(
                 text= buildAnnotatedString {
                     withStyle(
-                        style= SpanStyle(color = Color.hsl(43f,0.52f,0.54f,1f),
+                        style= SpanStyle(color = colour_Login_AR,
                             fontSize = 56.sp, fontFamily=fontFamily, fontWeight = FontWeight(600),
                         )
                     ){append("AR")}
-                    append(" HUNT")}, style= TextStyle(fontSize = 48.sp, color = Color.hsl(43f,0.52f,0.54f,1f)
-                    , fontWeight = FontWeight(400), fontFamily = fontFamily, shadow = Shadow(color = Color.hsl(54f,1f,0.61f,0.15f),offset= Offset(0f,12f),
+                    append(" HUNT")}, style= TextStyle(fontSize = 48.sp, color = colour_Login_AR
+                    , fontWeight = FontWeight(400), fontFamily = fontFamily, shadow = Shadow(color = shadow1,offset= Offset(0f,12f),
                         blurRadius = 3f
                     ), letterSpacing = 0.1.em
 
@@ -71,7 +71,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height((screenHeight/7).dp))
 
             Button(modifier=Modifier.height(70.dp).width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
-            = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
+            = background, contentColor = colour_AR_Hunt
             ),onClick = {
                 val intent : Intent = Intent(mContext,MainActivity::class.java)
                 mContext.startActivity(intent)
