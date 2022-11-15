@@ -54,6 +54,7 @@ fun BottomNavBar (
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (selected){
                             Icon(painterResource(it.selectedIcon), it.name)
+                            state.value = false
                         } else {
                             Icon(painterResource(it.unselectedIcon), it.name)
                         }

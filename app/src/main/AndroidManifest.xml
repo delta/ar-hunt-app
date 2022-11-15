@@ -46,7 +46,7 @@
             android:theme="@style/Theme.Orientation22android"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR KEY" />
+            android:value="AIzaSyD5ekvYbjJp_KFPGgm2flRXDfEgNOt_p_o" />
     </application>
 
 </manifest>
