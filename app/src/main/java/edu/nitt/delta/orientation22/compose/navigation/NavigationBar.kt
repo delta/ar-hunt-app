@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.compose.navigation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -73,6 +74,7 @@ fun BottomBar(
     checkedState: MutableState<Boolean>,
     navController: NavController,
 ) {
+    val backStackEntry = navController.currentBackStackEntryAsState()
     Box(
         modifier = Modifier.fillMaxHeight(0.12f)
     ) {
@@ -80,9 +82,11 @@ fun BottomBar(
             items = NavigationList.NavList.navList,
             navController = navController,
             onItemClick = {
-                navController.navigate(it.route){
-                    launchSingleTop = true
-                    popUpTo(NavigationRoutes.Dashboard.route)
+                if (backStackEntry.value!!.destination.route!! != it.route) {
+                    navController.navigate(it.route) {
+                        launchSingleTop = true
+                        popUpTo(NavigationRoutes.Dashboard.route)
+                    }
                 }
             }, modifier = Modifier.align(Alignment.BottomCenter),
             state = checkedState,
@@ -91,12 +95,14 @@ fun BottomBar(
         IconToggleButton(
             checked = checkedState.value,
             onCheckedChange = {
-                if (!checkedState.value){
-                    checkedState.value = !checkedState.value
-                }
-                navController.navigate(NavigationRoutes.Map.route) {
-                    launchSingleTop = true
-                    popUpTo(NavigationRoutes.Dashboard.route)
+                if (backStackEntry.value!!.destination.route!! != NavigationRoutes.Map.route) {
+                    if (!checkedState.value) {
+                        checkedState.value = !checkedState.value
+                    }
+                    navController.navigate(NavigationRoutes.Map.route) {
+                        launchSingleTop = true
+                        popUpTo(NavigationRoutes.Dashboard.route)
+                    }
                 }
             },
             modifier = Modifier
