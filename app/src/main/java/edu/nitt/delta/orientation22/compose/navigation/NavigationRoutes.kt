@@ -6,4 +6,7 @@ sealed class NavigationRoutes(val route: String) {
     object Map : NavigationRoutes("maps")
     object LeaderBoard : NavigationRoutes("leaderBoard")
     object TeamDetails : NavigationRoutes("teamDetails")
+    object SplashScreen : NavigationRoutes("splash")
+    object ARScreen : NavigationRoutes("ar")
+    object DAuthWebView : NavigationRoutes("dauth")
 }

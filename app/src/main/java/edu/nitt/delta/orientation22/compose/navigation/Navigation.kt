@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
+import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
 import edu.nitt.delta.orientation22.fragments.*
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
@@ -14,7 +15,7 @@ import edu.nitt.delta.orientation22.models.TeamMember
 fun NavigationOuter(navController: NavHostController){
     NavHost(
         navController = navController,
-        startDestination = NavigationRoutes.Map.route,
+        startDestination = NavigationRoutes.Login.route,
     ) {
         composable(route = NavigationRoutes.Login.route){
             LoginFragment(navController)
@@ -34,6 +35,9 @@ fun NavigationOuter(navController: NavHostController){
         }
         composable(route = NavigationRoutes.TeamDetails.route){
             TeamDetailsFragment()
+        }
+        composable(route = NavigationRoutes.DAuthWebView.route) {
+            DAuthWebView()
         }
     }
 }

@@ -1,6 +1,5 @@
 package edu.nitt.delta.orientation22.compose.screens
 
-import android.content.Intent
 import edu.nitt.delta.orientation22.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -30,9 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import edu.nitt.delta.orientation22.ArActivity
+import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 
 @Composable
@@ -69,9 +66,8 @@ fun LoginScreen(
                 .height(70.dp)
                 .width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
             = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
-            ),onClick = { val intent : Intent = Intent(mContext,ArActivity::class.java)
-                mContext.startActivity(intent)
-                //navController.navigate("teamDetails")
+            ),onClick = {
+                navController.navigate(NavigationRoutes.DAuthWebView.route)
             }) {
                     Text(text = "LOGIN WITH \n DAUTH", fontSize = 20.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), textAlign = TextAlign.Center, letterSpacing = 0.09.em, lineHeight = 24.sp)
             }
