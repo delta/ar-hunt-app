@@ -25,7 +25,6 @@ import edu.nitt.delta.orientation22.models.Person
 @Composable
 fun CustomItem(person: Person){
     val configuration= LocalConfiguration.current
-    val screenHeight=configuration.screenHeightDp
 Row(modifier = Modifier
     .fillMaxWidth()
     .background(
@@ -50,6 +49,5 @@ fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400)
 @Composable
 fun CustomItemPreview()
 {
-    CustomItem(person = Person(R.drawable.up,24,R.drawable.item2,"Kunal",300))
-
+    CustomItem(person = Person(24,R.drawable.item2,"Kunal",300))
 }
