@@ -5,5 +5,5 @@ import edu.nitt.delta.orientation22.models.BaseResponse
 
 data class CurrentLocationResponse(
     @SerializedName("currentState")
-    val currentLocationPosition:Int
+    val currentLevel:Int
 ):BaseResponse<String>()

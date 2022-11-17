@@ -6,6 +6,7 @@ import androidx.lifecycle.Lifecycle
 import com.google.ar.core.Anchor
 import com.google.ar.core.Session
 import edu.nitt.delta.orientation22.di.api.ApiInterface
+import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.models.Result
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
@@ -15,7 +16,6 @@ import javax.inject.Inject
 class ArRepository@Inject constructor(
     private val apiInterface: ApiInterface
 ) {
-
 
     fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?):Result<String> {
         try {
@@ -90,5 +90,16 @@ class ArRepository@Inject constructor(
         }
     } catch (e: Exception){
         Result.build<ArModelNode> { throw e }
+    }
+
+    fun postAnswer(token:String) : Result<String> = try {
+        val response = apiInterface.postAnswer(token)
+        if (response.message == ResponseConstants.SUCCESS){
+            Result.build { "Level Completed" }
+        }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
+
+    }catch (e:Exception){
+       Result.build { throw e }
     }
 }

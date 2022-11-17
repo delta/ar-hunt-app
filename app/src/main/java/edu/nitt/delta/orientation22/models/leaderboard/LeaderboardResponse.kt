@@ -5,5 +5,5 @@ import edu.nitt.delta.orientation22.models.BaseResponse
 
 data class LeaderboardResponse(
     @SerializedName("leaderboard")
-    val leaderboard: String
+    val leaderboard: List<LeaderboardData>
 ):BaseResponse<String>()

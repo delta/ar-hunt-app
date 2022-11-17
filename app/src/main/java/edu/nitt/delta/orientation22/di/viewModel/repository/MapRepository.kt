@@ -3,12 +3,14 @@ package edu.nitt.delta.orientation22.di.viewModel.repository
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import edu.nitt.delta.orientation22.di.api.ApiInterface
+import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
+import edu.nitt.delta.orientation22.models.game.LocationData
 import javax.inject.Inject
 
 class MapRepository @Inject constructor(
-    apiInterface: ApiInterface
+    private val apiInterface: ApiInterface
 ){
     private val markerList : List<MarkerModel> = mutableListOf(
         MarkerModel(
@@ -39,5 +41,25 @@ class MapRepository @Inject constructor(
          Result.build { markerList }
     }catch (e:Exception){
          Result.build { throw Exception(e) }
+    }
+
+    fun getRoutes(token: String):Result<List<LocationData>> = try {
+        val response = apiInterface.getRoute(token)
+        if(response.message == ResponseConstants.SUCCESS){
+            Result.build { response.locations }
+        }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
+    }catch (e:Exception){
+        Result.build { throw e }
+    }
+
+    fun getCurrentLevel(token:String):Result<Int> = try {
+        val response = apiInterface.getCurrentLevel(token)
+        if(response.message == ResponseConstants.SUCCESS){
+            Result.build { response.currentLevel }
+        }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
+    }catch (e:Exception){
+        Result.build { throw e }
     }
 }

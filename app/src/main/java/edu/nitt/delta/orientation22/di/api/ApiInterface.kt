@@ -35,7 +35,7 @@ interface ApiInterface {
     ):RouteResponse
 
     @GET(ApiRoutes.CURRENT_STATE)
-    fun getCurrentLocation(
+    fun getCurrentLevel(
         @Field("user_token") token: String,
     ):CurrentLocationResponse
 
