@@ -49,11 +49,11 @@ fun SetBackGround() {
             .background(Color.Black)
             .fillMaxSize()
     ) {
-        val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.splash_one))
+        val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.play_buttton_two))
         LottieAnimation(composition = composition)
         LaunchedEffect(Unit) {
-            delay(5.seconds)
-            mContext.startActivity(Intent(mContext, LoginActivity::class.java))
+            delay(7.seconds)
+            mContext.startActivity(Intent(mContext, MainActivity::class.java))
         }
     }
 }

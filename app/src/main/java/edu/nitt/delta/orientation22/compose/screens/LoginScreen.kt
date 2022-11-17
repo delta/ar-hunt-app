@@ -17,20 +17,17 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
-import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
+import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
 fun LoginScreen(
@@ -70,6 +67,26 @@ fun LoginScreen(
                 navController.navigate(NavigationRoutes.DAuthWebView.route)
             }) {
                     Text(text = "LOGIN WITH \n DAUTH", fontSize = 20.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), textAlign = TextAlign.Center, letterSpacing = 0.09.em, lineHeight = 24.sp)
+            }
+            Spacer(modifier = Modifier.fillMaxSize(0.9f))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                with(AnnotatedString.Builder() ){
+                    append("MADE WITH ❤ BY DELTA FORCE AND ORIENTATION")
+                    addStyle(SpanStyle(
+                        color = yellow,
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular))),
+                        start = 0,
+                        end = 41)
+                    addStringAnnotation(
+                        tag = "URL",
+                        annotation = "https://delta.nitt.edu/",
+                        start = 15,
+                        end = 25
+                    )
+                }
             }
         }
     }

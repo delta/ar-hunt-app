@@ -12,16 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import edu.nitt.delta.orientation22.R
-import edu.nitt.delta.orientation22.ui.theme.black
-import edu.nitt.delta.orientation22.ui.theme.peach
-import edu.nitt.delta.orientation22.ui.theme.white
-import edu.nitt.delta.orientation22.ui.theme.yellow
+import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
 fun BottomNavBar (
