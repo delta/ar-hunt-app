@@ -72,7 +72,7 @@ fun MarqueeText(
         val textLayoutInfo = textLayoutInfoState.value ?: return@LaunchedEffect
         if (textLayoutInfo.textWidth <= textLayoutInfo.containerWidth) return@LaunchedEffect
 
-        val duration = 2500 * textLayoutInfo.textWidth / textLayoutInfo.containerWidth
+        val duration = 4000 * textLayoutInfo.textWidth / textLayoutInfo.containerWidth
 
         val animation = TargetBasedAnimation(
             animationSpec = infiniteRepeatable(

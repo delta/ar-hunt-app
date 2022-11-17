@@ -50,7 +50,7 @@ fun LeaderBoardScreen(
         Column(modifier = Modifier
             .fillMaxSize()
             .background(
-                color= background,
+                color = background,
 
                 ), horizontalAlignment = Alignment.CenterHorizontally) {
        Text(text = "LEADERBOARD", style = TextStyle(fontSize = 32.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), color = colour_Leaderboard, shadow =
@@ -70,111 +70,59 @@ fun LeaderBoardScreen(
                         color = Color.White
                     )
             )
-            Row(modifier= Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.35f)){
-                Column(modifier= Modifier
-                    .width((screenWidth / 3).dp)
-                    .fillMaxHeight()) {
-                    Box(modifier=Modifier.padding(start = (screenWidth/10).dp,end=(screenWidth/90).dp)){
-                        Box(modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(top = (screenWidth / 10).dp)){
-                            avatar(image_id = R.drawable.item1, color = Color.White , size_value =(screenWidth/4.5) )
-                        }
+            Spacer(modifier=Modifier.height((screenHeight/70).dp))
 
-                        Box(modifier= Modifier
-                            .fillMaxSize()
-                            .padding((screenWidth / 21).dp)
-                            .fillMaxWidth(), contentAlignment = Alignment.BottomStart)
-                        {
-                    MarqueeText(text="Sarvesh", textAlign = TextAlign.Center, color= Color.White, fontWeight = FontWeight(400))
-
-                }
-                        Box(modifier= Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .height((screenWidth / 5).dp)
-                            .padding(bottom = (screenWidth / 9).dp)){
-                            Image(painter = painterResource(id = R.drawable.second_place), contentDescription ="Second place profile", modifier= Modifier
-                                .fillMaxSize()
-                                , contentScale = ContentScale.Fit)
-                        }
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = (screenHeight/15).dp)
+                ) {
+                    AvatarSmall(R.drawable.item2, R.drawable.second_place, color = white)
+                    Box(
+                        modifier = Modifier.fillMaxWidth(0.25f)
+                    ) {
+                        MarqueeText(text="Sarvesh", textAlign = TextAlign.Center, color= Color.White, fontWeight = FontWeight(400))
                     }
                 }
-                Column(modifier= Modifier
-                    .width((screenWidth / 3).dp)
-                    .fillMaxHeight()) {
-                    Box(modifier = Modifier.padding(bottom=(screenWidth/70).dp)) {
-                        Box(modifier= Modifier
-                            .fillMaxSize()
-                            .padding(
-                                top = (screenHeight / 18).dp,
-                                start = (screenHeight / 120).dp,
-                                end = (screenHeight / 120).dp
-                            ), contentAlignment = Alignment.Center){
-                            avatar(R.drawable.item1,color= lightYellow,(screenWidth/3.6))
-                        }
-                        Box(modifier=Modifier.fillMaxSize().padding(start=(screenWidth / 14).dp,end=(screenWidth / 14).dp), contentAlignment = Alignment.BottomStart)
-                        {
-                            MarqueeText(text="Vaikuntapuramalooo", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),color= Color.White,fontWeight = FontWeight(400))
-                        }
-                            Box(modifier= Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(0.46f)
-                                .padding(
-                                    top = (screenWidth / 15).dp,
-                                    start = (screenWidth / 18).dp,
-                                    end = (screenWidth / 18).dp
-                                )){
-                                Image(painter = painterResource(id = R.drawable.crown), contentDescription ="crown", modifier= Modifier
-                                    .fillMaxSize()
-                                    , contentScale = ContentScale.Fit)
-                        }
-                        Box(modifier= Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .height((screenWidth / 7).dp)
-                            .padding(bottom = (screenWidth / 16).dp)){
-                            Image(painter = painterResource(id = R.drawable.first_place), contentDescription ="First place profile", modifier= Modifier
-                                .fillMaxSize()
-                                , contentScale = ContentScale.Fit)
-                        }
-
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    AvatarBig(R.drawable.item1)
+                    Box (
+                        modifier = Modifier.fillMaxWidth(0.3f)
+                    ) {
+                        MarqueeText(
+                            text = "Vaikuntapuramalooo",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            color = Color.White,
+                            fontWeight = FontWeight(400)
+                        )
                     }
-
                 }
-                Column(modifier= Modifier
-                    .width((screenWidth / 3).dp)
-                    .fillMaxHeight()) {
-                    Box(modifier=Modifier.padding(start = (screenWidth/90).dp,end=(screenWidth/10).dp)){
-                        Box(modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(top = (screenWidth / 10).dp)){
-                            avatar(image_id = R.drawable.item1, color = orange , size_value =(screenWidth/4.5) )
-                        }
-
-                        Box(modifier= Modifier
-                            .fillMaxSize()
-                            .padding((screenWidth / 21).dp)
-                            .fillMaxWidth(), contentAlignment = Alignment.BottomStart)
-                        {
-                            MarqueeText(text="Sarvesh", textAlign = TextAlign.Center, color= Color.White, fontWeight = FontWeight(400))
-                        }
-                        Box(modifier= Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .height((screenWidth / 5).dp)
-                            .padding(bottom = (screenWidth / 9).dp)){
-                            Image(painter = painterResource(id = R.drawable.third_place), contentDescription ="Third place profile", modifier= Modifier
-                                .fillMaxSize()
-                                , contentScale = ContentScale.Fit)
-                        }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = (screenHeight/15).dp)
+                ) {
+                    AvatarSmall(R.drawable.item1, R.drawable.third_place, color = orange)
+                    Box (
+                        modifier = Modifier.fillMaxWidth(0.25f)
+                    ) {
+                        MarqueeText(
+                            text = "Vaikuntapuramalooo",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            color = Color.White,
+                            fontWeight = FontWeight(400)
+                        )
                     }
                 }
             }
             Spacer(modifier=Modifier.height((screenHeight/45).dp))
-            LazyColumn(contentPadding = PaddingValues(start = (screenWidth/6).dp, end =(screenWidth/6).dp ),
+            LazyColumn(contentPadding = PaddingValues(start = (screenWidth/10).dp, end =(screenWidth/10).dp ),
             verticalArrangement = Arrangement.spacedBy((screenHeight/27).dp), modifier = Modifier.fillMaxHeight(0.73f)){
                 items(items=getalldata){person->
                     CustomItem(person = person)
@@ -188,39 +136,73 @@ fun LeaderBoardScreen(
 @Composable
 fun LeaderBoardScreenPreview()
 {
-
     LeaderBoardScreen(Modifier,painterResource(id = R.drawable.background_image),"LeaderBoard")
-
 }
 
 @Composable
-fun avatar(image_id:Int, color: Color,size_value:Double
+fun AvatarSmall (
+    avatar_id: Int,
+    position_id: Int,
+    color: Color,
+){
+    val configuration= LocalConfiguration.current
+    val screenWidth=configuration.screenWidthDp
 
+    Box(
+        modifier = Modifier.size(height = (screenWidth/3.8).dp, width = ((screenWidth/4.5)).dp)
+    ){
+        Box(
+            modifier = Modifier.padding(bottom = (screenWidth/20).dp)
+        ) {
+            AvatarImage(
+                image_id = avatar_id,
+                color = color,
+                size_value = (screenWidth / 4.5)
+            )
+        }
+        Image(painter = painterResource(id = position_id), contentDescription ="Second place profile", modifier= Modifier
+            .size((screenWidth / 10).dp)
+            .align(Alignment.BottomCenter)
+            , contentScale = ContentScale.Fit,)
+    }
+}
+
+@Composable
+fun AvatarBig (
+    avatar_id: Int,
+){
+    val configuration= LocalConfiguration.current
+    val screenWidth=configuration.screenWidthDp
+
+    Box(
+        modifier = Modifier.size(height = (screenWidth/2.1).dp, width = ((screenWidth/3.5)).dp)
+    ){
+        Box(
+            modifier = Modifier.padding(bottom = (screenWidth/20).dp, top = (screenWidth/6.5).dp)
+        ) {
+            AvatarImage(
+                image_id = avatar_id,
+                color = lightYellow,
+                size_value = (screenWidth / 3.5)
+            )
+        }
+        Image(painter = painterResource(id = R.drawable.crown), contentDescription ="crown", modifier= Modifier
+            .size((screenWidth / 5).dp)
+            .align(Alignment.TopCenter)
+            , contentScale = ContentScale.Fit)
+        Image(painter = painterResource(id = R.drawable.first_place), contentDescription ="Second place profile", modifier= Modifier
+            .size((screenWidth / 10).dp)
+            .align(Alignment.BottomCenter)
+            , contentScale = ContentScale.Fit,)
+    }
+}
+
+@Composable
+fun AvatarImage(image_id:Int, color: Color,size_value:Double,
 ){
     Image(painter = painterResource(id = image_id), contentDescription ="Avatar with border", modifier= Modifier
         .size(size_value.dp)
         .clip(CircleShape)
         .border(4.dp, color, CircleShape)
         , contentScale = ContentScale.Fit)
-
 }
-
-/*
-@Composable
-fun first(a:Double)
-{
-    Box(modifier = Modifier
-        .height(150.dp)
-        .width(a.dp)
-        )
-    {
-        Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp)){avatar(image_id = R.drawable.item1, color = lightYellow, size_value = 100.0)}
-        Box(modifier = Modifier.align(Alignment.TopCenter))
-        {
-            Image(painter = painterResource(id = R.drawable.crown), contentDescription = "", modifier = Modifier.fillMaxSize(0.39f))
-        }
-        Box(modifier = Modifier.align(Alignment.BottomCenter)){
-            Image(painter = painterResource(id = R.drawable.first_place), contentDescription = "", modifier = Modifier.fillMaxSize(0.15f))
-        }
-    }
-}*/

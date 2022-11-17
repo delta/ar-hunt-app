@@ -22,7 +22,8 @@
             android:name=".LoginActivity"
             android:exported="true"
             android:noHistory="true"
-            android:hardwareAccelerated="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,8 +36,13 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:hardwareAccelerated="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Orientation22android">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -44,7 +50,8 @@
         <activity
             android:name=".ArActivity"
             android:exported="true"
-            android:hardwareAccelerated="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Orientation22android"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"

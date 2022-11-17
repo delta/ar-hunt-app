@@ -32,20 +32,17 @@ Row(modifier = Modifier
         color = Color.hsl(0f, 0f, 0f, 0.2f),
         shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp)
     ), verticalAlignment = Alignment.CenterVertically){
-    Image(painter = painterResource(id = person.level), contentDescription = "level", contentScale = ContentScale.Fit,modifier = Modifier
-        .fillMaxWidth(0.18f)
-        .scale(2f))
 
 Text(text = "${person.position}", modifier = Modifier
-    .fillMaxWidth(0.07f)
-    .padding(top = 12.dp, bottom = 12.dp), textAlign = TextAlign.Center,
+    .fillMaxWidth(0.18f)
+    .padding(top = 18.dp, bottom = 18.dp), textAlign = TextAlign.Center,
 fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400)
 )
     Image(painter = painterResource(id = person.profile), contentDescription = "profile", modifier= Modifier
-        .fillMaxWidth(0.38f)
+        .fillMaxWidth(0.20f)
         .scale(1.5f),
         contentScale = ContentScale.Fit)
-    MarqueeText(text = "${person.name}",modifier=Modifier.fillMaxWidth(0.4f), textAlign = TextAlign.Center,fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400))
+    MarqueeText(text = "${person.name}",modifier=Modifier.fillMaxWidth(0.5f), textAlign = TextAlign.Center,fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400))
     Text(text="${person.points}", modifier = Modifier.fillMaxWidth(),fontSize = 13.sp, textAlign = TextAlign.Center, color = Color.White,fontWeight = FontWeight(400))
 }
 }
