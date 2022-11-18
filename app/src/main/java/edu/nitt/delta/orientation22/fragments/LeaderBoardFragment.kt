@@ -8,9 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.screens.LeaderBoardScreen
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
 
 @Composable
 fun LeaderBoardFragment(
+    leaderBoardViewModel:LeaderBoardStateViewModel
 ){
     Surface(
         modifier = Modifier.fillMaxSize(),

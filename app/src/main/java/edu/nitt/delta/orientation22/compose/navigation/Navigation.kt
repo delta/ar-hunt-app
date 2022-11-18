@@ -5,13 +5,16 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
+import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
 import edu.nitt.delta.orientation22.fragments.*
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
 
 @Composable
-fun NavigationOuter(navController: NavHostController){
+fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel){
     NavHost(
         navController = navController,
         startDestination = NavigationRoutes.Login.route,
@@ -30,16 +33,16 @@ fun NavigationOuter(navController: NavHostController){
                 ),
                 teamName = "Team Name")
             }
-            DashboardFragment(data)
+            DashboardFragment(teamStateViewModel = teamStateViewModel,data)
         }
         composable(route = NavigationRoutes.TeamDetails.route){
-            TeamDetailsFragment()
+            TeamDetailsFragment(teamStateViewModel)
         }
     }
 }
 
 @Composable
-fun NavigationInner(navController: NavHostController,mapviewModel: MapStateViewModel){
+fun NavigationInner(navController: NavHostController,mapviewModel: MapStateViewModel,arStateViewModel: ArStateViewModel,leaderBoardStateViewModel: LeaderBoardStateViewModel,teamStateViewModel: TeamStateViewModel){
     NavHost(
         navController = navController,
         startDestination = NavigationRoutes.Dashboard.route,
@@ -57,7 +60,7 @@ fun NavigationInner(navController: NavHostController,mapviewModel: MapStateViewM
                         teamName = "Team Name"
                     )
                 }
-                DashboardFragment(data)
+                DashboardFragment(teamStateViewModel = teamStateViewModel,data)
             }
             else {
                 val data = Team(
@@ -68,14 +71,14 @@ fun NavigationInner(navController: NavHostController,mapviewModel: MapStateViewM
                     ),
                     teamName = "Team Name"
                 )
-                DashboardFragment(data)
+                DashboardFragment(teamStateViewModel = teamStateViewModel,data)
             }
         }
         composable(route = NavigationRoutes.Map.route){
             MapFragment(mapviewModel = mapviewModel)
         }
         composable(route = NavigationRoutes.LeaderBoard.route){
-            LeaderBoardFragment()
+            LeaderBoardFragment(leaderBoardViewModel = leaderBoardStateViewModel)
         }
     }
 }

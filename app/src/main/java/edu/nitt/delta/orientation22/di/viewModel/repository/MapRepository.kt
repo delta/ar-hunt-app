@@ -43,10 +43,15 @@ class MapRepository @Inject constructor(
          Result.build { throw Exception(e) }
     }
 
-    fun getRoutes(token: String):Result<List<LocationData>> = try {
+    fun getRoutes(token: String):Result<List<MarkerModel>> = try {
         val response = apiInterface.getRoute(token)
+        val markerList = mutableListOf<List<MarkerModel>>()
         if(response.message == ResponseConstants.SUCCESS){
-            Result.build { response.locations }
+            val locationData : List<LocationData> = response.locations
+            locationData.forEach {
+                markerList.add(listOf(MarkerModel(markerState = MarkerState(LatLng(it.latitude,it.longitude)), markerTitle = it.name, markerDescription = it.clue)))
+            }
+            Result.build { markerList }
         }
         Result.build { throw Exception(ResponseConstants.ERROR) }
     }catch (e:Exception){

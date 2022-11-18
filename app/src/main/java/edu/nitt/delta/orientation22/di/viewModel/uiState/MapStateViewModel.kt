@@ -46,7 +46,7 @@ class MapStateViewModel @Inject constructor(
     private fun getRoute() = launch {
         val token = ""
         when(val res=mapRepository.getRoutes(token)){
-            is Result.Value -> routeListData = res.value
+            is Result.Value -> markerListData = res.value
             is Result.Error -> mutableError.value= res.exception.message
         }
     }
