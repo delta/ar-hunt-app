@@ -35,7 +35,7 @@ import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
-fun GoogleMapScreen(markerList: List<MarkerModel>, currentClueLocation: MutableState<LatLng>) {
+fun GoogleMapScreen(markerList: List<MarkerModel>) {
 
     val lectureHallComplex = LatLng(10.7614246, 78.8139187)
 
@@ -125,7 +125,7 @@ fun MapScreen(
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     CameraPermissionGetter(permissionState = permissionState)
 
-    GoogleMapScreen(markerList = markerList, currentClueLocation)
+    GoogleMapScreen(markerList = markerList)
 
     TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState)
 }
