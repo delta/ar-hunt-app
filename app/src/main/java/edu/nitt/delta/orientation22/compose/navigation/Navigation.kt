@@ -14,7 +14,7 @@ import edu.nitt.delta.orientation22.models.TeamMember
 fun NavigationOuter(navController: NavHostController){
     NavHost(
         navController = navController,
-        startDestination = NavigationRoutes.Map.route,
+        startDestination = NavigationRoutes.Login.route,
     ) {
         composable(route = NavigationRoutes.Login.route){
             LoginFragment(navController)
