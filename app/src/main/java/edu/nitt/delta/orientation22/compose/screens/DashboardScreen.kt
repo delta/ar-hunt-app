@@ -1,6 +1,7 @@
 package edu.nitt.delta.orientation22.compose.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -24,7 +26,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.google.android.filament.utils.Utils
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.getAnnotatedString
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -36,50 +40,6 @@ fun DashboardScreen(
 ) {
     Orientation22androidTheme() {
         val painter = painterResource(id = R.drawable.background_image)
-        val annotatedString = buildAnnotatedString {
-            val str = "MADE WITH ❤ BY DELTA FORCE AND ORIENTATION"
-            val indexStartDelta = str.indexOf("DELTA FORCE")
-            val indexStartOrientation = str.indexOf("ORIENTATION")
-            append(str)
-            addStyle(
-                style = SpanStyle(
-                    color = yellow,
-                    fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                ),
-                start = 0,
-                end = 42
-            )
-            addStyle(
-                style = SpanStyle(
-                    color = yellow,
-                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                    textDecoration = TextDecoration.Underline
-                ),
-                start = indexStartDelta,
-                end = indexStartDelta+11
-            )
-            addStyle(
-                style = SpanStyle(
-                    color = yellow,
-                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                    textDecoration = TextDecoration.Underline
-                ),
-                start = indexStartOrientation,
-                end = indexStartOrientation + 11
-            )
-            addStringAnnotation(
-                tag = "URL",
-                annotation = "https://delta.nitt.edu/",
-                start = indexStartDelta,
-                end = indexStartDelta + 11
-            )
-            addStringAnnotation(
-                tag = "URL",
-                annotation = "https://www.instagram.com/nitt.orientation/",
-                start = indexStartOrientation,
-                end = indexStartOrientation + 11
-            )
-        }
         val uriHandler = LocalUriHandler.current
         Box(modifier = modifier.fillMaxSize()) {
             Image(
@@ -130,19 +90,6 @@ fun DashboardScreen(
                 Card(3, team.members[1].name)
                 Card(4, team.members[2].name)
                 Spacer(modifier = Modifier.fillMaxSize(0.65f))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    ClickableText(
-                        text = annotatedString,
-                        onClick = {
-                            annotatedString.getStringAnnotations("URL", it, it).firstOrNull()?.let { stringAnnotation ->
-                                uriHandler.openUri(stringAnnotation.item)
-                            }
-                        }
-                    )
-                }
                 }
             }
         }

@@ -53,7 +53,7 @@ fun SetBackGround() {
         LottieAnimation(composition = composition)
         LaunchedEffect(Unit) {
             delay(7.seconds)
-            mContext.startActivity(Intent(mContext, MainActivity::class.java))
+            mContext.startActivity(Intent(mContext, LoginActivity ::class.java))
         }
     }
 }

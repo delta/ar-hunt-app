@@ -105,7 +105,7 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>) {
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
                     fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                ),
+                )
             )
             Text(
                 "Hint: Check out the object to find the answer",

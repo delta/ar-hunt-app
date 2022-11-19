@@ -2,7 +2,9 @@ package edu.nitt.delta.orientation22.compose.screens
 
 import edu.nitt.delta.orientation22.R
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -16,6 +18,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.Font
@@ -26,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import edu.nitt.delta.orientation22.compose.LoadingIcon
+import edu.nitt.delta.orientation22.compose.SnackShowError
+import edu.nitt.delta.orientation22.compose.SnackShowSuccess
+import edu.nitt.delta.orientation22.compose.getAnnotatedString
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -38,10 +45,14 @@ fun LoginScreen(
     val fontFamily= FontFamily(
         Font(R.font.montserrat_regular)
     )
+    val annotatedString = mContext.getAnnotatedString(brightYellow)
+    val uriHandler = LocalUriHandler.current
     Box(modifier = modifier.fillMaxSize())
     {
         Image(painter = painter, contentDescription = contentDescription,modifier=Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
-        Column(modifier=Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,) {
+        Column(modifier= Modifier
+            .fillMaxSize()
+            .background(translucentBackground), horizontalAlignment = Alignment.CenterHorizontally,) {
             Box(){Text(
                 text= buildAnnotatedString {
                     withStyle(
@@ -64,29 +75,23 @@ fun LoginScreen(
                 .width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
             = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
             ),onClick = {
-                navController.navigate(NavigationRoutes.DAuthWebView.route)
+                navController.navigate(NavigationRoutes.TeamDetails.route)
             }) {
                     Text(text = "LOGIN WITH \n DAUTH", fontSize = 20.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), textAlign = TextAlign.Center, letterSpacing = 0.09.em, lineHeight = 24.sp)
             }
-            Spacer(modifier = Modifier.fillMaxSize(0.9f))
+            Spacer(modifier = Modifier.fillMaxSize(0.87f))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                with(AnnotatedString.Builder() ){
-                    append("MADE WITH ❤ BY DELTA FORCE AND ORIENTATION")
-                    addStyle(SpanStyle(
-                        color = yellow,
-                        fontFamily = FontFamily(Font(R.font.montserrat_regular))),
-                        start = 0,
-                        end = 41)
-                    addStringAnnotation(
-                        tag = "URL",
-                        annotation = "https://delta.nitt.edu/",
-                        start = 15,
-                        end = 25
-                    )
-                }
+                ClickableText(
+                    text = annotatedString,
+                    onClick = {
+                        annotatedString.getStringAnnotations("URL", it, it).firstOrNull()?.let { stringAnnotation ->
+                            uriHandler.openUri(stringAnnotation.item)
+                        }
+                    }
+                )
             }
         }
     }
