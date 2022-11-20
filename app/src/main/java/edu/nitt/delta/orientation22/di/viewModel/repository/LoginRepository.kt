@@ -7,9 +7,7 @@ import javax.inject.Inject
 class LoginRepository @Inject constructor(
     private val apiInterface: ApiInterface
 ) {
-
     fun log(){
         Log.v("INREPO","Hello")
     }
-
 }
