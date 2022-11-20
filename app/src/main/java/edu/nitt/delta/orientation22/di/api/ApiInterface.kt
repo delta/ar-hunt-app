@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.di.api
 
+import edu.nitt.delta.orientation22.models.auth.LoginResponse
 import edu.nitt.delta.orientation22.models.auth.RegisterTeamResponse
 import edu.nitt.delta.orientation22.models.auth.TeamDataResponse
 import edu.nitt.delta.orientation22.models.game.AnswerResponse
@@ -10,6 +11,7 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiInterface {
 
@@ -43,6 +45,11 @@ interface ApiInterface {
     fun postAnswer(
         @Field("user_token") token: String,
     ):AnswerResponse
+
+    @GET(ApiRoutes.AUTH_CALLBACK)
+    suspend fun login(
+        @Query("code") code:String
+    ):LoginResponse
 
 
 }

@@ -3,6 +3,7 @@ package edu.nitt.delta.orientation22
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,8 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
+import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
@@ -26,6 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
+    val loginStateViewModel by viewModels<LoginStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -34,7 +38,9 @@ class SplashActivity : AppCompatActivity() {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    SetBackGround()
+                    loginStateViewModel.doAction(LoginAction.IsLoggedIn)
+                    val isLoggedIn = loginStateViewModel.isLoggedIn.value
+                    SetBackGround(isLoggedIn = isLoggedIn)
                 }
             }
         }
@@ -42,7 +48,7 @@ class SplashActivity : AppCompatActivity() {
 }
 
 @Composable
-fun SetBackGround() {
+fun SetBackGround(isLoggedIn :Boolean) {
     val mContext = LocalContext.current
     Column(
         Modifier
@@ -51,17 +57,13 @@ fun SetBackGround() {
     ) {
         val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.play_buttton_two))
         LottieAnimation(composition = composition)
+
         LaunchedEffect(Unit) {
             delay(7.seconds)
-            mContext.startActivity(Intent(mContext, LoginActivity ::class.java))
+            if(isLoggedIn)
+                mContext.startActivity(Intent(mContext, MainActivity ::class.java))
+            else
+                mContext.startActivity(Intent(mContext,LoginActivity::class.java))
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Orientation22androidTheme {
-        SetBackGround()
     }
 }

@@ -2,6 +2,7 @@ package edu.nitt.delta.orientation22.di.viewModel.repository
 
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
+import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
 import javax.inject.Inject
 import edu.nitt.delta.orientation22.models.Result
@@ -9,6 +10,8 @@ import edu.nitt.delta.orientation22.models.Result
 class LeaderBoardRepository @Inject constructor(
     private val apiInterface: ApiInterface
 ) {
+    @Inject
+    lateinit var sharedPrefHelper: SharedPrefHelper
     fun getLeaderBoard(token:String):Result<List<LeaderboardData>> =try {
         val response = apiInterface.getLeaderBord(token = token)
         if (response.message == ResponseConstants.SUCCESS) {

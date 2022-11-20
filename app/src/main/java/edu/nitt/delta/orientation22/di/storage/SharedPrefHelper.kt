@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-class SharedPrefHelper@Inject constructor(context: Context) {
+class SharedPrefHelper @Inject constructor(context: Context) {
 
     private val sharedPreferences: SharedPreferences
 

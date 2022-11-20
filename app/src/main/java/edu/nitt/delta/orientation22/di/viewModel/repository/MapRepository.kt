@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
+import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.game.LocationData
@@ -12,6 +13,8 @@ import javax.inject.Inject
 class MapRepository @Inject constructor(
     private val apiInterface: ApiInterface
 ){
+    @Inject
+    lateinit var sharedPrefHelper: SharedPrefHelper
     private val markerList : List<MarkerModel> = mutableListOf(
         MarkerModel(
             markerState = MarkerState(LatLng(10.7599262139634, 78.81060766093582)),

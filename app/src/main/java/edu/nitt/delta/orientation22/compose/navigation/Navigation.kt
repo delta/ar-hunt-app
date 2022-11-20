@@ -4,21 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
 import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
+import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.*
 import edu.nitt.delta.orientation22.fragments.*
 
 @Composable
-fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel){
+fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel,loginStateViewModel: LoginStateViewModel){
     NavHost(
         navController = navController,
         startDestination = NavigationRoutes.Login.route,
     ) {
         composable(route = NavigationRoutes.Login.route){
-            LoginFragment(navController)
+            LoginFragment(navController,loginStateViewModel)
         }
         composable(route = NavigationRoutes.Dashboard.route){
             DashboardFragment(teamStateViewModel)
@@ -27,7 +25,10 @@ fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStat
             TeamDetailsFragment(teamStateViewModel)
         }
         composable(route = NavigationRoutes.DAuthWebView.route) {
-            DAuthWebView()
+            DAuthWebView(onSuccess = {
+                loginStateViewModel.doAction(LoginAction.Login(it))
+                navController.popBackStack()
+            })
         }
     }
 }

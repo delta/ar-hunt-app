@@ -7,6 +7,7 @@ import com.google.ar.core.Anchor
 import com.google.ar.core.Session
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
+import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.Result
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class ArRepository@Inject constructor(
     private val apiInterface: ApiInterface
 ) {
-
+    @Inject
+    lateinit var sharedPrefHelper: SharedPrefHelper
     fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?):Result<String> {
         try {
             var anchorId = ""
