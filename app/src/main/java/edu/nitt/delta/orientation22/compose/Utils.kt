@@ -19,17 +19,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
@@ -39,10 +33,22 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import edu.nitt.delta.orientation22.ArActivity
-import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.ui.theme.*
-
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import edu.nitt.delta.orientation22.R
+import kotlinx.coroutines.launch
 
 fun Context.toast(message: CharSequence)
 {
@@ -239,4 +245,103 @@ fun distanceCalculator(
             }
         }
     }
+}
+
+fun Context.getAnnotatedString(color: Color) : AnnotatedString {
+    val annotatedString = buildAnnotatedString {
+        val str = "MADE WITH ❤ BY DELTA FORCE AND ORIENTATION"
+        val indexStartDelta = str.indexOf("DELTA FORCE")
+        val indexStartOrientation = str.indexOf("ORIENTATION")
+        append(str)
+        addStyle(
+            style = SpanStyle(
+                color = color,
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp
+            ),
+            start = 0,
+            end = 42
+        )
+        addStyle(
+            style = SpanStyle(
+                color = color,
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp
+
+            ),
+            start = indexStartDelta,
+            end = indexStartDelta+11
+        )
+        addStyle(
+            style = SpanStyle(
+                color = color,
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp
+
+            ),
+            start = indexStartOrientation,
+            end = indexStartOrientation + 11
+        )
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "https://delta.nitt.edu/",
+            start = indexStartDelta,
+            end = indexStartDelta + 11
+        )
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "https://www.instagram.com/nitt.orientation/",
+            start = indexStartOrientation,
+            end = indexStartOrientation + 11
+        )
+    }
+    return annotatedString
+}
+
+@Composable
+fun Context.SnackShowError(errorMessage : String, modifier: Modifier) {
+    val snackHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    SnackbarHost(snackHostState, modifier = modifier){ data ->
+        Snackbar(
+            snackbarData = data,
+            containerColor = black,
+            contentColor = white,
+        )
+    }
+    fun showSnack() {
+        scope.launch {
+            snackHostState.showSnackbar(errorMessage, duration = SnackbarDuration.Short)
+        }
+    }
+    showSnack()
+}
+
+@Composable
+fun Context.SnackShowSuccess(errorMessage : String, modifier: Modifier) {
+    val snackHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    SnackbarHost(snackHostState, modifier = modifier){ data ->
+        Snackbar(
+            snackbarData = data,
+            containerColor = Color.Red,
+            contentColor = black,
+        )
+    }
+    fun showSnack() {
+        scope.launch {
+            snackHostState.showSnackbar(errorMessage, duration = SnackbarDuration.Short)
+        }
+    }
+    showSnack()
+}
+
+@Composable
+fun LoadingIcon() {
+    CircularProgressIndicator(color = yellow)
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -29,23 +30,24 @@ fun DashboardScreen(
     modifier: Modifier = Modifier,
     team: TeamModel,
 ) {
-            Orientation22androidTheme() {
-                val painter = painterResource(id = R.drawable.background_image)
-                val avatar = R.drawable.profile
-                Box(modifier = modifier.fillMaxSize()) {
-                    Image(
-                        painter = painter,
-                        contentDescription = "background",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                translucentBackground,
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+    Orientation22androidTheme() {
+        val painter = painterResource(id = R.drawable.background_image)
+        val uriHandler = LocalUriHandler.current
+        val avatar = R.drawable.duck
+        Box(modifier = modifier.fillMaxSize()) {
+            Image(
+                painter = painter,
+                contentDescription = "background",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        translucentBackground,
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
 
                         ) {
                         Text(
@@ -53,7 +55,7 @@ fun DashboardScreen(
                             fontSize = 45.sp,
                             letterSpacing = 0.15.em,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(all = 30.dp),
+                            modifier = Modifier.padding(top = 30.dp),
                             color = brightYellow,
                             fontFamily = FontFamily(Font(R.font.montserrat_regular))
                         )
@@ -99,10 +101,10 @@ fun DashboardScreen(
                                 )
                         )
                         Spacer(modifier = Modifier.height(30.dp))
-                        Card(1, team.members[0].name, avatar)
-                        Card(2, team.members[1].name, avatar)
-                        Card(3, team.members[2].name, avatar)
-                        Card(4, team.members[3].name, avatar)
+                        Card(1, team.members[0].name, R.drawable.profile)
+                        Card(2, team.members[1].name, R.drawable.profile)
+                        Card(3, team.members[2].name, R.drawable.profile)
+                        Card(4, team.members[3].name, R.drawable.profile)
                     }
                 }
             }
@@ -150,4 +152,3 @@ fun Card(index: Int, name: String, avatar: Int) {
         )
     }
 }
-

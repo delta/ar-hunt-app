@@ -9,6 +9,7 @@ import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.di.viewModel.repository.TeamRepository
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
+import edu.nitt.delta.orientation22.models.auth.Member
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +20,8 @@ class TeamStateViewModel @Inject constructor(
     private val teamRepository: TeamRepository
 ) : BaseViewModel<TeamAction>(){
 
-    private val teamDataSample: TeamModel = TeamModel(teamName = "", members =  listOf(), points = 0)
+    private val teamDataSample: TeamModel = TeamModel(teamName = "", members =  listOf(
+        Member(name = "",-1),Member(name = "",-1),Member(name = "",-1),Member(name = "",-1)), points = 0)
     var teamData by mutableStateOf(teamDataSample)
 
     override fun doAction(action: TeamAction): Any = when(action) {

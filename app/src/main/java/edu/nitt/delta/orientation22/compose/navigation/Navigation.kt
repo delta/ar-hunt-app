@@ -4,14 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.google.gson.Gson
 import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
+import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
 import edu.nitt.delta.orientation22.fragments.*
-import edu.nitt.delta.orientation22.models.Team
-import edu.nitt.delta.orientation22.models.TeamMember
 
 @Composable
 fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel){
@@ -27,6 +25,9 @@ fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStat
         }
         composable(route = NavigationRoutes.TeamDetails.route){
             TeamDetailsFragment(teamStateViewModel)
+        }
+        composable(route = NavigationRoutes.DAuthWebView.route) {
+            DAuthWebView()
         }
     }
 }
