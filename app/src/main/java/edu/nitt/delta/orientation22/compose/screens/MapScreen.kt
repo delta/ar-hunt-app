@@ -110,7 +110,15 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
 @Composable
 fun MapScreen(markerList: List<MarkerModel>){
     GoogleMapScreen(markerList = markerList)
-
+    val mContext = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
+    val currentClueLocation = remember {
+        mutableStateOf(LatLng(10.7614246, 78.8139187))
+    }
+    val fusedLocationProviderClient : FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(mContext)
+    val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
+    CameraPermissionGetter(permissionState = permissionState)
     TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState)
 }
 

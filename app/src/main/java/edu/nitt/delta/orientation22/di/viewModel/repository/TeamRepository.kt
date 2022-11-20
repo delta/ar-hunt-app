@@ -11,7 +11,6 @@ import javax.inject.Inject
 class TeamRepository @Inject constructor(
     private val apiInterface: ApiInterface
 ) {
-    @Inject
     lateinit var sharedPrefHelper: SharedPrefHelper
     fun registerTeam(token: String,teamData : Map<String,String>):Result<String> = try {
         val response = apiInterface.registerTeam(token,teamData)
