@@ -19,4 +19,5 @@ sealed class ArAction {
         val sceneView: ArSceneView,
         val cloudAnchorNode: ArModelNode
     ) : ArAction()
+    object PostAnswer : ArAction()
 }

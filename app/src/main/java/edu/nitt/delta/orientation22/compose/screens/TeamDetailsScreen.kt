@@ -33,8 +33,12 @@ import com.google.gson.Gson
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.toast
+import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
+import edu.nitt.delta.orientation22.models.auth.RegisterTeamRequest
+import edu.nitt.delta.orientation22.models.auth.RegisterTeamResponse
+import edu.nitt.delta.orientation22.models.auth.TeamModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
 
@@ -42,17 +46,19 @@ import edu.nitt.delta.orientation22.ui.theme.*
 @Composable
 fun TeamDetails(
     mContext: Context,
+    teamDetails: TeamModel,
+    registerTeam: (Map<String, String>) -> Unit,
 ) {
-    var nameLeader by rememberSaveable { mutableStateOf("Rajesh") }
-    var rollNumberLeader by rememberSaveable {mutableStateOf("106121000")}
-    var teamName by rememberSaveable { mutableStateOf("") }
+    var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
+    var rollNumberLeader by rememberSaveable {mutableStateOf(teamDetails.members[0].rollNo.toString())}
+    var teamName by rememberSaveable { mutableStateOf(teamDetails.teamName) }
 
-    var nameMember1 by rememberSaveable { mutableStateOf("") }
-    var rollNumberMember1 by rememberSaveable {mutableStateOf("")}
-    var nameMember2 by rememberSaveable { mutableStateOf("") }
-    var rollNumberMember2 by rememberSaveable {mutableStateOf("")}
-    var nameMember3 by rememberSaveable { mutableStateOf("") }
-    var rollNumberMember3 by rememberSaveable {mutableStateOf("")}
+    var nameMember1 by rememberSaveable { mutableStateOf(teamDetails.members[1].name) }
+    var rollNumberMember1 by rememberSaveable {mutableStateOf(teamDetails.members[1].rollNo.toString())}
+    var nameMember2 by rememberSaveable { mutableStateOf(teamDetails.members[2].name) }
+    var rollNumberMember2 by rememberSaveable {mutableStateOf(teamDetails.members[2].rollNo.toString())}
+    var nameMember3 by rememberSaveable { mutableStateOf(teamDetails.members[3].name) }
+    var rollNumberMember3 by rememberSaveable {mutableStateOf(teamDetails.members[3].rollNo.toString())}
 
     TeamNameHeader(teamName = teamName, onValueChange = {teamName = it})
 
@@ -73,17 +79,19 @@ fun TeamDetails(
         nameMembers = listOf(nameMember1, nameMember2, nameMember3),
         rollNumberMembers = listOf(rollNumberMember1, rollNumberMember2, rollNumberMember3),
         mContext = mContext,
+        registerTeam = registerTeam,
     )
 }
 
 @Composable
 fun TeamDetailsScreen(
-    modifier: Modifier = Modifier,
+    teamDetails: TeamModel,
+    registerTeam: (Map<String, String>) -> Unit,
 ){
     Orientation22androidTheme {
         val mContext = LocalContext.current
         val painter = painterResource(id = R.drawable.background_image)
-        Box(modifier = modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painter,
                 contentDescription = "background",
@@ -128,7 +136,7 @@ fun TeamDetailsScreen(
                 )
                 Spacer(modifier = Modifier.height(30.dp))
 
-                TeamDetails(mContext = mContext)
+                TeamDetails(mContext = mContext, teamDetails, registerTeam)
             }
         }
     }
@@ -183,9 +191,12 @@ fun SubmitButton(
     nameMembers: List<String>,
     rollNumberMembers: List<String>,
     mContext: Context,
+    registerTeam: (Map<String, String>) -> Unit,
 ){
+
     Button(
         onClick = {
+
             val leader = TeamMember(nameLeader, rollNumberLeader, true)
             val members = mutableListOf<TeamMember>()
             for (i in nameMembers.indices){
@@ -194,10 +205,21 @@ fun SubmitButton(
             val team = Team(leader = leader, members = members, teamName = teamName)
 
             if (validate(team, mContext)){
-                val bundle = Bundle()
-                bundle.putString("Team", Gson().toJson(team).toString())
+
+                val registerData = RegisterTeamRequest(
+                    teamName = team.teamName,
+                    member2Name = team.members[0].name,
+                    member2RollNo = team.members[0].rollNo.toInt(),
+                    member3Name = team.members[1].name,
+                    member3RollNo = team.members[1].rollNo.toInt(),
+                    member4Name = team.members[2].name,
+                    member4RollNo = team.members[2].rollNo.toInt(),
+                )
+                registerTeam(registerData.toMap())
+
                 val intent = Intent(mContext, MainActivity::class.java)
                 mContext.startActivity(intent)
+
             }
         },
         content = {

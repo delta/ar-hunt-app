@@ -34,6 +34,7 @@ class ArStateViewModel @Inject constructor(
             action.cloudAnchorNode,
             action.sceneView
         )
+        is ArAction.PostAnswer -> postAnswer()
     }
 
     private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode) = launch {
@@ -68,4 +69,11 @@ class ArStateViewModel @Inject constructor(
             is Result.Error -> Log.v("InArStateViewModel",res.exception.message.toString())
         }
     }
-}
+
+    private fun postAnswer() = launch {
+        val token = ""
+        when(val res =  arRepository.postAnswer(token)){
+            is Result.Value -> mutableSuccess.value = res.value
+            is Result.Error -> mutableError.value = res.exception.message
+        }
+    }}

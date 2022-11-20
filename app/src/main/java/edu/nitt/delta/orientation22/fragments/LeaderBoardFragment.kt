@@ -8,14 +8,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.screens.LeaderBoardScreen
+import edu.nitt.delta.orientation22.di.viewModel.actions.LeaderBoardAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
 
 @Composable
 fun LeaderBoardFragment(
+    leaderBoardViewModel : LeaderBoardStateViewModel
 ){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ){
-        LeaderBoardScreen(Modifier, painterResource(id = R.drawable.background_image),"LeaderBoard")
+        leaderBoardViewModel.doAction(LeaderBoardAction.GetLeaderBoard)
+        val leaderBoardData = leaderBoardViewModel.leaderBoardData
+        LeaderBoardScreen(leaderBoardData = leaderBoardData,
+            painter = painterResource(id = R.drawable.background_image),
+            contentDescription = "LeaderBoard")
     }
 }

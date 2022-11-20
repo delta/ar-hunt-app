@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -34,7 +35,9 @@ import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
 fun LeaderBoardScreen(
-    modifier: Modifier = Modifier,painter: Painter,contentDescription: String
+    modifier: Modifier = Modifier,
+    leaderBoardData: List<LeaderboardData>,
+    painter: Painter,contentDescription: String
 ){
     val fontFamily= FontFamily(
         Font(R.font.montserrat_regular)
@@ -136,7 +139,7 @@ fun LeaderBoardScreen(
 @Composable
 fun LeaderBoardScreenPreview()
 {
-    LeaderBoardScreen(Modifier,painterResource(id = R.drawable.background_image),"LeaderBoard")
+   // LeaderBoardScreen(Modifier,painterResource(id = R.drawable.background_image),"LeaderBoard")
 }
 
 @Composable

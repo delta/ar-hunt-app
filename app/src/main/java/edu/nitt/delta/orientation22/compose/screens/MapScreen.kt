@@ -29,8 +29,6 @@ import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
 import edu.nitt.delta.orientation22.compose.openAr
 import edu.nitt.delta.orientation22.constants.MapStyle
-import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
-import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -111,10 +109,8 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
-    viewModel: MapStateViewModel,
+    markerList: List<MarkerModel>,
 ){
-    viewModel.doAction(MapAction.GetAllMarkers)
-    val markerList = viewModel.markerListData
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
     val currentClueLocation = remember {
