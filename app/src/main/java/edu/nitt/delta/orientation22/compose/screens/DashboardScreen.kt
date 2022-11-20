@@ -33,7 +33,7 @@ fun DashboardScreen(
     Orientation22androidTheme() {
         val painter = painterResource(id = R.drawable.background_image)
         val uriHandler = LocalUriHandler.current
-        val avatar = R.drawable.profile
+        val avatar = R.drawable.duck
         Box(modifier = modifier.fillMaxSize()) {
             Image(
                 painter = painter,
@@ -55,7 +55,7 @@ fun DashboardScreen(
                             fontSize = 45.sp,
                             letterSpacing = 0.15.em,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(all = 30.dp),
+                            modifier = Modifier.padding(top = 30.dp),
                             color = brightYellow,
                             fontFamily = FontFamily(Font(R.font.montserrat_regular))
                         )
@@ -101,10 +101,10 @@ fun DashboardScreen(
                                 )
                         )
                         Spacer(modifier = Modifier.height(30.dp))
-                        Card(1, team.members[0].name, avatar)
-                        Card(2, team.members[1].name, avatar)
-                        Card(3, team.members[2].name, avatar)
-                        Card(4, team.members[3].name, avatar)
+                        Card(1, team.members[0].name, R.drawable.profile)
+                        Card(2, team.members[1].name, R.drawable.profile)
+                        Card(3, team.members[2].name, R.drawable.profile)
+                        Card(4, team.members[3].name, R.drawable.profile)
                     }
                 }
             }

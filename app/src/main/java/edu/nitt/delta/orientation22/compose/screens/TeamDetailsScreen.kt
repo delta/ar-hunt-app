@@ -54,15 +54,15 @@ fun TeamDetails(
     registerTeam: (Map<String, String>) -> Unit,
 ) {
     var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
-    var rollNumberLeader by rememberSaveable {mutableStateOf(teamDetails.members[0].rollNo.toString())}
+    var rollNumberLeader by rememberSaveable {mutableStateOf(if (teamDetails.members[0].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
     var teamName by rememberSaveable { mutableStateOf(teamDetails.teamName) }
 
     var nameMember1 by rememberSaveable { mutableStateOf(teamDetails.members[1].name) }
-    var rollNumberMember1 by rememberSaveable {mutableStateOf(teamDetails.members[1].rollNo.toString())}
+    var rollNumberMember1 by rememberSaveable {mutableStateOf(if (teamDetails.members[1].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
     var nameMember2 by rememberSaveable { mutableStateOf(teamDetails.members[2].name) }
-    var rollNumberMember2 by rememberSaveable {mutableStateOf(teamDetails.members[2].rollNo.toString())}
+    var rollNumberMember2 by rememberSaveable {mutableStateOf(if (teamDetails.members[2].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
     var nameMember3 by rememberSaveable { mutableStateOf(teamDetails.members[3].name) }
-    var rollNumberMember3 by rememberSaveable {mutableStateOf(teamDetails.members[3].rollNo.toString())}
+    var rollNumberMember3 by rememberSaveable {mutableStateOf(if (teamDetails.members[3].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
 
     var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
 
@@ -207,7 +207,6 @@ fun TeamDetailsScreen(
                                         Card(
                                             modifier = Modifier.size(100.dp),
                                             shape = CircleShape,
-                                            elevation = 0.dp,
                                             backgroundColor = brown
                                         ) {
                                             Image(

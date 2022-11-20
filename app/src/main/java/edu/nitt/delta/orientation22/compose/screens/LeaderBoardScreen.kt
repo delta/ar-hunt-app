@@ -125,8 +125,8 @@ fun LeaderBoardScreen(
                 }
             }
             Spacer(modifier=Modifier.height((screenHeight/45).dp))
-            LazyColumn(contentPadding = PaddingValues(start = (screenWidth/10).dp, end =(screenWidth/10).dp ),
-            verticalArrangement = Arrangement.spacedBy((screenHeight/27).dp), modifier = Modifier.fillMaxHeight(0.73f)){
+            LazyColumn(contentPadding = PaddingValues(start = (screenWidth/10).dp, end =(screenWidth/10).dp, bottom = 4.dp ),
+            verticalArrangement = Arrangement.spacedBy((screenHeight/27).dp), modifier = Modifier.fillMaxHeight()){
                 items(items=getalldata){person->
                     CustomItem(person = person)
                 }

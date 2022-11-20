@@ -257,7 +257,8 @@ fun Context.getAnnotatedString(color: Color) : AnnotatedString {
             style = SpanStyle(
                 color = color,
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp
             ),
             start = 0,
             end = 42
@@ -267,7 +268,9 @@ fun Context.getAnnotatedString(color: Color) : AnnotatedString {
                 color = color,
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp
+
             ),
             start = indexStartDelta,
             end = indexStartDelta+11
@@ -277,7 +280,9 @@ fun Context.getAnnotatedString(color: Color) : AnnotatedString {
                 color = color,
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp
+
             ),
             start = indexStartOrientation,
             end = indexStartOrientation + 11
