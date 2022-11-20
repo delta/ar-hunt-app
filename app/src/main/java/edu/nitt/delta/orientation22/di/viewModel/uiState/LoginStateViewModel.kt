@@ -31,7 +31,7 @@ class LoginStateViewModel @Inject constructor(
     }
 
     var uiState = mutableStateOf(LoginState.IDLE)
-    var isLoggedIn = mutableStateOf(false)
+    var isLoggedIn = false
     private fun Login(code:String)=launch {
         uiState.value=LoginState.LOADING
         when(val res = loginRepository.Login(code)){
@@ -48,7 +48,7 @@ class LoginStateViewModel @Inject constructor(
 
     private fun IsLoggedIn() = launch {
         when(val res = loginRepository.isLoggedInCheck()){
-            is edu.nitt.delta.orientation22.models.Result.Value -> isLoggedIn.value = res.value
+            is edu.nitt.delta.orientation22.models.Result.Value -> isLoggedIn = res.value
             is edu.nitt.delta.orientation22.models.Result.Error -> mutableError.value = res.exception.message
         }
     }

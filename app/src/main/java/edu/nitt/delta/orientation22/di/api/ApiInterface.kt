@@ -7,11 +7,7 @@ import edu.nitt.delta.orientation22.models.game.AnswerResponse
 import edu.nitt.delta.orientation22.models.game.CurrentLocationResponse
 import edu.nitt.delta.orientation22.models.game.RouteResponse
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardResponse
-import retrofit2.http.Field
-import retrofit2.http.FieldMap
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiInterface {
 
@@ -20,14 +16,17 @@ interface ApiInterface {
         @Field("user_token") token: String,
     ):LeaderboardResponse
 
+    @FormUrlEncoded
+    @JvmSuppressWildcards
     @POST(ApiRoutes.REGISTER_TEAM)
-    fun registerTeam(
+    suspend fun registerTeam(
         @Field("user_token") token: String,
-        @FieldMap parameters: Map<String, String>
+        @FieldMap parameters: Map<String, Any>
     ):RegisterTeamResponse
 
-    @GET(ApiRoutes.TEAM)
-    fun getTeam(
+    @FormUrlEncoded
+    @POST(ApiRoutes.TEAM)
+    suspend fun getTeam(
         @Field("user_token") token: String,
     ):TeamDataResponse
 

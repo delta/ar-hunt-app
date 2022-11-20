@@ -3,6 +3,7 @@ package edu.nitt.delta.orientation22.compose.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
@@ -51,7 +52,7 @@ import edu.nitt.delta.orientation22.ui.theme.*
 fun TeamDetails(
     mContext: Context,
     teamDetails: TeamModel,
-    registerTeam: (Map<String, String>) -> Unit,
+    registerTeam: (Map<String, Any>) -> Unit,
 ) {
     var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
     var rollNumberLeader by rememberSaveable {mutableStateOf(if (teamDetails.members[0].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
@@ -94,7 +95,7 @@ fun TeamDetails(
 @Composable
 fun TeamDetailsScreen(
     teamDetails: TeamModel,
-    registerTeam: (Map<String, String>) -> Unit,
+    registerTeam: (Map<String, Any>) -> Unit,
 ){
     Orientation22androidTheme {
         val mContext = LocalContext.current
@@ -284,7 +285,7 @@ fun SubmitButton(
     nameMembers: List<String>,
     rollNumberMembers: List<String>,
     mContext: Context,
-    registerTeam: (Map<String, String>) -> Unit,
+    registerTeam: (Map<String, Any>) -> Unit,
     selectedAvatar : Int
 ){
 
@@ -308,11 +309,12 @@ fun SubmitButton(
                     member3RollNo = team.members[1].rollNo.toInt(),
                     member4Name = team.members[2].name,
                     member4RollNo = team.members[2].rollNo.toInt(),
+                    avatar = 1
                 )
                 registerTeam(registerData.toMap())
 
-                val intent = Intent(mContext, MainActivity::class.java)
-                mContext.startActivity(intent)
+//                val intent = Intent(mContext, MainActivity::class.java)
+//                mContext.startActivity(intent)
 
             }
         },

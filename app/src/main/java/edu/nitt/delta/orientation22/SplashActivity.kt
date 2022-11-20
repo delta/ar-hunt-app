@@ -2,6 +2,8 @@ package edu.nitt.delta.orientation22
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,15 +23,18 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
 
 @AndroidEntryPoint
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : ComponentActivity() {
     val loginStateViewModel by viewModels<LoginStateViewModel>()
+    val teamStateViewModel by viewModels<TeamStateViewModel> ()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,8 +44,8 @@ class SplashActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     loginStateViewModel.doAction(LoginAction.IsLoggedIn)
-                    val isLoggedIn = loginStateViewModel.isLoggedIn.value
-                    SetBackGround(isLoggedIn = isLoggedIn)
+//                    teamStateViewModel.doAction(TeamAction.IsTeamPresent)
+                    SetBackGround(loginStateViewModel = loginStateViewModel, teamStateViewModel = teamStateViewModel)
                 }
             }
         }
@@ -48,7 +53,7 @@ class SplashActivity : AppCompatActivity() {
 }
 
 @Composable
-fun SetBackGround(isLoggedIn :Boolean) {
+fun SetBackGround(loginStateViewModel: LoginStateViewModel,teamStateViewModel: TeamStateViewModel) {
     val mContext = LocalContext.current
     Column(
         Modifier
@@ -60,9 +65,9 @@ fun SetBackGround(isLoggedIn :Boolean) {
 
         LaunchedEffect(Unit) {
             delay(7.seconds)
-            if(isLoggedIn)
-                mContext.startActivity(Intent(mContext, MainActivity ::class.java))
-            else
+//            if(loginStateViewModel.isLoggedIn)
+//                mContext.startActivity(Intent(mContext, MainActivity ::class.java))
+//            else
                 mContext.startActivity(Intent(mContext,LoginActivity::class.java))
         }
     }

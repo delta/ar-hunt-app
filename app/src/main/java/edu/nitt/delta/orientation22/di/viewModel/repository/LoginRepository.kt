@@ -17,6 +17,7 @@ class LoginRepository @Inject constructor(
     lateinit var sharedPrefHelper: SharedPrefHelper
     suspend fun Login(code:String): Result<UserModel> =try {
         val response = apiInterface.login(code)
+        Log.d("Login",response.user_token)
         if(response.user_token != "" )
         {
             sharedPrefHelper.token = response.user_token
@@ -32,6 +33,7 @@ class LoginRepository @Inject constructor(
 
     fun isLoggedInCheck():edu.nitt.delta.orientation22.models.Result<Boolean> =try {
         val token = sharedPrefHelper.token
+        Log.d("sharedLogin",token.toString())
         if(token == "")
             edu.nitt.delta.orientation22.models.Result.build { false }
         else
