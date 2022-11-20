@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -29,23 +30,24 @@ fun DashboardScreen(
     modifier: Modifier = Modifier,
     team: TeamModel,
 ) {
-            Orientation22androidTheme() {
-                val painter = painterResource(id = R.drawable.background_image)
-                val avatar = R.drawable.profile
-                Box(modifier = modifier.fillMaxSize()) {
-                    Image(
-                        painter = painter,
-                        contentDescription = "background",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                translucentBackground,
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+    Orientation22androidTheme() {
+        val painter = painterResource(id = R.drawable.background_image)
+        val uriHandler = LocalUriHandler.current
+        val avatar = R.drawable.profile
+        Box(modifier = modifier.fillMaxSize()) {
+            Image(
+                painter = painter,
+                contentDescription = "background",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        translucentBackground,
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
 
                         ) {
                         Text(
@@ -150,4 +152,3 @@ fun Card(index: Int, name: String, avatar: Int) {
         )
     }
 }
-

@@ -3,20 +3,26 @@ package edu.nitt.delta.orientation22.compose.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.*
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -28,16 +34,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
-import com.google.gson.Gson
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.toast
-import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
 import edu.nitt.delta.orientation22.models.auth.RegisterTeamRequest
-import edu.nitt.delta.orientation22.models.auth.RegisterTeamResponse
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -60,6 +64,8 @@ fun TeamDetails(
     var nameMember3 by rememberSaveable { mutableStateOf(teamDetails.members[3].name) }
     var rollNumberMember3 by rememberSaveable {mutableStateOf(teamDetails.members[3].rollNo.toString())}
 
+    var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
+
     TeamNameHeader(teamName = teamName, onValueChange = {teamName = it})
 
     TextInput(title = "Team Leader", isEnabled = false, data = nameLeader, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameLeader = it})
@@ -80,9 +86,11 @@ fun TeamDetails(
         rollNumberMembers = listOf(rollNumberMember1, rollNumberMember2, rollNumberMember3),
         mContext = mContext,
         registerTeam = registerTeam,
+        selectedAvatar = selectedAvatar
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TeamDetailsScreen(
     teamDetails: TeamModel,
@@ -91,6 +99,8 @@ fun TeamDetailsScreen(
     Orientation22androidTheme {
         val mContext = LocalContext.current
         val painter = painterResource(id = R.drawable.background_image)
+        var chooseAvatar by remember { mutableStateOf(false) }
+        var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painter,
@@ -136,7 +146,91 @@ fun TeamDetailsScreen(
                 )
                 Spacer(modifier = Modifier.height(30.dp))
 
+                Card(
+                    modifier = Modifier.size(150.dp),
+                    elevation = 0.dp,
+                    backgroundColor = Color.Transparent
+                ) {
+                    Row() {
+                        Image(
+                            painter = painterResource(selectedAvatar),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickable { chooseAvatar = true }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(30.dp))
+
                 TeamDetails(mContext = mContext, teamDetails, registerTeam)
+            }
+            if (chooseAvatar) {
+                Dialog(
+                    onDismissRequest = {
+                        chooseAvatar = false
+                                       },
+                    content = {
+                        val avatarList = mapOf(
+                            "duck" to R.drawable.duck,
+                            "frog" to R.drawable.frog,
+                            "giraffe" to R.drawable.giraffe,
+                            "elephant" to R.drawable.elephant,
+                            "horse" to R.drawable.horse,
+                            "monkey" to R.drawable.monkey
+                        )
+                        val state = rememberLazyListState()
+                        val layoutInfo = remember { derivedStateOf { state.layoutInfo } }
+
+                        layoutInfo.value.afterContentPadding
+
+                        Card(
+                            elevation = 0.dp,
+                            modifier = Modifier
+                                .height(150.dp)
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(15.dp),
+                            border = BorderStroke(3.dp, yellow),
+                            content = {
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(brown),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    state = state,
+                                    flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
+                                    contentPadding = PaddingValues(10.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(20.dp)
+                                ) {
+                                    items(avatarList.values.toList()) { avatar ->
+                                        Card(
+                                            modifier = Modifier.size(100.dp),
+                                            shape = CircleShape,
+                                            elevation = 0.dp,
+                                            backgroundColor = brown
+                                        ) {
+                                            Image(
+                                                painterResource(avatar),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .selectable(
+                                                        selected = false,
+                                                        onClick = {
+                                                            selectedAvatar = avatar
+                                                            chooseAvatar = false
+                                                        }
+                                                    )
+                                                    .size(50.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        )
+                    }
+                )
             }
         }
     }
@@ -192,6 +286,7 @@ fun SubmitButton(
     rollNumberMembers: List<String>,
     mContext: Context,
     registerTeam: (Map<String, String>) -> Unit,
+    selectedAvatar : Int
 ){
 
     Button(
