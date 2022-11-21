@@ -1,6 +1,7 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
 import android.content.Context
+import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.Lifecycle
 import com.google.ar.core.Anchor
@@ -101,7 +102,9 @@ class ArRepository@Inject constructor(
         if (response.message == ResponseConstants.SUCCESS){
             Result.build { "Level Completed" }
         }
-        Result.build { throw Exception(ResponseConstants.ERROR) }
+        else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
+        }
 
     }catch (e:Exception){
        Result.build { throw e }
