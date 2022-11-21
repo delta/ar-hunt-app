@@ -1,7 +1,7 @@
 package edu.nitt.delta.orientation22.di.api
 
 object ApiRoutes {
-    const val BASE_URL = "http://192.168.0.152:3000"
+    const val BASE_URL = "http://10.1.58.131:3000"
 
     const val LEADERBOARD = "/api/leaderboard"
     const val REGISTER_TEAM ="/api/registerTeam"

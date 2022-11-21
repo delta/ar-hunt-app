@@ -37,7 +37,7 @@ Text(text = "${person.position}", modifier = Modifier
     .padding(top = 18.dp, bottom = 18.dp), textAlign = TextAlign.Center,
 fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400)
 )
-    Image(painter = painterResource(id = person.profile), contentDescription = "profile", modifier= Modifier
+    Image(painter = painterResource(id = R.drawable.profile), contentDescription = "profile", modifier= Modifier
         .fillMaxWidth(0.20f)
         .scale(1.5f),
         contentScale = ContentScale.Fit)

@@ -19,7 +19,7 @@ fun TeamDetailsFragment(
         color = MaterialTheme.colorScheme.background
     ){
         teamStateViewModel.doAction(TeamAction.GetTeam)
-        val teamData = teamStateViewModel.teamData
+        val teamData = teamStateViewModel.teamData.value
         Log.d("GetTeam","tema $teamData")
         TeamDetailsScreen(teamDetails = teamData) {
             teamStateViewModel.doAction(

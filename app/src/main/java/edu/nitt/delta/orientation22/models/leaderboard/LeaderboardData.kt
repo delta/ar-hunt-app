@@ -7,5 +7,8 @@ data class LeaderboardData(
     val teamName: String,
 
     @SerializedName("score")
-    val score:Int
+    val score:Int,
+
+    @SerializedName("avatar")
+    val avatar : Int,
 )

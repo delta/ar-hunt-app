@@ -42,4 +42,8 @@ class LoginRepository @Inject constructor(
     }catch (e:Exception){
         edu.nitt.delta.orientation22.models.Result.build { throw e }
     }
+
+    fun isLogOut(){
+        sharedPrefHelper.clear()
+    }
 }

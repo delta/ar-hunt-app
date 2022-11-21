@@ -51,5 +51,8 @@ class SharedPrefHelper @Inject constructor(context: Context) {
             Default.TOKEN
         )
         set(value) = sharedPreferences.edit().putString(Key.TOKEN,value).apply()
+    fun clear() {
+        sharedPreferences.edit().clear().apply()
+    }
 }
 

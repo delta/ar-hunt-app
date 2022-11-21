@@ -1,8 +1,6 @@
 package edu.nitt.delta.orientation22.di.api
 
-import edu.nitt.delta.orientation22.models.auth.LoginResponse
-import edu.nitt.delta.orientation22.models.auth.RegisterTeamResponse
-import edu.nitt.delta.orientation22.models.auth.TeamDataResponse
+import edu.nitt.delta.orientation22.models.auth.*
 import edu.nitt.delta.orientation22.models.game.AnswerResponse
 import edu.nitt.delta.orientation22.models.game.CurrentLocationResponse
 import edu.nitt.delta.orientation22.models.game.RouteResponse
@@ -12,22 +10,19 @@ import retrofit2.http.*
 interface ApiInterface {
 
     @POST(ApiRoutes.LEADERBOARD)
-    fun getLeaderBord(
-        @Field("user_token") token: String,
+    suspend fun getLeaderBord(
+        @Body body: TokenRequestModel
     ):LeaderboardResponse
 
-    @FormUrlEncoded
-    @JvmSuppressWildcards
+
     @POST(ApiRoutes.REGISTER_TEAM)
     suspend fun registerTeam(
-        @Field("user_token") token: String,
-        @FieldMap parameters: Map<String, Any>
+        @Body registerTeamBody : RegisterTeamRequest
     ):RegisterTeamResponse
 
-    @FormUrlEncoded
     @POST(ApiRoutes.TEAM)
     suspend fun getTeam(
-        @Field("user_token") token: String,
+        @Body body: TokenRequestModel
     ):TeamDataResponse
 
     @GET(ApiRoutes.ROUTE)

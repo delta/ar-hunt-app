@@ -1,7 +1,6 @@
 package edu.nitt.delta.orientation22.di.viewModel.uiState
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.nitt.delta.orientation22.di.viewModel.BaseViewModel
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
@@ -28,6 +27,7 @@ class LoginStateViewModel @Inject constructor(
     override fun doAction(action: LoginAction): Any = when(action) {
         is LoginAction.Login ->Login(action.code)
         is LoginAction.IsLoggedIn -> IsLoggedIn()
+        is LoginAction.IsLoggedOut -> IsLoggedOut()
     }
 
     var uiState = mutableStateOf(LoginState.IDLE)
@@ -52,4 +52,9 @@ class LoginStateViewModel @Inject constructor(
             is edu.nitt.delta.orientation22.models.Result.Error -> mutableError.value = res.exception.message
         }
     }
+
+    private fun IsLoggedOut() = launch {
+        loginRepository.isLogOut()
+    }
+
 }

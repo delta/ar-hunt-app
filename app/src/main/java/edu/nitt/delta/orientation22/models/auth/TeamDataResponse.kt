@@ -8,4 +8,6 @@ data class TeamDataResponse(
     val members:List<Member>,
     @SerializedName("team_name")
     val teamName:String,
+    @SerializedName("avatar")
+    val avatar:Int
 ):BaseResponse<String>()
