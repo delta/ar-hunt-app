@@ -41,7 +41,6 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
     val locationReady = remember {
         mutableStateOf(false)
     }
-
     val mContext = LocalContext.current
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
@@ -97,7 +96,7 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
                     title = markers.markerTitle,
                     snippet = markers.markerDescription,
                     flat = false,
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.twooo),
+                    icon = BitmapDescriptorFactory.fromResource(markers.markerImage),
                     visible = markers.isVisible
                 )
             }

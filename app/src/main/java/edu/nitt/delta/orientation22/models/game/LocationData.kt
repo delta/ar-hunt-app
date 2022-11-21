@@ -3,22 +3,22 @@ package edu.nitt.delta.orientation22.models.game
 import com.google.gson.annotations.SerializedName
 
 data class LocationData(
-    @SerializedName("")
+    @SerializedName("Name")
     val name:String,
-    @SerializedName("")
+    @SerializedName("Clue")
     val clue:String,
-    @SerializedName("")
+    @SerializedName("anchorHash")
     val anchorHash:String,
-    @SerializedName("")
+    @SerializedName("GlbURL")
     val glbUrl:String,
-    @SerializedName("")
+    @SerializedName("Answer")
     val answer:String,
-    @SerializedName("")
+    @SerializedName("RouteID")
     val routeId:String,
-    @SerializedName("")
+    @SerializedName("Position")
     val position:Int,
-    @SerializedName("")
+    @SerializedName("Latitude")
     val latitude:Double,
-    @SerializedName("")
+    @SerializedName("Longitude")
     val longitude:Double
 )

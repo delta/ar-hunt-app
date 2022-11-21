@@ -355,10 +355,10 @@ val avatarList = mapOf(
 )
 
 val markerImages = mapOf(
-    1 to R.drawable.one,
-    2 to R.drawable.two,
-    3 to R.drawable.three,
-    4 to R.drawable.four,
-    5 to R.drawable.five,
-    6 to R.drawable.six,
+    0 to R.drawable.one,
+    1 to R.drawable.two,
+    2 to R.drawable.three,
+    3 to R.drawable.four,
+    4 to R.drawable.five,
+    5 to R.drawable.six,
 )
