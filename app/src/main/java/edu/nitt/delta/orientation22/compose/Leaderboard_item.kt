@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -37,11 +38,13 @@ Text(text = "${person.position}", modifier = Modifier
     .padding(top = 18.dp, bottom = 18.dp), textAlign = TextAlign.Center,
 fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400)
 )
-    Image(painter = painterResource(id = R.drawable.profile), contentDescription = "profile", modifier= Modifier
-        .fillMaxWidth(0.20f)
-        .scale(1.5f),
-        contentScale = ContentScale.Fit)
-    MarqueeText(text = "${person.name}",modifier=Modifier.fillMaxWidth(0.5f), textAlign = TextAlign.Center,fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400))
+    Image(painter = painterResource(id = person.avatar), contentDescription = "profile", modifier = Modifier
+        .clip(
+            RoundedCornerShape(100)
+        )
+        .padding(all = 15.dp)
+        .size(40.dp))
+    MarqueeText(text = person.name,modifier=Modifier.fillMaxWidth(0.5f), textAlign = TextAlign.Center,fontSize = 13.sp, color = Color.White,fontWeight = FontWeight(400))
     Text(text="${person.points}", modifier = Modifier.fillMaxWidth(),fontSize = 13.sp, textAlign = TextAlign.Center, color = Color.White,fontWeight = FontWeight(400))
 }
 }

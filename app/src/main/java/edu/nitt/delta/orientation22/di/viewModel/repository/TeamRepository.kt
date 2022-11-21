@@ -35,6 +35,9 @@ class TeamRepository @Inject constructor(
 
         if (response.message == ResponseConstants.SUCCESS){
             Log.d("TeamDetails",response.message.toString())
+            val gson = Gson()
+            val teamString = gson.toJson(response.message)
+            sharedPrefHelper.team = teamString
             Result.build { response.message }
         }
         Result.build { throw Exception(ResponseConstants.ERROR) }

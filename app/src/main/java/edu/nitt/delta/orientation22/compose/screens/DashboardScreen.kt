@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -89,7 +90,8 @@ fun DashboardScreen(
                             fontWeight = FontWeight.Light,
                             modifier = Modifier.padding(all = 15.dp),
                             color = brightYellow,
-                            fontFamily = FontFamily(Font(R.font.montserrat_regular))
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular),),
+                            textAlign = TextAlign.Center,
                         )
                         Box(
                             modifier = Modifier.fillMaxWidth(0.3f)
@@ -159,7 +161,7 @@ fun Card(index: Int, name: String, avatar: Int) {
             color = white,
             fontFamily = FontFamily(Font(R.font.montserrat_regular))
         )
-        Image(painter = painterResource(id = avatar), contentDescription = "", modifier = Modifier
+        Image(painter = painterResource(id = avatar), contentDescription = "avatar", modifier = Modifier
             .clip(
                 RoundedCornerShape(100)
             )
