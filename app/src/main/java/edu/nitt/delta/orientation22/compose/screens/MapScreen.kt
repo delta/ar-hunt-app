@@ -27,6 +27,7 @@ import com.google.maps.android.compose.*
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
+import edu.nitt.delta.orientation22.compose.markerImages
 import edu.nitt.delta.orientation22.compose.openAr
 import edu.nitt.delta.orientation22.constants.MapStyle
 import edu.nitt.delta.orientation22.models.MarkerModel

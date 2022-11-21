@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.compose.screens
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.CustomItem
 import edu.nitt.delta.orientation22.compose.MarqueeText
+import edu.nitt.delta.orientation22.compose.avatarList
 import edu.nitt.delta.orientation22.models.Person
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -78,56 +80,30 @@ fun LeaderBoardScreen(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = (screenHeight/15).dp)
-                ) {
-                    AvatarSmall(R.drawable.item2, R.drawable.second_place, color = white)
-                    Box(
-                        modifier = Modifier.fillMaxWidth(0.25f)
-                    ) {
-                        MarqueeText(text=leaderBoardData[0].teamName, textAlign = TextAlign.Center, color= Color.White, fontWeight = FontWeight(400))
+                when (leaderBoardData.size) {
+                    1 -> {
+                        Log.d("HI", avatarList[leaderBoardData[0].avatar].toString())
+                        First(name = leaderBoardData[0].teamName, avatar = avatarList[leaderBoardData[0].avatar]?: avatarList[1]!! )
                     }
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    AvatarBig(R.drawable.item1)
-                    Box (
-                        modifier = Modifier.fillMaxWidth(0.3f)
-                    ) {
-                        MarqueeText(
-                            text = leaderBoardData[0].teamName,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth(),
-                            color = Color.White,
-                            fontWeight = FontWeight(400)
-                        )
+                    2 -> {
+                        Second(name = leaderBoardData[1].teamName, screenHeight = screenHeight, avatar = avatarList[leaderBoardData[1].avatar]?: avatarList[1]!!)
+                        First(name = leaderBoardData[0].teamName, avatar = avatarList[leaderBoardData[0].avatar]?: avatarList[1]!!)
+                        Box(modifier = Modifier.fillMaxWidth(0.5f))
                     }
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = (screenHeight/15).dp)
-                ) {
-                    AvatarSmall(R.drawable.item1, R.drawable.third_place, color = orange)
-                    Box (
-                        modifier = Modifier.fillMaxWidth(0.25f)
-                    ) {
-                        MarqueeText(
-                            text = leaderBoardData[0].teamName,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth(),
-                            color = Color.White,
-                            fontWeight = FontWeight(400)
-                        )
+                    else -> {
+                        Second(name = leaderBoardData[1].teamName, screenHeight = screenHeight, avatar = avatarList[leaderBoardData[1].avatar]?: avatarList[1]!!)
+                        First(name = leaderBoardData[0].teamName, avatar = avatarList[leaderBoardData[0].avatar]?: avatarList[1]!!)
+                        Third(name = leaderBoardData[2].teamName, screenHeight = screenHeight, avatar = avatarList[leaderBoardData[2].avatar]?: avatarList[1]!!)
                     }
                 }
             }
             Spacer(modifier=Modifier.height((screenHeight/45).dp))
             LazyColumn(contentPadding = PaddingValues(start = (screenWidth/10).dp, end =(screenWidth/10).dp, bottom = 4.dp ),
-            verticalArrangement = Arrangement.spacedBy((screenHeight/27).dp), modifier = Modifier.fillMaxHeight()){
+            verticalArrangement = Arrangement.spacedBy((screenHeight/27).dp), modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(bottom = (screenWidth / 3.5).dp)){
                 itemsIndexed(items=leaderBoardData){index,person->
-                    CustomItem(person = Person(position = index+1, name = person.teamName, points = person.score, avatar = person.avatar))
+                    CustomItem(person = Person(position = index+1, name = person.teamName, points = person.score, avatar = avatarList[leaderBoardData[index].avatar]?: avatarList[1]!!))
                 }
             }
         }
@@ -140,6 +116,68 @@ fun LeaderBoardScreenPreview()
 {
    // LeaderBoardScreen(Modifier,painterResource(id = R.drawable.background_image),"LeaderBoard")
 }
+
+@Composable
+fun First(name: String, avatar: Int) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        AvatarBig(avatar)
+        Box (
+            modifier = Modifier.fillMaxWidth(0.3f)
+        ) {
+            MarqueeText(
+                text = name,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White,
+                fontWeight = FontWeight(400)
+            )
+        }
+    }
+}
+
+@Composable
+fun Second(name: String, screenHeight: Int, avatar: Int) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = (screenHeight / 15).dp)
+    ) {
+        AvatarSmall(avatar, R.drawable.second_place, color = white)
+        Box(
+            modifier = Modifier.fillMaxWidth(0.25f)
+        ) {
+            MarqueeText(
+                text = name,
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                fontWeight = FontWeight(400)
+            )
+        }
+    }
+}
+
+@Composable
+fun Third(name: String, screenHeight: Int, avatar: Int) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = (screenHeight / 15).dp)
+    ) {
+        AvatarSmall(avatar, R.drawable.third_place, color = orange)
+        Box(
+            modifier = Modifier.fillMaxWidth(0.25f)
+        ) {
+            MarqueeText(
+                text = name,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White,
+                fontWeight = FontWeight(400)
+            )
+        }
+    }
+}
+
 
 @Composable
 fun AvatarSmall (

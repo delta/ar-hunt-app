@@ -39,6 +39,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.avatarList
 import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
@@ -174,14 +175,7 @@ fun TeamDetailsScreen(
                         chooseAvatar = false
                                        },
                     content = {
-                        val avatarList = mapOf(
-                            "duck" to R.drawable.duck,
-                            "frog" to R.drawable.frog,
-                            "giraffe" to R.drawable.giraffe,
-                            "elephant" to R.drawable.elephant,
-                            "horse" to R.drawable.horse,
-                            "monkey" to R.drawable.monkey
-                        )
+
                         val state = rememberLazyListState()
                         val layoutInfo = remember { derivedStateOf { state.layoutInfo } }
 

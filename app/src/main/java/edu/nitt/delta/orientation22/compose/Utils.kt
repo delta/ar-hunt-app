@@ -218,7 +218,7 @@ fun distanceCalculator(
     mContext: Context,
     currentClueLocation: MutableState<LatLng>,
 ){
-    val radius = 116
+    val radius = 20
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {
@@ -345,3 +345,20 @@ fun Context.SnackShowSuccess(errorMessage : String, modifier: Modifier) {
 fun LoadingIcon() {
     CircularProgressIndicator(color = yellow)
 }
+
+val avatarList = mapOf(
+    1 to R.drawable.bear,
+    2 to R.drawable.cat,
+    3 to R.drawable.dog,
+    4 to R.drawable.giraffe,
+    5 to R.drawable.panda,
+)
+
+val markerImages = mapOf(
+    1 to R.drawable.one,
+    2 to R.drawable.two,
+    3 to R.drawable.three,
+    4 to R.drawable.four,
+    5 to R.drawable.five,
+    6 to R.drawable.six,
+)

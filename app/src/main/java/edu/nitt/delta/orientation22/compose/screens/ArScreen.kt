@@ -76,8 +76,7 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>,onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
-            .padding(10.dp, 5.dp, 5.dp, 10.dp)
-            .size(400.dp, 200.dp),
+            .padding(10.dp, 5.dp, 5.dp, 10.dp),
         elevation = 10.dp,
         ) {
         Column(
@@ -112,8 +111,8 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>,onClick: () -> Unit) {
             Text(
                 "Hint: Check out the object to find the answer",
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                color = brightYellow,
-                modifier = Modifier.padding(5.dp)
+                color = peach,
+                modifier = Modifier.padding(10.dp)
             )
             Row(
                 modifier = Modifier.padding(all = 8.dp),
