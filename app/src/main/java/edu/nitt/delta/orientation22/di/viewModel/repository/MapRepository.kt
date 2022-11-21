@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import edu.nitt.delta.orientation22.di.api.ApiInterface
@@ -7,6 +8,7 @@ import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
+import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import edu.nitt.delta.orientation22.models.game.LocationData
 import javax.inject.Inject
 
@@ -46,27 +48,28 @@ class MapRepository @Inject constructor(
          Result.build { throw Exception(e) }
     }
 
-    fun getRoutes(token: String):Result<List<MarkerModel>> = try {
-        val response = apiInterface.getRoute(token)
-        val markerList = mutableListOf<List<MarkerModel>>()
+    suspend fun getRoutes():Result<List<LocationData>> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.getRoute(TokenRequestModel(token))
         if(response.message == ResponseConstants.SUCCESS){
             val locationData : List<LocationData> = response.locations
-            locationData.forEach {
-                markerList.add(listOf(MarkerModel(markerState = MarkerState(LatLng(it.latitude,it.longitude)), markerTitle = it.name, markerDescription = it.clue)))
-            }
-            Result.build { markerList }
+            Result.build { locationData }
+        }else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
         }
-        Result.build { throw Exception(ResponseConstants.ERROR) }
     }catch (e:Exception){
         Result.build { throw e }
     }
 
-    fun getCurrentLevel(token:String):Result<Int> = try {
-        val response = apiInterface.getCurrentLevel(token)
+    suspend fun getCurrentLevel():Result<Int> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.getCurrentLevel(TokenRequestModel(token))
         if(response.message == ResponseConstants.SUCCESS){
             Result.build { response.currentLevel }
         }
-        Result.build { throw Exception(ResponseConstants.ERROR) }
+        else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
+        }
     }catch (e:Exception){
         Result.build { throw e }
     }

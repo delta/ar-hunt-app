@@ -34,9 +34,6 @@ import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
 fun GoogleMapScreen(markerList: List<MarkerModel>) {
-
-    val lectureHallComplex = LatLng(10.7614246, 78.8139187)
-
     val currentLocation = remember {
         mutableStateOf(LatLng(0.0, 0.0))
     }
@@ -99,7 +96,8 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
                     title = markers.markerTitle,
                     snippet = markers.markerDescription,
                     flat = false,
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.twooo)
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.twooo),
+                    visible = markers.isVisible
                 )
             }
         }

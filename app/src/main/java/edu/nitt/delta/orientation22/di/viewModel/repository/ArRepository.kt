@@ -9,6 +9,7 @@ import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.Result
+import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
@@ -94,8 +95,9 @@ class ArRepository@Inject constructor(
         Result.build<ArModelNode> { throw e }
     }
 
-    fun postAnswer(token:String) : Result<String> = try {
-        val response = apiInterface.postAnswer(token)
+    suspend fun postAnswer() : Result<String> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.postAnswer(TokenRequestModel(token))
         if (response.message == ResponseConstants.SUCCESS){
             Result.build { "Level Completed" }
         }
