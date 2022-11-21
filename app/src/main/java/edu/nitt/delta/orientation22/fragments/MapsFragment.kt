@@ -32,7 +32,7 @@ fun MapFragment(
                 markerState = MarkerState(LatLng(marker.latitude,marker.longitude)),
                 markerDescription = marker.clue,
                 markerTitle = marker.name,
-                isVisible = marker.position <= currentLevel
+                isVisible = marker.position < currentLevel
             )
             markerList = markerList+markerModel
         }
