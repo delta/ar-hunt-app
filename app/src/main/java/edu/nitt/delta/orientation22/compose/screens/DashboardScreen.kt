@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.MarqueeText
+import edu.nitt.delta.orientation22.compose.avatarList
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -38,7 +42,7 @@ fun DashboardScreen(
         val uriHandler = LocalUriHandler.current
         val screenHeight = LocalConfiguration.current.screenHeightDp
         val screenWidth = LocalConfiguration.current.screenWidthDp
-        val avatar = R.drawable.duck
+        val avatar = avatarList[team.avatar]
         Box(modifier = modifier.fillMaxSize()) {
             Image(
                 painter = painter,
@@ -56,17 +60,29 @@ fun DashboardScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
 
                         ) {
-                        Text(
-                            text = "AR HUNT",
-                            fontSize = 45.sp,
-                            letterSpacing = 0.15.em,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 30.dp),
-                            color = brightYellow,
-                            fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ){
+                            Text(
+                                text = "AR HUNT",
+                                fontSize = 45.sp,
+                                letterSpacing = 0.15.em,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 30.dp).align(alignment = Alignment.Center),
+                                color = brightYellow,
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular))
+                            )
+                            IconButton(onClick = {
+
+                            }, modifier = Modifier.padding(top = 30.dp, end = 10.dp).align(Alignment.CenterEnd)) {
+                                Icon(
+                                    Icons.Sharp.ExitToApp, "logout", modifier = Modifier.size(30.dp), tint = peach
+                                )
+                            }
+                        }
+                        
                         Spacer(modifier = Modifier.height(5.dp))
-                        Text(
+                        MarqueeText(
                             text = team.teamName,
                             fontSize = 30.sp,
                             letterSpacing = 0.08.em,
@@ -80,7 +96,7 @@ fun DashboardScreen(
                         ) {
 
                             Image(
-                                painter = painterResource(id = avatar),
+                                painter = painterResource(id = avatar!!),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .clip(
@@ -109,10 +125,10 @@ fun DashboardScreen(
                                 )
                         )
                         Spacer(modifier = Modifier.height(30.dp))
-                        Card(1, team.members[0].name, R.drawable.profile)
-                        Card(2, team.members[1].name, R.drawable.profile)
-                        Card(3, team.members[2].name, R.drawable.profile)
-                        Card(4, team.members[3].name, R.drawable.profile)
+                        Card(1, team.members[0].name, avatar!!)
+                        Card(2, team.members[1].name, avatar)
+                        Card(3, team.members[2].name, avatar)
+                        Card(4, team.members[3].name, avatar)
                         Spacer(modifier = Modifier.height((screenWidth/3.2).dp))
                     }
                 }
@@ -148,8 +164,8 @@ fun Card(index: Int, name: String, avatar: Int) {
                 RoundedCornerShape(100)
             )
             .padding(all = 15.dp)
-            .scale(1.5f))
-        Text(
+            .size(40.dp))
+        MarqueeText(
             text = name,
             fontSize = 15.sp,
             fontWeight = FontWeight.Normal,
