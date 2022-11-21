@@ -108,6 +108,7 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
 @Composable
 fun MapScreen(
     markerList: List<MarkerModel>,
+    currentLevel: Int,
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
