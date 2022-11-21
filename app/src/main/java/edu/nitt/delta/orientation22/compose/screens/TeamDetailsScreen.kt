@@ -42,6 +42,7 @@ import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
+import edu.nitt.delta.orientation22.models.auth.Member
 import edu.nitt.delta.orientation22.models.auth.RegisterTeamRequest
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import edu.nitt.delta.orientation22.ui.theme.*
@@ -52,7 +53,7 @@ import edu.nitt.delta.orientation22.ui.theme.*
 fun TeamDetails(
     mContext: Context,
     teamDetails: TeamModel,
-    registerTeam: (Map<String, Any>) -> Unit,
+    registerTeam: (TeamModel) -> Unit,
 ) {
     var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
     var rollNumberLeader by rememberSaveable {mutableStateOf(if (teamDetails.members[0].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
@@ -95,7 +96,7 @@ fun TeamDetails(
 @Composable
 fun TeamDetailsScreen(
     teamDetails: TeamModel,
-    registerTeam: (Map<String, Any>) -> Unit,
+    registerTeam: (TeamModel) -> Unit,
 ){
     Orientation22androidTheme {
         val mContext = LocalContext.current
@@ -285,7 +286,7 @@ fun SubmitButton(
     nameMembers: List<String>,
     rollNumberMembers: List<String>,
     mContext: Context,
-    registerTeam: (Map<String, Any>) -> Unit,
+    registerTeam: (TeamModel) -> Unit,
     selectedAvatar : Int
 ){
 
@@ -301,17 +302,14 @@ fun SubmitButton(
 
             if (validate(team, mContext)){
 
-                val registerData = RegisterTeamRequest(
+                val registerData = TeamModel(
                     teamName = team.teamName,
-                    member2Name = team.members[0].name,
-                    member2RollNo = team.members[0].rollNo.toInt(),
-                    member3Name = team.members[1].name,
-                    member3RollNo = team.members[1].rollNo.toInt(),
-                    member4Name = team.members[2].name,
-                    member4RollNo = team.members[2].rollNo.toInt(),
-                    avatar = 1
+                    members = listOf<Member>(Member(name =team.members[0].name, rollNo =team.members[0].rollNo.toInt()),
+                        Member(name =team.members[1].name, rollNo =team.members[1].rollNo.toInt()),
+                        Member(name =team.members[2].name, rollNo =team.members[2].rollNo.toInt())),
+                    avatar = selectedAvatar
                 )
-                registerTeam(registerData.toMap())
+                registerTeam(registerData)
 
 //                val intent = Intent(mContext, MainActivity::class.java)
 //                mContext.startActivity(intent)

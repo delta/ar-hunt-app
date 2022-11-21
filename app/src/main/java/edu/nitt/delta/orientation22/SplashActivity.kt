@@ -33,8 +33,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
-    val loginStateViewModel by viewModels<LoginStateViewModel>()
     val teamStateViewModel by viewModels<TeamStateViewModel> ()
+    val loginStateViewModel by viewModels<LoginStateViewModel> ()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -43,9 +43,8 @@ class SplashActivity : ComponentActivity() {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    loginStateViewModel.doAction(LoginAction.IsLoggedIn)
-//                    teamStateViewModel.doAction(TeamAction.IsTeamPresent)
-                    SetBackGround(loginStateViewModel = loginStateViewModel, teamStateViewModel = teamStateViewModel)
+                    teamStateViewModel.doAction(TeamAction.IsTeamPresent)
+                    SetBackGround( teamStateViewModel = teamStateViewModel)
                 }
             }
         }
@@ -53,7 +52,7 @@ class SplashActivity : ComponentActivity() {
 }
 
 @Composable
-fun SetBackGround(loginStateViewModel: LoginStateViewModel,teamStateViewModel: TeamStateViewModel) {
+fun SetBackGround(teamStateViewModel: TeamStateViewModel) {
     val mContext = LocalContext.current
     Column(
         Modifier
@@ -65,9 +64,9 @@ fun SetBackGround(loginStateViewModel: LoginStateViewModel,teamStateViewModel: T
 
         LaunchedEffect(Unit) {
             delay(7.seconds)
-//            if(loginStateViewModel.isLoggedIn)
-//                mContext.startActivity(Intent(mContext, MainActivity ::class.java))
-//            else
+            if(teamStateViewModel.isTeamPresent)
+                mContext.startActivity(Intent(mContext, MainActivity ::class.java))
+            else
                 mContext.startActivity(Intent(mContext,LoginActivity::class.java))
         }
     }

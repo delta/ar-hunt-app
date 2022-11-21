@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.CustomItem
 import edu.nitt.delta.orientation22.compose.MarqueeText
-import edu.nitt.delta.orientation22.di.repository.PersonRepository
+import edu.nitt.delta.orientation22.models.Person
 import edu.nitt.delta.orientation22.ui.theme.*
 
 
@@ -45,8 +46,6 @@ fun LeaderBoardScreen(
     val configuration= LocalConfiguration.current
     val screenHeight=configuration.screenHeightDp
     val screenWidth=configuration.screenWidthDp
-    val personRepository=PersonRepository()
-    val getalldata=personRepository.getalldata()
     Box(modifier.fillMaxSize())
     {
         Image(painter = painter, contentDescription = contentDescription,modifier=Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
@@ -87,7 +86,7 @@ fun LeaderBoardScreen(
                     Box(
                         modifier = Modifier.fillMaxWidth(0.25f)
                     ) {
-                        MarqueeText(text="Sarvesh", textAlign = TextAlign.Center, color= Color.White, fontWeight = FontWeight(400))
+                        MarqueeText(text=leaderBoardData[0].teamName, textAlign = TextAlign.Center, color= Color.White, fontWeight = FontWeight(400))
                     }
                 }
                 Column(
@@ -98,7 +97,7 @@ fun LeaderBoardScreen(
                         modifier = Modifier.fillMaxWidth(0.3f)
                     ) {
                         MarqueeText(
-                            text = "Vaikuntapuramalooo",
+                            text = leaderBoardData[0].teamName,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth(),
                             color = Color.White,
@@ -115,7 +114,7 @@ fun LeaderBoardScreen(
                         modifier = Modifier.fillMaxWidth(0.25f)
                     ) {
                         MarqueeText(
-                            text = "Vaikuntapuramalooo",
+                            text = leaderBoardData[0].teamName,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth(),
                             color = Color.White,
@@ -127,8 +126,8 @@ fun LeaderBoardScreen(
             Spacer(modifier=Modifier.height((screenHeight/45).dp))
             LazyColumn(contentPadding = PaddingValues(start = (screenWidth/10).dp, end =(screenWidth/10).dp, bottom = 4.dp ),
             verticalArrangement = Arrangement.spacedBy((screenHeight/27).dp), modifier = Modifier.fillMaxHeight()){
-                items(items=getalldata){person->
-                    CustomItem(person = person)
+                itemsIndexed(items=leaderBoardData){index,person->
+                    CustomItem(person = Person(position = index+1, name = person.teamName, points = person.score, avatar = person.avatar))
                 }
             }
         }

@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - main
+      - final
   pull_request:
     branches:
       - main
+      - final
 
 env:
   java_version: 11

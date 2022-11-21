@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.fragments
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,7 +18,8 @@ fun DashboardFragment(teamStateViewModel: TeamStateViewModel) {
         color = MaterialTheme.colorScheme.background
     ){
         teamStateViewModel.doAction(TeamAction.GetTeam)
-        val teamData = teamStateViewModel.teamData
+        val teamData = teamStateViewModel.teamData.value
+        Log.d("GetTeam","tema $teamData")
         DashboardScreen(team = teamData)
     }
 }
