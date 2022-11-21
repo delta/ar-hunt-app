@@ -32,6 +32,8 @@ class ArActivity : ComponentActivity() {
                     this.arSceneView =arSceneView
                     cloudAnchorNode = ArModelNode(placementMode = PlacementMode.PLANE_HORIZONTAL)
                     setUpEnvironment()
+                }, onClick = {
+                    viewModel.doAction(ArAction.PostAnswer)
                 })
             }
         }

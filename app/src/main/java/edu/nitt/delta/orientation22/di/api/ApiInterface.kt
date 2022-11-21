@@ -22,22 +22,22 @@ interface ApiInterface {
 
     @POST(ApiRoutes.TEAM)
     suspend fun getTeam(
-        @Body body: TokenRequestModel
+        @Body teamBody: TokenRequestModel
     ):TeamDataResponse
 
-    @GET(ApiRoutes.ROUTE)
-    fun getRoute(
-        @Field("user_token") token: String,
+    @POST(ApiRoutes.ROUTE)
+    suspend fun getRoute(
+        @Body routeBody: TokenRequestModel
     ):RouteResponse
 
-    @GET(ApiRoutes.CURRENT_STATE)
-    fun getCurrentLevel(
-        @Field("user_token") token: String,
+    @POST(ApiRoutes.CURRENT_STATE)
+    suspend fun getCurrentLevel(
+        @Body currentLevelBody: TokenRequestModel
     ):CurrentLocationResponse
 
     @POST(ApiRoutes.NEXT_STATE)
-    fun postAnswer(
-        @Field("user_token") token: String,
+    suspend fun postAnswer(
+        @Body postAnswerBody: TokenRequestModel
     ):AnswerResponse
 
     @GET(ApiRoutes.AUTH_CALLBACK)

@@ -71,8 +71,7 @@ class ArStateViewModel @Inject constructor(
     }
 
     private fun postAnswer() = launch {
-        val token = ""
-        when(val res =  arRepository.postAnswer(token)){
+        when(val res =  arRepository.postAnswer()){
             is Result.Value -> mutableSuccess.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }

@@ -1,6 +1,7 @@
 package edu.nitt.delta.orientation22.compose.screens
 
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import io.github.sceneview.ar.ArSceneView
 fun ArScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
     updateSceneView:(ArSceneView)->Unit,
+    onClick : ()->Unit
 ){
     AndroidView(factory = {
         context ->
@@ -63,13 +65,13 @@ fun ArScreen(
     }
     if (isPopUp.value) {
         Dialog(onDismissRequest = { isPopUp.value = false }){
-            SubmitPopUp(isPopUp = isPopUp)
+            SubmitPopUp(isPopUp = isPopUp,onClick)
         }
     }
 }
 
 @Composable
-fun SubmitPopUp(isPopUp : MutableState<Boolean>) {
+fun SubmitPopUp(isPopUp : MutableState<Boolean>,onClick: () -> Unit) {
     var text by remember { mutableStateOf("") }
     Card(
         shape = RoundedCornerShape(10.dp),
@@ -134,6 +136,7 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>) {
                         .padding(5.dp),
                     onClick = {
                         isPopUp.value = false
+                        onClick()
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = yellow)
                 ) {
