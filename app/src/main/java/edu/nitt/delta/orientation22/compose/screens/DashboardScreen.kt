@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -33,6 +36,8 @@ fun DashboardScreen(
     Orientation22androidTheme() {
         val painter = painterResource(id = R.drawable.background_image)
         val uriHandler = LocalUriHandler.current
+        val screenHeight = LocalConfiguration.current.screenHeightDp
+        val screenWidth = LocalConfiguration.current.screenWidthDp
         val avatar = R.drawable.duck
         Box(modifier = modifier.fillMaxSize()) {
             Image(
@@ -44,6 +49,7 @@ fun DashboardScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .background(
                         translucentBackground,
                     ),
@@ -80,7 +86,9 @@ fun DashboardScreen(
                                     .clip(
                                         RoundedCornerShape(100)
                                     )
-                                    .padding(all = 15.dp).size(80.dp).align(Alignment.Center)
+                                    .padding(all = 15.dp)
+                                    .size(80.dp)
+                                    .align(Alignment.Center)
                             )
                         }
                     Text(
@@ -105,6 +113,7 @@ fun DashboardScreen(
                         Card(2, team.members[1].name, R.drawable.profile)
                         Card(3, team.members[2].name, R.drawable.profile)
                         Card(4, team.members[3].name, R.drawable.profile)
+                        Spacer(modifier = Modifier.height((screenWidth/3.2).dp))
                     }
                 }
             }
