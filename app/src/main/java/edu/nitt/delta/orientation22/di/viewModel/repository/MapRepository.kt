@@ -17,31 +17,7 @@ class MapRepository @Inject constructor(
 ){
     @Inject
     lateinit var sharedPrefHelper: SharedPrefHelper
-    private val markerList : List<MarkerModel> = mutableListOf(
-        MarkerModel(
-            markerState = MarkerState(LatLng(10.7599262139634, 78.81060766093582)),
-            markerTitle = "Orion",
-            markerDescription = "A place where all starts",
-
-            ),
-        MarkerModel(
-            markerState = MarkerState(LatLng(10.761512360192034, 78.81611227571871)),
-            markerTitle = "Production Building",
-            markerDescription = "production building",
-
-            ),
-        MarkerModel(
-            markerState = MarkerState(LatLng(10.762649008007616, 78.81231815554612)),
-            markerTitle = "Kailash Mess",
-            markerDescription = "Kailash mess",
-        ),
-        MarkerModel(
-            markerState = MarkerState(LatLng(10.76263364793056, 78.81489273709181)),
-            markerTitle = "Chatzzz",
-            markerDescription = "Chatzz kazana" ,
-
-            )
-    )
+    private val markerList : List<MarkerModel> = mutableListOf()
     fun getAllMarkers(): Result<List<MarkerModel>> = try {
          Result.build { markerList }
     }catch (e:Exception){

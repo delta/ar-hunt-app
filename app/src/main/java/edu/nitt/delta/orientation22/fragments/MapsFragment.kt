@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
+import edu.nitt.delta.orientation22.compose.markerImages
 import edu.nitt.delta.orientation22.compose.screens.MapScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
@@ -32,6 +33,7 @@ fun MapFragment(
                 markerState = MarkerState(LatLng(marker.latitude,marker.longitude)),
                 markerDescription = marker.clue,
                 markerTitle = marker.name,
+                markerImage = markerImages[marker.position]!!,
                 isVisible = marker.position < currentLevel
             )
             markerList = markerList+markerModel
