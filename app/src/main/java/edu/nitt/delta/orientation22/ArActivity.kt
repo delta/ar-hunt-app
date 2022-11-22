@@ -8,7 +8,10 @@ import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
+import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.arcore.LightEstimationMode
@@ -22,19 +25,26 @@ class ArActivity : ComponentActivity() {
     private lateinit var arSceneView: ArSceneView
     private lateinit var cloudAnchorNode: ArModelNode
     private val viewModel:ArStateViewModel by viewModels()
+    private val mapStateViewModel: MapStateViewModel by viewModels()
     private val DEFAULT_LIGHT_INTENSITY=0.3f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Orientation22androidTheme {
+
+                mapStateViewModel.doAction(MapAction.GetRoute)
+                var routeList = mapStateViewModel.routeListData.value
+                mapStateViewModel.doAction(MapAction.GetCurrentLevel)
+                val currentLevel = mapStateViewModel.currentState.value
+
                 ArScreen(updateSceneView = {arSceneView ->
                     this.arSceneView =arSceneView
                     cloudAnchorNode = ArModelNode(placementMode = PlacementMode.PLANE_HORIZONTAL)
                     setUpEnvironment()
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer)
-                })
+                }, currentLevel = currentLevel, routeList = routeList)
             }
         }
     }

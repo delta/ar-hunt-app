@@ -27,7 +27,6 @@ import com.google.maps.android.compose.*
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
-import edu.nitt.delta.orientation22.compose.markerImages
 import edu.nitt.delta.orientation22.compose.openAr
 import edu.nitt.delta.orientation22.constants.MapStyle
 import edu.nitt.delta.orientation22.models.MarkerModel
@@ -108,12 +107,11 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
 @Composable
 fun MapScreen(
     markerList: List<MarkerModel>,
+    currentClue: String,
+    currentClueLocation: LatLng,
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
-    val currentClueLocation = remember {
-        mutableStateOf(LatLng(10.7614246, 78.8139187))
-    }
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
@@ -121,7 +119,7 @@ fun MapScreen(
 
     GoogleMapScreen(markerList = markerList)
 
-    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState)
+    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -130,8 +128,9 @@ fun TopBar (
     mContext: Context,
     fusedLocationProviderClient: FusedLocationProviderClient,
     showDialog: MutableState<Boolean>,
-    currentClueLocation: MutableState<LatLng>,
+    currentClueLocation: LatLng,
     permissionState: PermissionState,
+    currentClue: String,
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -158,7 +157,7 @@ fun TopBar (
 
         if (showDialog.value) {
             ClueAlertBox(clueName = "Current Clue",
-                clueDescription = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                clueDescription = currentClue,
                 showDialog = showDialog.value,
                 onDismiss = {showDialog.value = false})
         }

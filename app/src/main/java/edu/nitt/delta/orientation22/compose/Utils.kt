@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -95,7 +94,7 @@ fun openAr(
     permissionState: PermissionState,
     mContext: Context,
     fusedLocationProviderClient: FusedLocationProviderClient,
-    currentClueLocation: MutableState<LatLng>,
+    currentClueLocation: LatLng,
 ) {
     when{
         permissionState.hasPermission -> {
@@ -216,7 +215,7 @@ fun ClueAlertBox(clueName: String,
 fun distanceCalculator(
     fusedLocationProviderClient: FusedLocationProviderClient,
     mContext: Context,
-    currentClueLocation: MutableState<LatLng>,
+    currentClueLocation: LatLng,
 ){
     val radius = 20
     if (
@@ -229,8 +228,8 @@ fun distanceCalculator(
             Location.distanceBetween(
                 it.latitude,
                 it.longitude,
-                currentClueLocation.value.latitude,
-                currentClueLocation.value.longitude,
+                currentClueLocation.latitude,
+                currentClueLocation.longitude,
                 results
             )
             val distanceInMeters = results[0]
