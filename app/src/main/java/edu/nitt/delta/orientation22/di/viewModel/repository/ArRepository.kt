@@ -31,14 +31,14 @@ class ArRepository@Inject constructor(
             if (sceneView.arSession?.estimateFeatureMapQualityForHosting(frame!!.camera.pose) == Session.FeatureMapQuality.INSUFFICIENT) {
                 return Result.build<String> { throw Exception("Unable To Host Anchor") }
             }
-            cloudAnchorNode.hostCloudAnchor(10) { anchor: Anchor, success: Boolean ->
+            cloudAnchorNode.hostCloudAnchor{ anchor: Anchor, success: Boolean ->
                 if (success)
                     anchorId = anchor.cloudAnchorId
             }
             if (anchorId.isEmpty()) Result.build<String> { throw Exception("Unable To Host Anchor") }
             return Result.build { anchorId }
         } catch (e: Exception) {
-            return Result.build<String> { throw e }
+            return Result.build<String> { throw Exception(ResponseConstants.ERROR) }
         }
     }
 
@@ -54,7 +54,7 @@ class ArRepository@Inject constructor(
             Result.build { throw Exception("Error occurred while resolving cloud anchor") }
         Result.build{ "Cloud Anchor resolved successfully" }
         } catch (e: Exception) {
-            Result.build<String> { throw e }
+            Result.build<String> { throw Exception(ResponseConstants.ERROR) }
     }
 
 
@@ -66,7 +66,7 @@ class ArRepository@Inject constructor(
         }
             Result.build { "Cloud anchor detached successfully" }
         }catch (e:Exception){
-            Result.build<String> { throw e }
+            Result.build<String> { throw Exception(ResponseConstants.ERROR) }
     }
 
     fun loadModel(
@@ -93,7 +93,7 @@ class ArRepository@Inject constructor(
             }
         }
     } catch (e: Exception){
-        Result.build<ArModelNode> { throw e }
+        Result.build<ArModelNode> { throw Exception(ResponseConstants.ERROR) }
     }
 
     suspend fun postAnswer() : Result<String> = try {
@@ -107,6 +107,6 @@ class ArRepository@Inject constructor(
         }
 
     }catch (e:Exception){
-       Result.build { throw e }
+       Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 }

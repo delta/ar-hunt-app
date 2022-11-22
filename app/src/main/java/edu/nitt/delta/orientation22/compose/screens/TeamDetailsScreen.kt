@@ -67,7 +67,7 @@ fun TeamDetails(
     var nameMember3 by rememberSaveable { mutableStateOf(teamDetails.members[3].name) }
     var rollNumberMember3 by rememberSaveable {mutableStateOf(if (teamDetails.members[3].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
 
-    var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
+    var selectedAvatar by remember { mutableStateOf<Int>(R.drawable.ic_action_name) }
 
     TeamNameHeader(teamName = teamName, onValueChange = {teamName = it})
 
@@ -103,7 +103,7 @@ fun TeamDetailsScreen(
         val mContext = LocalContext.current
         val painter = painterResource(id = R.drawable.background_image)
         var chooseAvatar by remember { mutableStateOf(false) }
-        var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
+        var selectedAvatar by remember { mutableStateOf<Int>(R.drawable.ic_action_name) }
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painter,

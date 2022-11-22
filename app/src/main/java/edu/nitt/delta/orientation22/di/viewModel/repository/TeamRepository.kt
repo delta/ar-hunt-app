@@ -43,7 +43,7 @@ class TeamRepository @Inject constructor(
         Result.build { throw Exception(ResponseConstants.ERROR) }
     }catch (e:Exception){
         Log.d("TeamDetails",e.message.toString())
-        Result.build { throw e}
+        Result.build { throw Exception(ResponseConstants.ERROR)}
     }
 
     suspend fun getTeam():Result<TeamModel> = try {
@@ -74,16 +74,16 @@ class TeamRepository @Inject constructor(
         }
     }catch (e:Exception){
         Log.d("Dashboardrepo",e.message.toString())
-        Result.build { throw e }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
-    fun isTeamPresent():edu.nitt.delta.orientation22.models.Result<Boolean> = try {
+    fun isTeamPresent():Result<Boolean> = try {
         val team = sharedPrefHelper.team
         if(team != "")
-            edu.nitt.delta.orientation22.models.Result.build { true }
+            Result.build { true }
         else
-            edu.nitt.delta.orientation22.models.Result.build { false }
+            Result.build { false }
     }catch (e:Exception){
-        edu.nitt.delta.orientation22.models.Result.build { throw e }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 }

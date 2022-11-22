@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -64,6 +63,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_KEY" />
+        <meta-data
+            android:name="com.google.android.ar.API_KEY"
+            android:value="YOUR_KEY"/>
     </application>
 
 </manifest>

@@ -28,7 +28,7 @@ class LoginRepository @Inject constructor(
         }
     }catch (e:Exception){
         Log.d("Login",e.message.toString())
-        Result.build { throw e }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
     fun isLoggedInCheck():edu.nitt.delta.orientation22.models.Result<Boolean> =try {

@@ -27,6 +27,6 @@ class LeaderBoardRepository @Inject constructor(
             Result.build { throw Exception(ResponseConstants.ERROR) }
         }
     }catch (e:Exception){
-        Result.build { throw e }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 }

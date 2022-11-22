@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.compose.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
