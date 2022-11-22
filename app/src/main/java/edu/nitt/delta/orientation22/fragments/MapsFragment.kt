@@ -25,6 +25,8 @@ fun MapFragment(
         mapviewModel.doAction(MapAction.GetRoute)
         var routeList = mapviewModel.routeListData.value
         var markerList : List<MarkerModel> = listOf()
+        var currentClue = "Default Clue"
+        var currentClueLocation = LatLng(10.7614246, 78.8139187)
         mapviewModel.doAction(MapAction.GetCurrentLevel)
         var currentLevel = mapviewModel.currentState.value
         Log.d("MapScreen",currentLevel.toString())
@@ -37,8 +39,12 @@ fun MapFragment(
                 isVisible = marker.position < currentLevel
             )
             markerList = markerList+markerModel
+            if (marker.position == currentLevel){
+                currentClue = marker.clue
+                currentClueLocation = LatLng(marker.latitude, marker.longitude)
+            }
         }
         Log.d("MapScreen",markerList.toString())
-        MapScreen(markerList)
+        MapScreen(markerList, currentClue, currentClueLocation)
     }
 }

@@ -1,7 +1,5 @@
 package edu.nitt.delta.orientation22.compose.screens
 
-
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -20,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.toast
+import edu.nitt.delta.orientation22.models.game.LocationData
 import edu.nitt.delta.orientation22.ui.theme.*
 import io.github.sceneview.ar.ArSceneView
 
@@ -27,7 +28,9 @@ import io.github.sceneview.ar.ArSceneView
 fun ArScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
     updateSceneView:(ArSceneView)->Unit,
-    onClick : ()->Unit
+    onClick : ()->Unit,
+    currentLevel: Int,
+    routeList: List<LocationData>,
 ){
     AndroidView(factory = {
         context ->
@@ -65,14 +68,16 @@ fun ArScreen(
     }
     if (isPopUp.value) {
         Dialog(onDismissRequest = { isPopUp.value = false }){
-            SubmitPopUp(isPopUp = isPopUp,onClick)
+            SubmitPopUp(isPopUp = isPopUp,onClick, currentLevel = currentLevel, routeList = routeList)
         }
     }
 }
 
 @Composable
-fun SubmitPopUp(isPopUp : MutableState<Boolean>,onClick: () -> Unit) {
+fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, routeList: List<LocationData>, currentLevel: Int) {
     var text by remember { mutableStateOf("") }
+    val mContext = LocalContext.current
+
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
@@ -134,8 +139,16 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>,onClick: () -> Unit) {
                         .fillMaxWidth()
                         .padding(5.dp),
                     onClick = {
-                        isPopUp.value = false
-                        onClick()
+                        routeList.forEach(
+                        ){
+                            if (it.position == currentLevel){
+                                if (it.answer == text){
+                                    isPopUp.value = false
+                                    onClick()
+                                }
+                            }
+                        }
+                        mContext.toast("Wrong code. Please check and try again!")
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = yellow)
                 ) {
