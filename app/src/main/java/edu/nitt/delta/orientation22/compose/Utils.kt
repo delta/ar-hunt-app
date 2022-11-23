@@ -217,7 +217,7 @@ fun distanceCalculator(
     mContext: Context,
     currentClueLocation: LatLng,
 ){
-    val radius = 20
+    val radius = 200000
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {

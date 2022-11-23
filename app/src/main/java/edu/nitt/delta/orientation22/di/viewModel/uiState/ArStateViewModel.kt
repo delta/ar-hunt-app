@@ -6,13 +6,14 @@ import android.view.MotionEvent
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.nitt.delta.orientation22.ArHostActivity
+import edu.nitt.delta.orientation22.ArMainActivity
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.di.viewModel.repository.ArRepository
 import edu.nitt.delta.orientation22.di.viewModel.BaseViewModel
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
 import edu.nitt.delta.orientation22.models.game.Location
 import edu.nitt.delta.orientation22.models.game.LocationRequest
-import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
@@ -28,7 +29,10 @@ class ArStateViewModel @Inject constructor(
 ):BaseViewModel<ArAction>() {
 
 
-    var leaderBoardData = mutableStateOf<List<Location>>(emptyList())
+    var locationData = mutableStateOf<List<Location>>(emptyList())
+
+    var locationId = mutableStateOf<Int>(5)
+    var glbUrl : String = "miyawaki.glb"
 
 
     override fun doAction(action: ArAction): Any = when(action){
@@ -39,7 +43,8 @@ class ArStateViewModel @Inject constructor(
             action.context,
             action.lifecycle,
             action.cloudAnchorNode,
-            action.sceneView
+            action.sceneView,
+            action.gldFileUrl,
         )
         is ArAction.PostAnswer -> postAnswer()
         is ArAction.FetchLocation -> fetchLocation()
@@ -47,9 +52,15 @@ class ArStateViewModel @Inject constructor(
     }
 
     private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode) = launch {
-        when(val res=arRepository.hostAnchor(cloudAnchorNode,sceneView)){
-            is Result.Value -> mutableSuccess.value =res.value
-            is Result.Error -> mutableError.value= res.exception.message
+        when(val res=arRepository.hostAnchor(cloudAnchorNode,sceneView,this.coroutineContext)){
+            is Result.Value -> {
+                mutableSuccess.value = res.value
+                Log.d("Hosting", res.value)
+            }
+            is Result.Error -> {
+                mutableError.value= res.exception.message
+                Log.d("HostingErr", res.exception.message.toString())
+            }
         }
     }
 
@@ -71,9 +82,10 @@ class ArStateViewModel @Inject constructor(
         context: Context,
         lifecycle: Lifecycle?,
         cloudAnchorNode: ArModelNode,
-        sceneView: ArSceneView
+        sceneView: ArSceneView,
+        glbFileUrl: String,
     )= CoroutineScope(Dispatchers.Main).launch{
-        when (val res = arRepository.loadModel(sceneView,cloudAnchorNode, onTapModel, context, lifecycle)){
+        when (val res = arRepository.loadModel(sceneView,cloudAnchorNode, onTapModel, context, lifecycle, glbFileUrl)){
             is Result.Value -> Log.v(res.value.name,res.toString())
             is Result.Error -> Log.v("InArStateViewModel",res.exception.message.toString())
         }
@@ -88,7 +100,7 @@ class ArStateViewModel @Inject constructor(
 
     private fun fetchLocation() = launch {
         when(val res = arRepository.fetchLocations()){
-            is Result.Value-> leaderBoardData.value = res.value
+            is Result.Value-> locationData.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }
     }

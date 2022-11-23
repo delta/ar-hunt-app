@@ -6,6 +6,9 @@ import android.view.MotionEvent
 import androidx.lifecycle.Lifecycle
 import com.google.ar.core.Anchor
 import com.google.ar.core.Session
+import edu.nitt.delta.orientation22.ArActivity
+import edu.nitt.delta.orientation22.ArHostActivity
+import edu.nitt.delta.orientation22.ArMainActivity
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
@@ -16,14 +19,17 @@ import edu.nitt.delta.orientation22.models.game.LocationRequest
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class ArRepository@Inject constructor(
     private val apiInterface: ApiInterface
 ) {
     @Inject
     lateinit var sharedPrefHelper: SharedPrefHelper
-    fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?):Result<String> {
+    fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?,ctx: CoroutineContext):Result<String> {
         try {
             var anchorId = ""
             val frame = sceneView!!.currentFrame
@@ -31,13 +37,30 @@ class ArRepository@Inject constructor(
                 cloudAnchorNode.anchor()
             }
             if (sceneView.arSession?.estimateFeatureMapQualityForHosting(frame!!.camera.pose) == Session.FeatureMapQuality.INSUFFICIENT) {
-                return Result.build<String> { throw Exception("Unable To Host Anchor") }
+                return Result.build<String> { throw Exception("Unable To Host Anchor1") }
             }
             cloudAnchorNode.hostCloudAnchor{ anchor: Anchor, success: Boolean ->
-                if (success)
+                if (success) {
                     anchorId = anchor.cloudAnchorId
+                    ArHostActivity.anchorId = anchorId
+                    Log.d("Hosting1",anchorId)
+                    CoroutineScope(ctx).launch {
+                        Log.d("Hosting2",anchorId)
+                       var res= updateLocation(
+                            LocationRequest(
+                                id= ArMainActivity.locationId,
+                                anchorHash = anchorId,
+                                userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEwNjEyMDEwNUBuaXR0LmVkdSIsIm5hbWUiOiJTQVJWRVNIIFIifQ.nkOJA30xb5mjI8BbTSz-t0nyQK9H8Dx8eIVAFthApaA",
+                                latitude = ArHostActivity.latitude,
+                                longitude = ArHostActivity.longitude,
+                            )
+                        )
+                        Log.d("Hosting", res.toString());
+                    }
+                }
+                Log.d("Hosting3",anchorId)
             }
-            if (anchorId.isEmpty()) Result.build<String> { throw Exception("Unable To Host Anchor") }
+            if (anchorId.isEmpty()) Result.build<String> { throw Exception("Unable To Host Anchor2") }
             return Result.build { anchorId }
         } catch (e: Exception) {
             return Result.build<String> { throw Exception(ResponseConstants.ERROR) }
@@ -47,15 +70,20 @@ class ArRepository@Inject constructor(
     fun resolveAnchor(cloudAnchorNode: ArModelNode?,code : String):Result<String> = try {
         var isResolved = false
         cloudAnchorNode?.resolveCloudAnchor(code){ _, success: Boolean ->
+            Log.d("resolve",code)
             if(success){
                 cloudAnchorNode.isVisible = true
                 isResolved = true
+                Log.d("resolve", "Success")
             }
         }
-        if (!isResolved)
+        if (!isResolved) {
             Result.build { throw Exception("Error occurred while resolving cloud anchor") }
+            Log.d("resolve", "Error occurred while resolving cloud anchor")
+        }
         Result.build{ "Cloud Anchor resolved successfully" }
         } catch (e: Exception) {
+        Log.d("resolve", ResponseConstants.ERROR)
             Result.build<String> { throw Exception(ResponseConstants.ERROR) }
     }
 
@@ -77,6 +105,7 @@ class ArRepository@Inject constructor(
         onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         context:Context,
         lifecycle: Lifecycle?,
+        glbFileUrl: String,
     ):Result<ArModelNode> = try{
         Result.build{
             cloudAnchorNode.apply {
@@ -86,10 +115,11 @@ class ArRepository@Inject constructor(
                 loadModelAsync(
                     context = context,
                     lifecycle = lifecycle,
-                    glbFileLocation = "miyawaki.glb",
+                    glbFileLocation = glbFileUrl,
                     onLoaded ={
+                        cloudAnchorNode.isVisible = false
                         cloudAnchorNode.anchor()
-                        onTap =onTapModel
+                        onTap = onTapModel
                     }
                 )
             }
@@ -115,21 +145,26 @@ class ArRepository@Inject constructor(
     suspend fun updateLocation(location:LocationRequest) : Result<String> = try {
         val token = sharedPrefHelper.token.toString()
         val response = apiInterface.hostLocation(location)
+        Log.d("Host","I am Called")
         if (response.message == ResponseConstants.SUCCESS){
+            Log.d("Host","1")
             Result.build { "Updated Successfully" }
         }
         else {
+            Log.d("Host","2")
             Result.build { throw Exception(ResponseConstants.ERROR) }
         }
 
     }catch (e:Exception){
+        Log.d("Host",e.message.toString())
         Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
     suspend fun fetchLocations() : Result<List<Location>> = try {
         val token = sharedPrefHelper.token.toString()
-        val response = apiInterface.getLocations(TokenRequestModel(""))
+        val response = apiInterface.getLocations(TokenRequestModel("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEwNjEyMDEwNUBuaXR0LmVkdSIsIm5hbWUiOiJTQVJWRVNIIFIifQ.nkOJA30xb5mjI8BbTSz-t0nyQK9H8Dx8eIVAFthApaA"))
         if (response.message == ResponseConstants.SUCCESS){
+            Log.d("Response", response.locations.toString())
             Result.build { response.locations }
         }
         else {
@@ -137,6 +172,7 @@ class ArRepository@Inject constructor(
         }
 
     }catch (e:Exception){
+        Log.d("Exception", e.message.toString())
         Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 }

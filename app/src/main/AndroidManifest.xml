@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".OrientationApplication"
@@ -18,35 +19,59 @@
         android:theme="@style/Theme.Orientation22android"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.Transparent"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/Theme.Transparent">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ArMainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ArHostActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ArResolveActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:configChanges="orientation"
             android:exported="true"
             android:noHistory="true"
-            android:configChanges="orientation"
             android:screenOrientation="portrait">
-
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true"
             android:configChanges="orientation"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Orientation22android">
             <meta-data
@@ -55,17 +80,18 @@
         </activity>
         <activity
             android:name=".ArActivity"
-            android:exported="true"
             android:configChanges="orientation"
+            android:exported="true"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Orientation22android"/>
+            android:theme="@style/Theme.Orientation22android" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_KEY" />
         <meta-data
             android:name="com.google.android.ar.API_KEY"
-            android:value="YOUR_KEY"/>
+            android:value="AIzaSyD5ekvYbjJp_KFPGgm2flRXDfEgNOt_p_o" />
     </application>
 
 </manifest>

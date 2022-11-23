@@ -18,7 +18,8 @@ sealed class ArAction {
         val lifecycle: Lifecycle?,
         val onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         val sceneView: ArSceneView,
-        val cloudAnchorNode: ArModelNode
+        val cloudAnchorNode: ArModelNode,
+        val gldFileUrl: String,
     ) : ArAction()
     data class UpdateLocation(val location:LocationRequest): ArAction()
     object FetchLocation:ArAction()

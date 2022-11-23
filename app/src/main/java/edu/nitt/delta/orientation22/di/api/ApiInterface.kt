@@ -43,7 +43,7 @@ interface ApiInterface {
         @Query("code") code:String
     ):LoginResponse
 
-    @GET(ApiRoutes.GET_LOCATION)
+    @POST(ApiRoutes.GET_LOCATION)
     suspend fun getLocations(
         @Body routeBody: TokenRequestModel
     ): LocationFetchResponse

@@ -61,7 +61,8 @@ class ArActivity : ComponentActivity() {
                     tapModel()
                 },
                 arSceneView,
-                cloudAnchorNode
+                cloudAnchorNode,
+                "miyawaki.glb"
             )
         )
 

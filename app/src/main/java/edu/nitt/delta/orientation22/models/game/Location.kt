@@ -14,6 +14,6 @@ data class Location(
     val id :Int,
     @SerializedName("name")
     val name: String,
-    @SerializedName("glburl")
+    @SerializedName("glb_url")
     val glbUrl: String,
 )

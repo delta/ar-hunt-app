@@ -10,6 +10,8 @@ import edu.nitt.delta.orientation22.di.viewModel.repository.MapRepository
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.game.LocationData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,10 +44,10 @@ class MapStateViewModel @Inject constructor(
             is Result.Error -> mutableError.value= res.exception.message
         }
     }
-    private fun getRoute() = launch {
+    private fun getRoute() = launch(Dispatchers.IO) {
         when(val res=mapRepository.getRoutes()){
             is Result.Value -> routeListData.value = res.value
-            is Result.Error -> mutableError.value= res.exception.message
+            is Result.Error -> {}
         }
     }
 }
