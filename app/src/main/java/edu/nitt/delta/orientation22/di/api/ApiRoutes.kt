@@ -10,4 +10,6 @@ object ApiRoutes {
     const val CURRENT_STATE="api/currentState"
     const val NEXT_STATE="api/nextState"
     const val AUTH_CALLBACK = "api/auth/callback"
+    const val GET_LOCATION = "api/location"
+    const val HOST ="api/host"
 }

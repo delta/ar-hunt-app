@@ -3,12 +3,16 @@ package edu.nitt.delta.orientation22.di.viewModel.uiState
 import android.content.Context
 import android.util.Log
 import android.view.MotionEvent
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.di.viewModel.repository.ArRepository
 import edu.nitt.delta.orientation22.di.viewModel.BaseViewModel
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
+import edu.nitt.delta.orientation22.models.game.Location
+import edu.nitt.delta.orientation22.models.game.LocationRequest
+import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
@@ -24,6 +28,9 @@ class ArStateViewModel @Inject constructor(
 ):BaseViewModel<ArAction>() {
 
 
+    var leaderBoardData = mutableStateOf<List<Location>>(emptyList())
+
+
     override fun doAction(action: ArAction): Any = when(action){
         is ArAction.HostAnchor -> hostModel(action.sceneView,action.cloudAnchorNode)
         is ArAction.ResolveAnchor -> resolveModel(action.cloudAnchorNode,action.code)
@@ -35,6 +42,8 @@ class ArStateViewModel @Inject constructor(
             action.sceneView
         )
         is ArAction.PostAnswer -> postAnswer()
+        is ArAction.FetchLocation -> fetchLocation()
+        is ArAction.UpdateLocation -> updateLocation(action.location)
     }
 
     private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode) = launch {
@@ -75,4 +84,20 @@ class ArStateViewModel @Inject constructor(
             is Result.Value -> mutableSuccess.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }
-    }}
+    }
+
+    private fun fetchLocation() = launch {
+        when(val res = arRepository.fetchLocations()){
+            is Result.Value-> leaderBoardData.value = res.value
+            is Result.Error -> mutableError.value = res.exception.message
+        }
+    }
+
+    private fun updateLocation(req:LocationRequest) = launch {
+        when(val res = arRepository.updateLocation(req)){
+            is Result.Value -> mutableSuccess.value = res.value
+            is Result.Error -> mutableError.value = res.exception.message
+        }
+    }
+}
+

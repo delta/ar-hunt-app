@@ -11,6 +11,8 @@ import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
+import edu.nitt.delta.orientation22.models.game.Location
+import edu.nitt.delta.orientation22.models.game.LocationRequest
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
@@ -108,5 +110,33 @@ class ArRepository@Inject constructor(
 
     }catch (e:Exception){
        Result.build { throw Exception(ResponseConstants.ERROR) }
+    }
+
+    suspend fun updateLocation(location:LocationRequest) : Result<String> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.hostLocation(location)
+        if (response.message == ResponseConstants.SUCCESS){
+            Result.build { "Updated Successfully" }
+        }
+        else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
+        }
+
+    }catch (e:Exception){
+        Result.build { throw Exception(ResponseConstants.ERROR) }
+    }
+
+    suspend fun fetchLocations() : Result<List<Location>> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.getLocations(TokenRequestModel(""))
+        if (response.message == ResponseConstants.SUCCESS){
+            Result.build { response.locations }
+        }
+        else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
+        }
+
+    }catch (e:Exception){
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 }

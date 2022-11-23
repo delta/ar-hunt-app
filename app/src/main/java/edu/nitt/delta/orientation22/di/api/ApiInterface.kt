@@ -1,9 +1,7 @@
 package edu.nitt.delta.orientation22.di.api
 
 import edu.nitt.delta.orientation22.models.auth.*
-import edu.nitt.delta.orientation22.models.game.AnswerResponse
-import edu.nitt.delta.orientation22.models.game.CurrentLocationResponse
-import edu.nitt.delta.orientation22.models.game.RouteResponse
+import edu.nitt.delta.orientation22.models.game.*
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardResponse
 import retrofit2.http.*
 
@@ -45,5 +43,13 @@ interface ApiInterface {
         @Query("code") code:String
     ):LoginResponse
 
+    @GET(ApiRoutes.GET_LOCATION)
+    suspend fun getLocations(
+        @Body routeBody: TokenRequestModel
+    ): LocationFetchResponse
 
+    @POST(ApiRoutes.HOST)
+    suspend fun hostLocation(
+        @Body updateLocationRequest:LocationRequest
+    ): LocationResponse
 }
