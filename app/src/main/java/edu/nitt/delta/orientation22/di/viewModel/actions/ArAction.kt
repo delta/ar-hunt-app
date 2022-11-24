@@ -17,7 +17,8 @@ sealed class ArAction {
         val lifecycle: Lifecycle?,
         val onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         val sceneView: ArSceneView,
-        val cloudAnchorNode: ArModelNode
+        val cloudAnchorNode: ArModelNode,
+        val glbUrl : String
     ) : ArAction()
     object PostAnswer : ArAction()
 }
