@@ -77,7 +77,7 @@ class ArActivity : ComponentActivity() {
                 },
                 arSceneView,
                 cloudAnchorNode,
-                "sportscomplex.glb"
+                glbUrl
             )
         )
 
