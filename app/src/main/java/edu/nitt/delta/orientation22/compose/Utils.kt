@@ -353,6 +353,14 @@ val avatarList = mapOf(
     5 to R.drawable.panda,
 )
 
+val reverseAvatarList = mapOf(
+    R.drawable.bear to 1,
+    R.drawable.cat to 2,
+    R.drawable.dog to 3,
+    R.drawable.giraffe to 4,
+    R.drawable.panda to 5,
+)
+
 val markerImages = mapOf(
     0 to R.drawable.one,
     1 to R.drawable.two,

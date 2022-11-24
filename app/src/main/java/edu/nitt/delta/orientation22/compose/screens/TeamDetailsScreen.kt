@@ -39,8 +39,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.LoadingIcon
 import edu.nitt.delta.orientation22.compose.avatarList
+import edu.nitt.delta.orientation22.compose.reverseAvatarList
 import edu.nitt.delta.orientation22.compose.toast
+import edu.nitt.delta.orientation22.di.viewModel.uiState.RegistrationState
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
 import edu.nitt.delta.orientation22.models.auth.Member
@@ -55,6 +58,7 @@ fun TeamDetails(
     mContext: Context,
     teamDetails: TeamModel,
     registerTeam: (TeamModel) -> Unit,
+    state: RegistrationState
 ) {
     var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
     var rollNumberLeader by rememberSaveable {mutableStateOf(if (teamDetails.members[0].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
@@ -89,7 +93,8 @@ fun TeamDetails(
         rollNumberMembers = listOf(rollNumberMember1, rollNumberMember2, rollNumberMember3),
         mContext = mContext,
         registerTeam = registerTeam,
-        selectedAvatar = selectedAvatar
+        selectedAvatar = reverseAvatarList[selectedAvatar]?:1,
+        state = state
     )
 }
 
@@ -98,6 +103,7 @@ fun TeamDetails(
 fun TeamDetailsScreen(
     teamDetails: TeamModel,
     registerTeam: (TeamModel) -> Unit,
+    state :RegistrationState
 ){
     Orientation22androidTheme {
         val mContext = LocalContext.current
@@ -167,7 +173,7 @@ fun TeamDetailsScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                TeamDetails(mContext = mContext, teamDetails, registerTeam)
+                TeamDetails(mContext = mContext, teamDetails, registerTeam,state)
             }
             if (chooseAvatar) {
                 Dialog(
@@ -281,7 +287,8 @@ fun SubmitButton(
     rollNumberMembers: List<String>,
     mContext: Context,
     registerTeam: (TeamModel) -> Unit,
-    selectedAvatar : Int
+    selectedAvatar : Int,
+    state: RegistrationState
 ){
 
     Button(
@@ -305,13 +312,12 @@ fun SubmitButton(
                 )
                 registerTeam(registerData)
 
-//                val intent = Intent(mContext, MainActivity::class.java)
-//                mContext.startActivity(intent)
 
             }
         },
         content = {
-            Text(
+            if (state == RegistrationState.LOADING) LoadingIcon()
+            else Text(
                 text = "Submit",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,

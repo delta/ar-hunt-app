@@ -37,6 +37,7 @@ import edu.nitt.delta.orientation22.ui.theme.*
 fun DashboardScreen(
     modifier: Modifier = Modifier,
     team: TeamModel,
+    logout:() ->Unit
 ) {
     Orientation22androidTheme() {
         val painter = painterResource(id = R.drawable.background_image)
@@ -74,7 +75,7 @@ fun DashboardScreen(
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular))
                             )
                             IconButton(onClick = {
-
+                                logout()
                             }, modifier = Modifier.padding(top = 30.dp, end = 10.dp).align(Alignment.CenterEnd)) {
                                 Icon(
                                     Icons.Sharp.ExitToApp, "logout", modifier = Modifier.size(30.dp), tint = peach

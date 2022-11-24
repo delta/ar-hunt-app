@@ -9,5 +9,7 @@ data class TeamDataResponse(
     @SerializedName("team_name")
     val teamName:String,
     @SerializedName("avatar")
-    val avatar:Int
+    val avatar:Int,
+    @SerializedName("score")
+    val points: Int
 ):BaseResponse<String>()

@@ -7,6 +7,7 @@ import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import edu.nitt.delta.orientation22.models.Result
+import edu.nitt.delta.orientation22.models.auth.Member
 import edu.nitt.delta.orientation22.models.auth.RegisterTeamRequest
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import javax.inject.Inject
@@ -34,13 +35,10 @@ class TeamRepository @Inject constructor(
         Log.d("TeamDetails",response.message.toString())
 
         if (response.message == ResponseConstants.SUCCESS){
-            Log.d("TeamDetails",response.message.toString())
-            val gson = Gson()
-            val teamString = gson.toJson(response.message)
-            sharedPrefHelper.team = teamString
-            Result.build { response.message }
+            Result.build { response.message.toString() }
+        } else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
         }
-        Result.build { throw Exception(ResponseConstants.ERROR) }
     }catch (e:Exception){
         Log.d("TeamDetails",e.message.toString())
         Result.build { throw Exception(ResponseConstants.ERROR)}
@@ -48,42 +46,25 @@ class TeamRepository @Inject constructor(
 
     suspend fun getTeam():Result<TeamModel> = try {
         var token = sharedPrefHelper.token
-        if(sharedPrefHelper.team != "")
-        {
-            val gson = Gson()
-            val team = gson.fromJson(sharedPrefHelper.team,TeamModel::class.java)
-            Log.d("DashboardrepoShare",team.toString())
+        val response = apiInterface.getTeam(TokenRequestModel(token.toString()))
+        Log.v("123",response.toString())
+        if (response.message == ResponseConstants.SUCCESS) {
+            val team = TeamModel(teamName = response.teamName,
+                members = response.members,
+                avatar = response.avatar,
+                points = response.points)
+            Log.d("Dashboardrepo", team.toString())
             Result.build { team }
-        }
-        else {
-            val response = apiInterface.getTeam(TokenRequestModel(token.toString()))
-            if (response.message == ResponseConstants.SUCCESS) {
-                val team = TeamModel(teamName = response.teamName,
-                    members = response.members,
-                    avatar = 1,
-                    points = 0)
-                Log.d("Dashboardrepo", team.toString())
-                val gson = Gson()
-                val teamString = gson.toJson(team)
-                sharedPrefHelper.team = teamString
-                Result.build { team }
-            } else {
-                Log.d("Dashboardrepo", "Err")
-                Result.build { throw Exception(ResponseConstants.ERROR) }
-            }
+        } else {
+            Log.d("Dashboardrepo", "Err")
+            Result.build { throw Exception(ResponseConstants.ERROR) }
         }
     }catch (e:Exception){
         Log.d("Dashboardrepo",e.message.toString())
         Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
-    fun isTeamPresent():Result<Boolean> = try {
-        val team = sharedPrefHelper.team
-        if(team != "")
-            Result.build { true }
-        else
-            Result.build { false }
-    }catch (e:Exception){
-        Result.build { throw Exception(ResponseConstants.ERROR) }
+    fun getLeader():Member{
+        return Member(name = sharedPrefHelper.leaderName.toString(), rollNo = sharedPrefHelper.rollNo)
     }
 }

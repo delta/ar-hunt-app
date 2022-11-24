@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import edu.nitt.delta.orientation22.LoginActivity
 import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
@@ -15,14 +16,11 @@ import edu.nitt.delta.orientation22.fragments.*
 fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel,loginStateViewModel: LoginStateViewModel){
     NavHost(
         navController = navController,
-        startDestination = if (loginStateViewModel.isLoggedIn) NavigationRoutes.TeamDetails.route else NavigationRoutes.Login.route,
+        startDestination = LoginActivity.startDestination
     ) {
         composable(route = NavigationRoutes.Login.route){
             LoginFragment(navController,loginStateViewModel)
         }
-//        composable(route = NavigationRoutes.Dashboard.route){
-//            DashboardFragment(teamStateViewModel)
-//        }
         composable(route = NavigationRoutes.TeamDetails.route){
             TeamDetailsFragment(teamStateViewModel)
         }
@@ -36,13 +34,18 @@ fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStat
 }
 
 @Composable
-fun NavigationInner(navController: NavHostController,mapviewModel: MapStateViewModel, arStateViewModel: ArStateViewModel,leaderBoardStateViewModel: LeaderBoardStateViewModel,teamStateViewModel: TeamStateViewModel){
+fun NavigationInner(navController: NavHostController,
+                    mapviewModel: MapStateViewModel,
+                    leaderBoardStateViewModel: LeaderBoardStateViewModel,
+                    teamStateViewModel: TeamStateViewModel,
+                    loginStateViewModel: LoginStateViewModel
+){
     NavHost(
         navController = navController,
         startDestination = NavigationRoutes.Dashboard.route,
     ) {
         composable(route = NavigationRoutes.Dashboard.route){
-            DashboardFragment(teamStateViewModel = teamStateViewModel)
+            DashboardFragment(teamStateViewModel = teamStateViewModel,loginStateViewModel)
         }
         composable(route = NavigationRoutes.Map.route){
             MapFragment(mapviewModel = mapviewModel)

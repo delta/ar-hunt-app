@@ -15,6 +15,13 @@ import edu.nitt.delta.orientation22.models.auth.TeamModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class RegistrationState{
+    IDLE,
+    LOADING,
+    ERROR,
+    SUCCESS,
+}
+
 
 @HiltViewModel
 class TeamStateViewModel @Inject constructor(
@@ -22,15 +29,15 @@ class TeamStateViewModel @Inject constructor(
 ) : BaseViewModel<TeamAction>(){
 
     private val teamDataSample: TeamModel = TeamModel(teamName = "", members =  listOf(
-        Member(name = "",110120089),Member(name = "",110120090),Member(name = "",110120091),Member(name = "",110120073)), points = 0, avatar = 1)
+        Member(name = "",-1),Member(name = "",-1),Member(name = "",-1),Member(name = "",-1)), points = 0, avatar = 1)
     var teamData = mutableStateOf(teamDataSample)
+    var uiState = mutableStateOf(RegistrationState.IDLE)
 
     override fun doAction(action: TeamAction): Any = when(action) {
         is TeamAction.GetTeam -> getTeam()
         is TeamAction.RegisterTeam->registerTeam(action.teamData)
-        is TeamAction.IsTeamPresent -> IsTeamPresentt()
+        is TeamAction.GetLeader -> register()
     }
-    var isTeamPresent = true
     private fun getTeam() =launch{
         when(val res = teamRepository.getTeam()){
             is Result.Value -> {
@@ -42,17 +49,24 @@ class TeamStateViewModel @Inject constructor(
         }
     }
 
-    private fun registerTeam(teamData:TeamModel) =launch{
-        when(val res = teamRepository.registerTeam(teamData)){
-            is Result.Value -> mutableSuccess.value = res.value
-            is Result.Error -> mutableError.value= res.exception.message
-        }
+    private fun register(){
+        var res = teamRepository.getLeader()
+        teamData.value=TeamModel(teamName = "", members = listOf(res,Member(name = "",-1),Member(name = "",-1),Member(name = "",-1)), points = 0, avatar = 1)
+        Log.v("2222",teamData.value.toString())
     }
 
-    private fun IsTeamPresentt() = launch {
-        when(val res = teamRepository.isTeamPresent()){
-            is edu.nitt.delta.orientation22.models.Result.Value -> isTeamPresent = res.value
-            is edu.nitt.delta.orientation22.models.Result.Error -> mutableError.value = res.exception.message
+    private fun registerTeam(teamData:TeamModel) =launch{
+        uiState.value =RegistrationState.LOADING
+        when(val res = teamRepository.registerTeam(teamData)){
+            is Result.Value -> {
+                Log.v("123","123")
+                uiState.value =RegistrationState.SUCCESS
+                mutableSuccess.value = res.value
+            }
+            is Result.Error -> {
+                uiState.value =RegistrationState.ERROR
+                mutableError.value= res.exception.message
+            }
         }
     }
 }

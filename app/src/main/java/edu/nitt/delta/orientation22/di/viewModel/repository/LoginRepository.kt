@@ -6,10 +6,8 @@ import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.Result
-import edu.nitt.delta.orientation22.models.auth.LoginResponse
 import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import edu.nitt.delta.orientation22.models.auth.UserModel
-import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
 import javax.inject.Inject
 
 class LoginRepository @Inject constructor(
@@ -23,6 +21,8 @@ class LoginRepository @Inject constructor(
         if(response.user_token != "" )
         {
             sharedPrefHelper.token = response.user_token
+            sharedPrefHelper.leaderName =response.name
+            sharedPrefHelper.rollNo = response.email.substring(0,9).toInt()
             Result.build { UserModel(name = response.name, email = response.email) }
         } else {
             Log.d("Login", "Out")
@@ -33,16 +33,16 @@ class LoginRepository @Inject constructor(
         Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
-    fun isLoggedInCheck():edu.nitt.delta.orientation22.models.Result<Boolean> =try {
+    fun isLoggedInCheck():Result<Boolean> =try {
         val token = sharedPrefHelper.token
         Log.d("sharedLogin",token.toString())
         if(token == "")
-            edu.nitt.delta.orientation22.models.Result.build { false }
+            Result.build { false }
         else
-            edu.nitt.delta.orientation22.models.Result.build { true }
+            Result.build { true }
 
     }catch (e:Exception){
-        edu.nitt.delta.orientation22.models.Result.build { throw e }
+        Result.build { throw e }
     }
 
     suspend fun isRegistered():Result<IsRegisteredResponse> =try {

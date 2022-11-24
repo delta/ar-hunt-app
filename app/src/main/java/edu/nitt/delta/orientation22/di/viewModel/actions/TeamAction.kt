@@ -5,5 +5,5 @@ import edu.nitt.delta.orientation22.models.auth.TeamModel
 sealed class TeamAction  {
     data class RegisterTeam(val teamData:TeamModel) : TeamAction()
     object GetTeam : TeamAction()
-    object IsTeamPresent : TeamAction()
+    object GetLeader : TeamAction()
 }
