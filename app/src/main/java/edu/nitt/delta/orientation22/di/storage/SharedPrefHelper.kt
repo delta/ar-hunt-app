@@ -21,6 +21,7 @@ class SharedPrefHelper @Inject constructor(context: Context) {
         const val TEAM ="TEAM"
         const val USER_ROUTE = "ROUTE_NAME"
         const val TOKEN = "TOKEN"
+        const val USER = "USER"
     }
 
     object Default {
@@ -28,6 +29,7 @@ class SharedPrefHelper @Inject constructor(context: Context) {
         val USER_ROUTE= ""
         val TEAM_MEMBERS = ""
         val TOKEN = ""
+        val USER =""
     }
 
     var team : String?
@@ -43,6 +45,13 @@ class SharedPrefHelper @Inject constructor(context: Context) {
             Default.USER_ROUTE
         )
         set(value) = sharedPreferences.edit().putString(Key.USER_ROUTE,value).apply()
+
+    var user: String?
+        get() = sharedPreferences.getString(
+            Key.USER,
+            Default.USER
+        )
+        set(value) = sharedPreferences.edit().putString(Key.USER,value).apply()
 
 
     var token : String?

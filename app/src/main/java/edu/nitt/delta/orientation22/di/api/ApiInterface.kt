@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.di.api
 
+import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.auth.*
 import edu.nitt.delta.orientation22.models.game.AnswerResponse
 import edu.nitt.delta.orientation22.models.game.CurrentLocationResponse
@@ -45,5 +46,8 @@ interface ApiInterface {
         @Query("code") code:String
     ):LoginResponse
 
-
+    @POST(ApiRoutes.IS_REGISTERED)
+    suspend fun isRegistered(
+        @Body token:TokenRequestModel
+    ):IsRegisteredResponse
 }

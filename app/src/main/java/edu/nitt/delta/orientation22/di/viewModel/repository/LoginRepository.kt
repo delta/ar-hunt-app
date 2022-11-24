@@ -4,8 +4,10 @@ import android.util.Log
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
+import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.auth.LoginResponse
+import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import edu.nitt.delta.orientation22.models.auth.UserModel
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
 import javax.inject.Inject
@@ -41,6 +43,23 @@ class LoginRepository @Inject constructor(
 
     }catch (e:Exception){
         edu.nitt.delta.orientation22.models.Result.build { throw e }
+    }
+
+    suspend fun isRegistered():Result<IsRegisteredResponse> =try {
+        val token = sharedPrefHelper.token
+        val response = apiInterface.isRegistered(TokenRequestModel(token.toString()))
+        Log.d("isRegistered",response.toString())
+        if(response.message == ResponseConstants.SUCCESS){
+            Log.d("isRegistered",response.toString())
+            Result.build { response }
+        } else{
+            Log.d("isRegistered",response.message.toString())
+            Result.build { response }
+        }
+
+    }catch (e:Exception){
+        Log.d("isRegistered",e.message.toString())
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
     fun isLogOut(){

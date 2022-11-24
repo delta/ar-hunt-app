@@ -1,12 +1,15 @@
 package edu.nitt.delta.orientation22.fragments
 
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.compose.screens.LoginScreen
@@ -26,13 +29,19 @@ fun LoginFragment(
         color = MaterialTheme.colorScheme.background
     ){
         val state= loginStateViewModel.uiState
+        val isReg =loginStateViewModel.isRegistered
+        var mContext = LocalContext.current
         LoginScreen(painter,
             description,
             navController = navController,
             state = state.value,
             onSuccess = {
-                navController.navigate(NavigationRoutes.TeamDetails.route){
-                    popUpTo(NavigationRoutes.Login.route){inclusive=true}
+                if(!isReg.value.isRegistered) {
+                    navController.navigate(NavigationRoutes.TeamDetails.route) {
+                        popUpTo(NavigationRoutes.Login.route) { inclusive = true }
+                    }
+                } else {
+                    mContext.startActivity(Intent(mContext, MainActivity ::class.java))
                 }
                 loginStateViewModel.uiState.value=LoginState.IDLE
             },

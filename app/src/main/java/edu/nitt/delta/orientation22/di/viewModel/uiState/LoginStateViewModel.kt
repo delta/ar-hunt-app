@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.nitt.delta.orientation22.di.viewModel.BaseViewModel
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.repository.LoginRepository
+import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.auth.UserModel
 import kotlinx.coroutines.launch
@@ -31,13 +32,15 @@ class LoginStateViewModel @Inject constructor(
     }
 
     var uiState = mutableStateOf(LoginState.IDLE)
+    var isRegistered = mutableStateOf<IsRegisteredResponse>(IsRegisteredResponse(false,"",0))
     var isLoggedIn = false
     private fun Login(code:String)=launch {
         uiState.value=LoginState.LOADING
         when(val res = loginRepository.Login(code)){
             is Result.Value-> {
                 user = res.value
-                uiState.value=LoginState.SUCCESS
+                isRegistered()
+
             }
             is Result.Error -> {
                 mutableError.value = res.exception.message
@@ -55,6 +58,18 @@ class LoginStateViewModel @Inject constructor(
 
     private fun IsLoggedOut() = launch {
         loginRepository.isLogOut()
+    }
+    private fun isRegistered() =launch {
+        when(val res= loginRepository.isRegistered()){
+            is edu.nitt.delta.orientation22.models.Result.Value -> {
+                isRegistered.value=res.value
+                uiState.value=LoginState.SUCCESS
+            }
+            is edu.nitt.delta.orientation22.models.Result.Error ->{
+                mutableError.value = res.exception.message
+                uiState.value=LoginState.ERROR
+            }
+        }
     }
 
 }
