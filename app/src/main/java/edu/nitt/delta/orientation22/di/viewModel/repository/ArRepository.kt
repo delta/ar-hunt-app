@@ -3,12 +3,16 @@ package edu.nitt.delta.orientation22.di.viewModel.repository
 import android.content.Context
 import android.util.Log
 import android.view.MotionEvent
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import com.google.ar.core.Anchor
 import com.google.ar.core.Session
 import edu.nitt.delta.orientation22.ArActivity
 import edu.nitt.delta.orientation22.ArHostActivity
 import edu.nitt.delta.orientation22.ArMainActivity
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
@@ -23,13 +27,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
 class ArRepository@Inject constructor(
     private val apiInterface: ApiInterface
 ) {
     @Inject
     lateinit var sharedPrefHelper: SharedPrefHelper
-    fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?,ctx: CoroutineContext):Result<String> {
+    fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?,ctx: CoroutineContext, context: Context):Result<String> {
+
         try {
             var anchorId = ""
             val frame = sceneView!!.currentFrame
@@ -44,6 +50,7 @@ class ArRepository@Inject constructor(
                     anchorId = anchor.cloudAnchorId
                     ArHostActivity.anchorId = anchorId
                     Log.d("Hosting1",anchorId)
+                    context.toast("Cloud Anchor hosted successfully. Anchor Id: $anchorId")
                     CoroutineScope(ctx).launch {
                         Log.d("Hosting2",anchorId)
                        var res= updateLocation(
@@ -53,7 +60,8 @@ class ArRepository@Inject constructor(
                                 userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEwNjEyMDEwNUBuaXR0LmVkdSIsIm5hbWUiOiJTQVJWRVNIIFIifQ.nkOJA30xb5mjI8BbTSz-t0nyQK9H8Dx8eIVAFthApaA",
                                 latitude = ArHostActivity.latitude,
                                 longitude = ArHostActivity.longitude,
-                            )
+                            ),
+                           context = context,
                         )
                         Log.d("Hosting", res.toString());
                     }
@@ -67,7 +75,7 @@ class ArRepository@Inject constructor(
         }
     }
 
-    fun resolveAnchor(cloudAnchorNode: ArModelNode?,code : String):Result<String> = try {
+    fun resolveAnchor(cloudAnchorNode: ArModelNode?,code : String, context: Context):Result<String> = try {
         var isResolved = false
         cloudAnchorNode?.resolveCloudAnchor(code){ _, success: Boolean ->
             Log.d("resolve",code)
@@ -75,10 +83,12 @@ class ArRepository@Inject constructor(
                 cloudAnchorNode.isVisible = true
                 isResolved = true
                 Log.d("resolve", "Success")
+                context.toast("Cloud Anchor resolved successfully.")
             }
         }
         if (!isResolved) {
             Result.build { throw Exception("Error occurred while resolving cloud anchor") }
+            context.toast("Error occurred while resolving cloud anchor")
             Log.d("resolve", "Error occurred while resolving cloud anchor")
         }
         Result.build{ "Cloud Anchor resolved successfully" }
@@ -106,6 +116,7 @@ class ArRepository@Inject constructor(
         context:Context,
         lifecycle: Lifecycle?,
         glbFileUrl: String,
+        isHost: Boolean
     ):Result<ArModelNode> = try{
         Result.build{
             cloudAnchorNode.apply {
@@ -117,7 +128,7 @@ class ArRepository@Inject constructor(
                     lifecycle = lifecycle,
                     glbFileLocation = glbFileUrl,
                     onLoaded ={
-                        cloudAnchorNode.isVisible = false
+                        cloudAnchorNode.isVisible = isHost
                         cloudAnchorNode.anchor()
                         onTap = onTapModel
                     }
@@ -142,16 +153,18 @@ class ArRepository@Inject constructor(
        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
-    suspend fun updateLocation(location:LocationRequest) : Result<String> = try {
+    suspend fun updateLocation(location:LocationRequest, context: Context) : Result<String> = try {
         val token = sharedPrefHelper.token.toString()
         val response = apiInterface.hostLocation(location)
         Log.d("Host","I am Called")
         if (response.message == ResponseConstants.SUCCESS){
             Log.d("Host","1")
+            context.toast("Anchor details sent to backend successfully")
             Result.build { "Updated Successfully" }
         }
         else {
             Log.d("Host","2")
+            context.toast(ResponseConstants.ERROR)
             Result.build { throw Exception(ResponseConstants.ERROR) }
         }
 

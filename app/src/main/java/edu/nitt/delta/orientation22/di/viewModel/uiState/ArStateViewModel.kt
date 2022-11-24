@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.nitt.delta.orientation22.ArHostActivity
 import edu.nitt.delta.orientation22.ArMainActivity
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.di.viewModel.repository.ArRepository
 import edu.nitt.delta.orientation22.di.viewModel.BaseViewModel
@@ -36,8 +37,8 @@ class ArStateViewModel @Inject constructor(
 
 
     override fun doAction(action: ArAction): Any = when(action){
-        is ArAction.HostAnchor -> hostModel(action.sceneView,action.cloudAnchorNode)
-        is ArAction.ResolveAnchor -> resolveModel(action.cloudAnchorNode,action.code)
+        is ArAction.HostAnchor -> hostModel(action.sceneView,action.cloudAnchorNode, action.context)
+        is ArAction.ResolveAnchor -> resolveModel(action.cloudAnchorNode,action.code, action.context)
         is ArAction.ResetAnchor -> resetModel(action.cloudAnchorNode)
         is ArAction.LoadModel -> loadModel(action.onTapModel,
             action.context,
@@ -45,14 +46,15 @@ class ArStateViewModel @Inject constructor(
             action.cloudAnchorNode,
             action.sceneView,
             action.gldFileUrl,
+            action.isHost,
         )
         is ArAction.PostAnswer -> postAnswer()
         is ArAction.FetchLocation -> fetchLocation()
-        is ArAction.UpdateLocation -> updateLocation(action.location)
+        is ArAction.UpdateLocation -> updateLocation(action.location, action.context)
     }
 
-    private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode) = launch {
-        when(val res=arRepository.hostAnchor(cloudAnchorNode,sceneView,this.coroutineContext)){
+    private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode, context: Context) = launch {
+        when(val res=arRepository.hostAnchor(cloudAnchorNode,sceneView,this.coroutineContext, context = context)){
             is Result.Value -> {
                 mutableSuccess.value = res.value
                 Log.d("Hosting", res.value)
@@ -64,8 +66,8 @@ class ArStateViewModel @Inject constructor(
         }
     }
 
-    private fun resolveModel(cloudAnchorNode: ArModelNode,code:String) = launch {
-        when(val res =  arRepository.resolveAnchor(cloudAnchorNode,code)){
+    private fun resolveModel(cloudAnchorNode: ArModelNode,code:String, context: Context) = launch {
+        when(val res =  arRepository.resolveAnchor(cloudAnchorNode,code, context = context)){
             is Result.Value -> mutableSuccess.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }
@@ -84,8 +86,9 @@ class ArStateViewModel @Inject constructor(
         cloudAnchorNode: ArModelNode,
         sceneView: ArSceneView,
         glbFileUrl: String,
+        isHost: Boolean,
     )= CoroutineScope(Dispatchers.Main).launch{
-        when (val res = arRepository.loadModel(sceneView,cloudAnchorNode, onTapModel, context, lifecycle, glbFileUrl)){
+        when (val res = arRepository.loadModel(sceneView,cloudAnchorNode, onTapModel, context, lifecycle, glbFileUrl, isHost)){
             is Result.Value -> Log.v(res.value.name,res.toString())
             is Result.Error -> Log.v("InArStateViewModel",res.exception.message.toString())
         }
@@ -105,10 +108,14 @@ class ArStateViewModel @Inject constructor(
         }
     }
 
-    private fun updateLocation(req:LocationRequest) = launch {
-        when(val res = arRepository.updateLocation(req)){
-            is Result.Value -> mutableSuccess.value = res.value
-            is Result.Error -> mutableError.value = res.exception.message
+    private fun updateLocation(req:LocationRequest, context: Context) = launch {
+        when(val res = arRepository.updateLocation(req, context = context)){
+            is Result.Value -> {
+                mutableSuccess.value = res.value
+            }
+            is Result.Error -> {
+                mutableError.value = res.exception.message
+            }
         }
     }
 }

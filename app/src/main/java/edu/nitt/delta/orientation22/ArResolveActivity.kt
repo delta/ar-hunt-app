@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,11 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.ar.sceneform.math.Vector3
 import dagger.hilt.android.AndroidEntryPoint
+import dev.romainguy.kotlin.math.Float3
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
@@ -55,7 +60,7 @@ class ArResolveActivity : ComponentActivity() {
 
         setContent {
             Orientation22androidTheme {
-
+                val context = LocalContext.current
 //                viewModel.doAction(ArAction.FetchLocation)
                 var locations = viewModel.locationData.value
 
@@ -85,13 +90,15 @@ class ArResolveActivity : ComponentActivity() {
                     viewModel.doAction(ArAction.PostAnswer)
                 }, currentLevel = currentLevel, routeList = routeList)
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
                         onClick = {
                             viewModel.doAction(ArAction.ResolveAnchor(
                                 cloudAnchorNode,
-                                "ua-d017680d317ab1343505e54f7a958b66"
+                                ArMainActivity.anchorId,
+                                context = context
                             ))
                         }
                     ) {
@@ -114,6 +121,10 @@ class ArResolveActivity : ComponentActivity() {
         arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
         arSceneView.cloudAnchorEnabled=true
         cloudAnchorNode.isVisible = false
+        cloudAnchorNode.scale = Float3(0.25f, 0.25f, 0.25f)
+        cloudAnchorNode.isRotationEditable = false
+        cloudAnchorNode.isPositionEditable = false
+        cloudAnchorNode.isScaleEditable = false
         viewModel.doAction(
             ArAction.LoadModel(
                 this,
@@ -124,17 +135,12 @@ class ArResolveActivity : ComponentActivity() {
                 arSceneView,
                 cloudAnchorNode,
                 ArMainActivity.glbUrl,
+                false
             )
         )
     }
 
     private fun tapModel(){
         Toast.makeText(applicationContext,"Model clicked successfully",Toast.LENGTH_SHORT).show()
-    }
-
-    var updateAnchorLocation: (
-        hostedAnchorData: LocationRequest,
-    ) -> Unit = {
-        viewModel.doAction(ArAction.UpdateLocation(it))
     }
 }

@@ -10,8 +10,8 @@ import io.github.sceneview.renderable.Renderable
 
 sealed class ArAction {
     data class HostAnchor(val sceneView: ArSceneView,
-    val cloudAnchorNode: ArModelNode): ArAction()
-    data class ResolveAnchor(val cloudAnchorNode: ArModelNode,val code:String) : ArAction()
+    val cloudAnchorNode: ArModelNode, val context: Context): ArAction()
+    data class ResolveAnchor(val cloudAnchorNode: ArModelNode,val code:String, val context: Context) : ArAction()
     data class ResetAnchor(val cloudAnchorNode: ArModelNode) : ArAction()
     data class LoadModel(
         val context: Context,
@@ -20,8 +20,9 @@ sealed class ArAction {
         val sceneView: ArSceneView,
         val cloudAnchorNode: ArModelNode,
         val gldFileUrl: String,
+        val isHost: Boolean,
     ) : ArAction()
-    data class UpdateLocation(val location:LocationRequest): ArAction()
+    data class UpdateLocation(val location:LocationRequest, val context: Context): ArAction()
     object FetchLocation:ArAction()
     object PostAnswer : ArAction()
 }

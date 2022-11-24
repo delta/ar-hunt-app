@@ -62,7 +62,8 @@ class ArActivity : ComponentActivity() {
                 },
                 arSceneView,
                 cloudAnchorNode,
-                "miyawaki.glb"
+                "miyawaki.glb",
+                false
             )
         )
 

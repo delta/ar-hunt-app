@@ -32,7 +32,7 @@
         <activity
             android:name=".ArMainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Orientation22android">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -45,7 +45,7 @@
         <activity
             android:name=".ArHostActivity"
             android:exported="true"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Orientation22android">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -53,7 +53,7 @@
         <activity
             android:name=".ArResolveActivity"
             android:exported="true"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Orientation22android">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -91,7 +91,7 @@
             android:value="YOUR_KEY" />
         <meta-data
             android:name="com.google.android.ar.API_KEY"
-            android:value="AIzaSyD5ekvYbjJp_KFPGgm2flRXDfEgNOt_p_o" />
+            android:value="YOUR_KEY" />
     </application>
 
 </manifest>
