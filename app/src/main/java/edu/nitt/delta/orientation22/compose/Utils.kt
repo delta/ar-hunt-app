@@ -221,7 +221,7 @@ fun distanceCalculator(
     glbUrl:String,
     anchorHash: String
 ){
-    val radius = 2000000000000
+    val radius = 20
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {

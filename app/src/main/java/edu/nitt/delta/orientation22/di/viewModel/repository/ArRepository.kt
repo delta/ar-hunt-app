@@ -86,6 +86,9 @@ class ArRepository@Inject constructor(
                 parent = arSceneView
                 isSmoothPoseEnable = false
                 isVisible = false
+                isRotationEditable = false
+                isScaleEditable = false
+                isPositionEditable = false
                 loadModelAsync(
                     context = context,
                     lifecycle = lifecycle,
