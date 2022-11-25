@@ -121,7 +121,7 @@ class ArResolveActivity : ComponentActivity() {
         arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
         arSceneView.cloudAnchorEnabled=true
         cloudAnchorNode.isVisible = false
-        cloudAnchorNode.scale = Float3(0.25f, 0.25f, 0.25f)
+        cloudAnchorNode.scale = Float3(ArMainActivity.xScale, ArMainActivity.yScale, ArMainActivity.zScale)
         cloudAnchorNode.isRotationEditable = false
         cloudAnchorNode.isPositionEditable = false
         cloudAnchorNode.isScaleEditable = false

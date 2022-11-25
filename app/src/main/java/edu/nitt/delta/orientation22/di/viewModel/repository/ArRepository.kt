@@ -43,6 +43,7 @@ class ArRepository@Inject constructor(
                 cloudAnchorNode.anchor()
             }
             if (sceneView.arSession?.estimateFeatureMapQualityForHosting(frame!!.camera.pose) == Session.FeatureMapQuality.INSUFFICIENT) {
+                context.toast("Map Quality is inefficient")
                 return Result.build<String> { throw Exception("Unable To Host Anchor1") }
             }
             cloudAnchorNode.hostCloudAnchor{ anchor: Anchor, success: Boolean ->
@@ -68,7 +69,10 @@ class ArRepository@Inject constructor(
                 }
                 Log.d("Hosting3",anchorId)
             }
-            if (anchorId.isEmpty()) Result.build<String> { throw Exception("Unable To Host Anchor2") }
+            if (anchorId.isEmpty()) Result.build<String> {
+                context.toast("Unable To Host Anchor2")
+                throw Exception("Unable To Host Anchor2")
+            }
             return Result.build { anchorId }
         } catch (e: Exception) {
             return Result.build<String> { throw Exception(ResponseConstants.ERROR) }

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Dialog
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.romainguy.kotlin.math.Float3
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
 import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
@@ -57,6 +58,9 @@ class ArMainActivity : ComponentActivity() {
         var glbUrl = "miyawaki.glb"
         var locationId = 0
         var anchorId = ""
+        var xScale = 1f
+        var yScale = 1f
+        var zScale = 1f
     }
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +84,11 @@ class ArMainActivity : ComponentActivity() {
             var mSelectedText = remember { mutableStateOf("") }
 
             var cloudAnchorId = remember { mutableStateOf("") }
+
+            var x = remember { mutableStateOf( "1.0") }
+            var y = remember { mutableStateOf( "1.0") }
+            var z = remember { mutableStateOf( "1.0") }
+
 
             clipboardManager.getText()?.text?.let {
                 cloudAnchorId.value = it
@@ -122,6 +131,29 @@ class ArMainActivity : ComponentActivity() {
                         .fillMaxWidth(0.8f).padding(20.dp),
                     label = {Text("Enter Cloud Anchor ID to resolve anchor")},
                 )
+
+                TextField(
+                    value = x.value,
+                    onValueChange = { x.value = it },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f).padding(20.dp),
+                    label = {Text("Enter X Scale")},
+                )
+                TextField(
+                    value = y.value.toString(),
+                    onValueChange = { y.value = it},
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f).padding(20.dp),
+                    label = {Text("Enter Y Scale")},
+                )
+                TextField(
+                    value = z.value,
+                    onValueChange = { z.value = it },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f).padding(20.dp),
+                    label = {Text("Enter Z Scale")},
+                )
+
                 Button(
                     onClick = {
                         if (cloudAnchorId.value == ""){
@@ -132,6 +164,9 @@ class ArMainActivity : ComponentActivity() {
                         }
                         else {
                             anchorId = cloudAnchorId.value
+                            xScale = x.value.toFloat()
+                            yScale = y.value.toFloat()
+                            zScale = z.value.toFloat()
                             locations.forEach() {
                                 if (it.name == mSelectedText.value) {
                                     arViewModel.locationId.value = it.id
