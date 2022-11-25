@@ -44,6 +44,7 @@ class LoginStateViewModel @Inject constructor(
             is Result.Value-> {
                 user = res.value
                 isRegistered()
+                isLive()
 
             }
             is Result.Error -> {
@@ -59,6 +60,7 @@ class LoginStateViewModel @Inject constructor(
                 isLoggedIn = res.value
                 if(isLoggedIn){
                     isRegistered()
+                    isLive()
                 }
             }
             is Result.Error -> mutableError.value = res.exception.message

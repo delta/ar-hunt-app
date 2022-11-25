@@ -34,9 +34,8 @@ fun LoginFragment(
         val isReg =loginStateViewModel.isRegistered
         var mContext = LocalContext.current
         Log.d("islive","before ${loginStateViewModel.isLive.value}")
-        loginStateViewModel.doAction(LoginAction.IsLive)
         Log.d("islive","after ${loginStateViewModel.isLive.value}")
-
+        val isLive = loginStateViewModel.isLive.value
         LoginScreen(painter,
             description,
             navController = navController,
@@ -47,7 +46,7 @@ fun LoginFragment(
                         popUpTo(NavigationRoutes.Login.route) { inclusive = true }
                     }
                 } else {
-                    if(loginStateViewModel.isLive.value) {
+                    if(isLive) {
                         mContext.startActivity(Intent(mContext, MainActivity::class.java))
                     }
                     else{
