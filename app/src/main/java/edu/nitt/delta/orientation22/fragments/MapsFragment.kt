@@ -27,9 +27,11 @@ fun MapFragment(
         var markerList : List<MarkerModel> = listOf()
         var currentClue = "Default Clue"
         var currentClueLocation = LatLng(10.7614246, 78.8139187)
+        var currentglbUrl = "miyawaki.glb"
+        var currentanchorHash="hello"
         mapviewModel.doAction(MapAction.GetCurrentLevel)
         var currentLevel = mapviewModel.currentState.value
-        Log.d("MapScreen",currentLevel.toString())
+        Log.d("MapScreen",routeList.toString())
         routeList.forEach {marker->
             val markerModel = MarkerModel(
                 markerState = MarkerState(LatLng(marker.latitude,marker.longitude)),
@@ -40,11 +42,13 @@ fun MapFragment(
             )
             markerList = markerList+markerModel
             if (marker.position == currentLevel){
+                Log.d("Resolve",marker.anchorHash)
                 currentClue = marker.clue
                 currentClueLocation = LatLng(marker.latitude, marker.longitude)
+                currentglbUrl = marker.glbUrl
+                currentanchorHash = marker.anchorHash
             }
         }
-        Log.d("MapScreen",markerList.toString())
-        MapScreen(markerList, currentClue, currentClueLocation)
+        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash)
     }
 }

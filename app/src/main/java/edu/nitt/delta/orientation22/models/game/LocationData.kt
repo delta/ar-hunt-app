@@ -7,7 +7,7 @@ data class LocationData(
     val name:String,
     @SerializedName("Clue")
     val clue:String,
-    @SerializedName("anchorHash")
+    @SerializedName("AnchorHash")
     val anchorHash:String,
     @SerializedName("GlbURL")
     val glbUrl:String,

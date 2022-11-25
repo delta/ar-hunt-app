@@ -44,8 +44,11 @@ class ArRepository@Inject constructor(
 
     fun resolveAnchor(cloudAnchorNode: ArModelNode?,code : String):Result<String> = try {
         var isResolved = false
+        Log.d("Resolve","inside repo")
         cloudAnchorNode?.resolveCloudAnchor(code){ _, success: Boolean ->
+            Log.d("Resolve","Inside cloudanchor resolve")
             if(success){
+                Log.d("Resolve","Done resolving")
                 cloudAnchorNode.isVisible = true
                 isResolved = true
             }
@@ -54,6 +57,7 @@ class ArRepository@Inject constructor(
             Result.build { throw Exception("Error occurred while resolving cloud anchor") }
         Result.build{ "Cloud Anchor resolved successfully" }
         } catch (e: Exception) {
+            Log.d("Resolve",e.message.toString())
             Result.build<String> { throw Exception(ResponseConstants.ERROR) }
     }
 
@@ -75,16 +79,18 @@ class ArRepository@Inject constructor(
         onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         context:Context,
         lifecycle: Lifecycle?,
+        glbUrl : String
     ):Result<ArModelNode> = try{
         Result.build{
             cloudAnchorNode.apply {
                 parent = arSceneView
                 isSmoothPoseEnable = false
-                isVisible = true
+                isVisible = false
                 loadModelAsync(
                     context = context,
                     lifecycle = lifecycle,
-                    glbFileLocation = "miyawaki.glb",
+                    glbFileLocation = glbUrl,
+                    autoAnimate = false,
                     onLoaded ={
                         cloudAnchorNode.anchor()
                         onTap =onTapModel
