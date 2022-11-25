@@ -9,10 +9,10 @@ plugins {
 android {
     signingConfigs {
         debug {
-            storeFile file('don_wick32')
-            storePassword 'don_wick32'
-            keyAlias 'don_wick32'
-            keyPassword 'don_wick32'
+            storeFile file('/media/nitish/Education/Linux/Coding/Delta/debug-keystore1.jks')
+            storePassword 'test123'
+            keyAlias 'key2'
+            keyPassword 'test123'
         }
     }
     namespace 'edu.nitt.delta.orientation22'
