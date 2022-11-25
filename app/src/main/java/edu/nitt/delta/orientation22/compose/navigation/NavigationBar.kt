@@ -25,6 +25,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.LocationPermissionGetter
 import edu.nitt.delta.orientation22.compose.locationPermissionCheck
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.black
 import edu.nitt.delta.orientation22.ui.theme.peach
 import edu.nitt.delta.orientation22.ui.theme.white

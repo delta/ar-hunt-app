@@ -11,4 +11,5 @@ object ApiRoutes {
     const val NEXT_STATE="api/nextState"
     const val AUTH_CALLBACK = "api/auth/callback"
     const val IS_REGISTERED = "api/isRegistered"
+    const val IS_LIVE="api/isLive"
 }

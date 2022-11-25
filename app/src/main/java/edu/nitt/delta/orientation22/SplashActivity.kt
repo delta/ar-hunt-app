@@ -35,6 +35,7 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loginStateViewModel.doAction(LoginAction.IsLoggedIn)
+        loginStateViewModel.doAction(LoginAction.IsLive)
         setContent {
             Orientation22androidTheme {
                 // A surface container using the 'background' color from the theme
@@ -67,11 +68,17 @@ fun SetBackGround(
         LaunchedEffect(Unit) {
             delay(7.seconds)
             if (loginStateViewModel.isLoggedIn) {
-                if (loginStateViewModel.isRegistered.value.isRegistered) {
-                    mContext.startActivity(Intent(mContext, MainActivity::class.java))
-                } else{
-                    LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
-                    mContext.startActivity(Intent(mContext,LoginActivity::class.java))
+                if(loginStateViewModel.isLive.value) {
+                    if (loginStateViewModel.isRegistered.value.isRegistered) {
+                        mContext.startActivity(Intent(mContext, MainActivity::class.java))
+                    } else {
+                        LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
+                        mContext.startActivity(Intent(mContext, LoginActivity::class.java))
+                    }
+                }
+                else{
+                    val intent = Intent(mContext,LiveActivity::class.java)
+                    mContext.startActivity(intent)
                 }
             } else{
                 LoginActivity.startDestination = NavigationRoutes.Login.route

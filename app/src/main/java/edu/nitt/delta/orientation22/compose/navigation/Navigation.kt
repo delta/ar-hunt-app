@@ -22,7 +22,7 @@ fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStat
             LoginFragment(navController,loginStateViewModel)
         }
         composable(route = NavigationRoutes.TeamDetails.route){
-            TeamDetailsFragment(teamStateViewModel)
+            TeamDetailsFragment(teamStateViewModel,loginStateViewModel)
         }
         composable(route = NavigationRoutes.DAuthWebView.route) {
             DAuthWebView(onSuccess = {

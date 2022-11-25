@@ -65,4 +65,17 @@ class LoginRepository @Inject constructor(
     fun isLogOut(){
         sharedPrefHelper.clear()
     }
+
+    suspend fun isLive() : Result<Boolean> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.isLive(TokenRequestModel(token))
+        if (response.message == ResponseConstants.SUCCESS){
+            Result.build { true }
+        }
+        else{
+            Result.build { false }
+        }
+    }catch (e:Exception){
+        Result.build { throw e }
+    }
 }
