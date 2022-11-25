@@ -87,4 +87,12 @@ class ArActivity : ComponentActivity() {
         cloudAnchorNode.playAnimation(0,false)
         Toast.makeText(applicationContext,"Model clicked successfully",Toast.LENGTH_SHORT).show()
     }
+
+    override fun onBackPressed() {
+//        super.onBackPressed()
+       // Log.v("999",cloudAnchorNode.isAttached.toString())
+      //  cloudAnchorNode.detachFromScene(arSceneView)
+        cloudAnchorNode.destroy()
+    //    super.onBackPressed()
+    }
 }

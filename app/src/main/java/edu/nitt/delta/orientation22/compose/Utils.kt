@@ -221,13 +221,12 @@ fun distanceCalculator(
     glbUrl:String,
     anchorHash: String
 ){
-    val radius = 2000000000
+    val radius = 20
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {
         val location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
-            mContext.toast("Latitude: ${it.latitude}, Longitude: ${it.longitude}")
             val results = FloatArray(1)
             Location.distanceBetween(
                 it.latitude,

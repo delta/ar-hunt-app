@@ -74,13 +74,13 @@ fun DashboardScreen(
                                 color = brightYellow,
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular))
                             )
-                            IconButton(onClick = {
-                                logout()
-                            }, modifier = Modifier.padding(top = 30.dp, end = 10.dp).align(Alignment.CenterEnd)) {
-                                Icon(
-                                    Icons.Sharp.ExitToApp, "logout", modifier = Modifier.size(30.dp), tint = peach
-                                )
-                            }
+//                            IconButton(onClick = {
+//                                logout()
+//                            }, modifier = Modifier.padding(top = 30.dp, end = 10.dp).align(Alignment.CenterEnd)) {
+//                                Icon(
+//                                    Icons.Sharp.ExitToApp, "logout", modifier = Modifier.size(30.dp), tint = peach
+//                                )
+//                            }
                         }
                         
                         Spacer(modifier = Modifier.height(5.dp))
