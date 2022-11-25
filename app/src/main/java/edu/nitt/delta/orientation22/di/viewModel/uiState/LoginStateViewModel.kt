@@ -31,11 +31,13 @@ class LoginStateViewModel @Inject constructor(
         is LoginAction.IsLoggedIn -> isLoggedIn()
         is LoginAction.IsLoggedOut -> isLoggedOut()
         is LoginAction.IsRegistered -> isRegistered()
+        is LoginAction.IsLive -> isLive()
     }
 
     var uiState = mutableStateOf(LoginState.IDLE)
     var isRegistered = mutableStateOf<IsRegisteredResponse>(IsRegisteredResponse(false,"",0))
     var isLoggedIn = false
+    var isLive = mutableStateOf(false)
     private fun login(code:String)=launch {
         uiState.value=LoginState.LOADING
         when(val res = loginRepository.Login(code)){
@@ -77,6 +79,14 @@ class LoginStateViewModel @Inject constructor(
                 uiState.value=LoginState.ERROR
                 Log.v("1111",res.exception.message.toString())
             }
+        }
+    }
+
+    private fun isLive() = launch {
+        when(val res = loginRepository.isLive()){
+            is Result.Value -> isLive.value = res.value
+            is Result.Error -> mutableError.value = res.exception.message
+
         }
     }
 

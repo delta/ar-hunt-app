@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.di.api
 
+import edu.nitt.delta.orientation22.models.IsLiveResponse
 import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.auth.*
 import edu.nitt.delta.orientation22.models.game.AnswerResponse
@@ -50,4 +51,9 @@ interface ApiInterface {
     suspend fun isRegistered(
         @Body token:TokenRequestModel
     ):IsRegisteredResponse
+
+    @POST(ApiRoutes.IS_LIVE)
+    suspend fun isLive(
+        @Body token: TokenRequestModel
+    ):IsLiveResponse
 }

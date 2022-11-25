@@ -55,6 +55,16 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".LiveActivity"
+            android:exported="true"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Orientation22android">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ArActivity"
             android:exported="true"
             android:configChanges="orientation"

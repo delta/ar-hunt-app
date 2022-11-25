@@ -5,4 +5,5 @@ sealed class LoginAction {
     object IsLoggedIn : LoginAction()
     object IsLoggedOut : LoginAction()
     object IsRegistered : LoginAction()
+    object IsLive : LoginAction()
 }
