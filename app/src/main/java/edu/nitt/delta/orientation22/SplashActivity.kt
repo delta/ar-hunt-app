@@ -68,18 +68,18 @@ fun SetBackGround(
         LaunchedEffect(Unit) {
             delay(7.seconds)
             if (loginStateViewModel.isLoggedIn) {
-                if(loginStateViewModel.isLive.value) {
                     if (loginStateViewModel.isRegistered.value.isRegistered) {
-                        mContext.startActivity(Intent(mContext, MainActivity::class.java))
+                        if(loginStateViewModel.isLive.value) {
+                            mContext.startActivity(Intent(mContext, MainActivity::class.java))
+                        }
+                        else {
+                            val intent = Intent(mContext,LiveActivity::class.java)
+                            mContext.startActivity(intent)
+                        }
                     } else {
                         LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
                         mContext.startActivity(Intent(mContext, LoginActivity::class.java))
                     }
-                }
-                else{
-                    val intent = Intent(mContext,LiveActivity::class.java)
-                    mContext.startActivity(intent)
-                }
             } else{
                 LoginActivity.startDestination = NavigationRoutes.Login.route
                 mContext.startActivity(Intent(mContext,LoginActivity::class.java))
