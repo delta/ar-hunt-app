@@ -100,7 +100,7 @@ fun LoginScreen(
                         navController.navigate(NavigationRoutes.DAuthWebView.route)
                 }
                 else {
-                    mContext.toast("Your device doesn't support Google AR Services, please try with a different device.")
+                    mContext.toast("Google AR Services is not supported. Please use a different device.")
                 }
             }) {
                 if(state==LoginState.IDLE)

@@ -29,6 +29,7 @@ fun MapFragment(
         var currentClueLocation = LatLng(10.7614246, 78.8139187)
         var currentglbUrl = "miyawaki.glb"
         var currentanchorHash="hello"
+        var currentScale = 1.0
         mapviewModel.doAction(MapAction.GetCurrentLevel)
         var currentLevel = mapviewModel.currentState.value
         Log.d("MapScreen",routeList.toString())
@@ -47,8 +48,9 @@ fun MapFragment(
                 currentClueLocation = LatLng(marker.latitude, marker.longitude)
                 currentglbUrl = marker.glbUrl
                 currentanchorHash = marker.anchorHash
+                currentScale = marker.scale
             }
         }
-        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash)
+        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash, currentScale)
     }
 }

@@ -96,11 +96,12 @@ fun openAr(
     fusedLocationProviderClient: FusedLocationProviderClient,
     currentClueLocation: LatLng,
     glbUrl: String,
-    anchorHash : String,
+    anchorHash: String,
+    currentScale: Double,
 ) {
     when{
         permissionState.hasPermission -> {
-            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash)
+            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash,currentScale)
         }
         permissionState.shouldShowRationale -> {
             mContext.toast("Camera Access is required for AR Explore.")
@@ -218,8 +219,9 @@ fun distanceCalculator(
     fusedLocationProviderClient: FusedLocationProviderClient,
     mContext: Context,
     currentClueLocation: LatLng,
-    glbUrl:String,
-    anchorHash: String
+    glbUrl: String,
+    anchorHash: String,
+    currentScale: Double
 ){
     val radius = 20
     if (
@@ -242,6 +244,7 @@ fun distanceCalculator(
                     val intent = Intent(mContext, ArActivity::class.java)
                     intent.putExtra("glb", glbUrl)
                     intent.putExtra("anchorHash", anchorHash)
+                    intent.putExtra("anchorScale", currentScale)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     mContext.startActivity(intent)
                 } else {

@@ -115,8 +115,9 @@ fun MapScreen(
     markerList: List<MarkerModel>,
     currentClue: String,
     currentClueLocation: LatLng,
-    currentglbUrl : String,
-    currentanchorHash : String
+    currentglbUrl: String,
+    currentanchorHash: String,
+    currentScale: Double
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
@@ -127,7 +128,7 @@ fun MapScreen(
 
     GoogleMapScreen(markerList = markerList)
 
-    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash)
+    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -140,7 +141,8 @@ fun TopBar (
     permissionState: PermissionState,
     currentClue: String,
     currentglbUrl: String,
-    currentanchorHash : String
+    currentanchorHash: String,
+    currentScale: Double
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -151,7 +153,7 @@ fun TopBar (
     ) {
         Button(
             onClick = {
-                openAr(permissionState, mContext, fusedLocationProviderClient, currentClueLocation,currentglbUrl,currentanchorHash)
+                openAr(permissionState, mContext, fusedLocationProviderClient, currentClueLocation,currentglbUrl,currentanchorHash,currentScale)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = yellow

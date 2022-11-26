@@ -25,7 +25,7 @@ class LoginRepository @Inject constructor(
             sharedPrefHelper.rollNo = response.email.substring(0,9).toInt()
             Result.build { UserModel(name = response.name, email = response.email) }
         } else {
-            Log.d("Login", "Out")
+            Log.d("Login", response.message.toString())
             Result.build { throw Exception(ResponseConstants.ERROR) }
         }
     }catch (e:Exception){
@@ -69,8 +69,9 @@ class LoginRepository @Inject constructor(
     suspend fun isLive() : Result<Boolean> = try {
         val token = sharedPrefHelper.token.toString()
         val response = apiInterface.isLive(TokenRequestModel(token))
+        Log.d("isLive",response.live.toString())
         if (response.message == ResponseConstants.SUCCESS){
-            Result.build { true }
+            Result.build { response.live }
         }
         else{
             Result.build { false }
