@@ -223,7 +223,7 @@ fun distanceCalculator(
     anchorHash: String,
     currentScale: Double
 ){
-    val radius = 20
+    val radius = 10
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {
@@ -239,7 +239,7 @@ fun distanceCalculator(
                     results
                 )
                 val distanceInMeters = results[0]
-                Log.d("DIST", distanceInMeters.toString())
+ //               mContext.toast(distanceInMeters.toString())
                 if (distanceInMeters <= radius) {
                     val intent = Intent(mContext, ArActivity::class.java)
                     intent.putExtra("glb", glbUrl)
