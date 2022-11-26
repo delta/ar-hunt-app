@@ -44,5 +44,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        finishAffinity()
+        return
+        super.onBackPressed()
+    }
 
 }

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -147,7 +148,7 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, routeList:
                         routeList.forEach(
                         ){
                             if (it.position == currentLevel){
-                                if (it.answer == text){
+                                if (it.answer.equals(text, ignoreCase = true)){
                                     isPopUp.value = false
                                     mContext.toast("Congratulations!! You completed this level")
                                     onClick()

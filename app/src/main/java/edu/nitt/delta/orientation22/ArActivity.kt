@@ -69,7 +69,7 @@ class ArActivity : ComponentActivity() {
         arSceneView.lightEstimationMode= LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity =DEFAULT_LIGHT_INTENSITY
         arSceneView.cloudAnchorEnabled=true
-        cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
+       // cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
         cloudAnchorNode.isScaleEditable = false
         cloudAnchorNode.isPositionEditable = false
         cloudAnchorNode.isRotationEditable = false
@@ -96,10 +96,9 @@ class ArActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-//        super.onBackPressed()
-       // Log.v("999",cloudAnchorNode.isAttached.toString())
-      //  cloudAnchorNode.detachFromScene(arSceneView)
-        cloudAnchorNode.destroy()
-    //    super.onBackPressed()
+        val intent = Intent(applicationContext,MainActivity::class.java)
+        startActivity(intent)
+        return
+        super.onBackPressed()
     }
 }
