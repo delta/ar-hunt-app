@@ -69,7 +69,7 @@ class ArActivity : ComponentActivity() {
         arSceneView.lightEstimationMode= LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity =DEFAULT_LIGHT_INTENSITY
         arSceneView.cloudAnchorEnabled=true
-       // cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
+        cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
         cloudAnchorNode.isScaleEditable = false
         cloudAnchorNode.isPositionEditable = false
         cloudAnchorNode.isRotationEditable = false
@@ -92,7 +92,6 @@ class ArActivity : ComponentActivity() {
 
     private fun tapModel(){
         cloudAnchorNode.playAnimation(0,false)
-        Toast.makeText(applicationContext,"Model clicked successfully",Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
