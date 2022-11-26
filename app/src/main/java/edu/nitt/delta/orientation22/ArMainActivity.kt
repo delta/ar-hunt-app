@@ -58,15 +58,14 @@ class ArMainActivity : ComponentActivity() {
         var glbUrl = "miyawaki.glb"
         var locationId = 0
         var anchorId = ""
-        var xScale = 1f
-        var yScale = 1f
-        var zScale = 1f
+        var anchorScale = 1.0f
     }
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val arViewModel by viewModels<ArStateViewModel>()
+
         arViewModel.doAction(ArAction.FetchLocation)
         setContent {
 
@@ -85,10 +84,7 @@ class ArMainActivity : ComponentActivity() {
 
             var cloudAnchorId = remember { mutableStateOf("") }
 
-            var x = remember { mutableStateOf( "1.0") }
-            var y = remember { mutableStateOf( "1.0") }
-            var z = remember { mutableStateOf( "1.0") }
-
+            var scale = remember { mutableStateOf( "1.0") }
 
             clipboardManager.getText()?.text?.let {
                 cloudAnchorId.value = it
@@ -98,12 +94,23 @@ class ArMainActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 MyContent(locationNames, mSelectedText)
+
+                TextField(
+                    value = scale.value,
+                    onValueChange = { scale.value = it },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f).padding(20.dp),
+                    label = {Text("Enter Scale")},
+                )
+
                 Button(
                     onClick = {
                         if (mSelectedText.value == ""){
                             this@ArMainActivity.toast("Pick a location!")
                         }
                         else{
+//                            anchorScale = scale.value.toFloat()
+                            ArHostActivity.anchorScale = scale.value.toFloat()
                         locations.forEach(){
                             if (it.name == mSelectedText.value){
                                 arViewModel.locationId.value = it.id
@@ -131,28 +138,20 @@ class ArMainActivity : ComponentActivity() {
                         .fillMaxWidth(0.8f).padding(20.dp),
                     label = {Text("Enter Cloud Anchor ID to resolve anchor")},
                 )
-
-                TextField(
-                    value = x.value,
-                    onValueChange = { x.value = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f).padding(20.dp),
-                    label = {Text("Enter X Scale")},
-                )
-                TextField(
-                    value = y.value.toString(),
-                    onValueChange = { y.value = it},
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f).padding(20.dp),
-                    label = {Text("Enter Y Scale")},
-                )
-                TextField(
-                    value = z.value,
-                    onValueChange = { z.value = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f).padding(20.dp),
-                    label = {Text("Enter Z Scale")},
-                )
+//                TextField(
+//                    value = y.value.toString(),
+//                    onValueChange = { y.value = it},
+//                    modifier = Modifier
+//                        .fillMaxWidth(0.8f).padding(20.dp),
+//                    label = {Text("Enter Y Scale")},
+//                )
+//                TextField(
+//                    value = z.value,
+//                    onValueChange = { z.value = it },
+//                    modifier = Modifier
+//                        .fillMaxWidth(0.8f).padding(20.dp),
+//                    label = {Text("Enter Z Scale")},
+//                )
 
                 Button(
                     onClick = {
@@ -164,15 +163,15 @@ class ArMainActivity : ComponentActivity() {
                         }
                         else {
                             anchorId = cloudAnchorId.value
-                            xScale = x.value.toFloat()
-                            yScale = y.value.toFloat()
-                            zScale = z.value.toFloat()
                             locations.forEach() {
                                 if (it.name == mSelectedText.value) {
                                     arViewModel.locationId.value = it.id
                                     arViewModel.glbUrl = it.glbUrl
                                     glbUrl = it.glbUrl
                                     locationId = it.id
+                                    Log.d("Scale from backend", it.scale.toString())
+//                                    Log.d("Anchor Hash", it.anchorHash)
+                                    anchorScale = it.scale.toFloat()
                                 }
                             }
                             val intent = Intent(applicationContext, ArResolveActivity::class.java)

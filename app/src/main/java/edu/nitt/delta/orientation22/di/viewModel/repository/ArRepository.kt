@@ -61,10 +61,12 @@ class ArRepository@Inject constructor(
                                 userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEwNjEyMDEwNUBuaXR0LmVkdSIsIm5hbWUiOiJTQVJWRVNIIFIifQ.nkOJA30xb5mjI8BbTSz-t0nyQK9H8Dx8eIVAFthApaA",
                                 latitude = ArHostActivity.latitude,
                                 longitude = ArHostActivity.longitude,
+                                scale = ArMainActivity.anchorScale.toDouble(),
                             ),
                            context = context,
                         )
                         Log.d("Hosting", res.toString());
+                        Log.d("host",ArMainActivity.anchorScale.toString())
                     }
                 }
                 Log.d("Hosting3",anchorId)

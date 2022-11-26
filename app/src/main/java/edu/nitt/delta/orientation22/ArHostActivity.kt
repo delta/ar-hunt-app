@@ -45,6 +45,7 @@ class ArHostActivity: ComponentActivity() {
         var latitude = 0.0
         var longitude = 0.0
         var anchorId = ""
+        var anchorScale = 1.0f
     }
     private lateinit var arSceneView: ArSceneView
     private lateinit var cloudAnchorNode: ArModelNode
@@ -131,11 +132,12 @@ class ArHostActivity: ComponentActivity() {
                                         ArMainActivity.locationId,
                                         latitude,
                                         longitude,
-                                        userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEwNjEyMDEwNUBuaXR0LmVkdSIsIm5hbWUiOiJTQVJWRVNIIFIifQ.nkOJA30xb5mjI8BbTSz-t0nyQK9H8Dx8eIVAFthApaA"
+                                        userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEwNjEyMDEwNUBuaXR0LmVkdSIsIm5hbWUiOiJTQVJWRVNIIFIifQ.nkOJA30xb5mjI8BbTSz-t0nyQK9H8Dx8eIVAFthApaA",
+                                        scale = anchorScale.toDouble()
                                     ),
                                     context = context
                                 ))
-                                context.toast("Anchor details sent to backend successfully")
+                                context.toast("Anchor details sent to backend successfully ${anchorScale.toDouble()}")
                             }
                         },
                         modifier = Modifier.padding(10.dp)

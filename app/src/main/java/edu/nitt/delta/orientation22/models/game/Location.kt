@@ -16,4 +16,8 @@ data class Location(
     val name: String,
     @SerializedName("glb_url")
     val glbUrl: String,
+    @SerializedName("scale")
+    val scale: Double,
+    @SerializedName("anchorHash")
+    val anchorHash: String,
 )

@@ -12,5 +12,7 @@ data class LocationRequest(
     @SerializedName("Longitude")
     val longitude:Double,
     @SerializedName("user_token")
-    val userToken:String
+    val userToken:String,
+    @SerializedName("scale")
+    val scale:Double,
 )
