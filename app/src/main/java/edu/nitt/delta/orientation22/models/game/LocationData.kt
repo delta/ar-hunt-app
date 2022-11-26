@@ -21,6 +21,6 @@ data class LocationData(
     val latitude:Double,
     @SerializedName("Longitude")
     val longitude:Double,
-    @SerializedName("scale")
+    @SerializedName("Scale")
     val scale:Double,
 )
