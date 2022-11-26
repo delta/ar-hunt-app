@@ -28,6 +28,7 @@ import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
 import edu.nitt.delta.orientation22.compose.openAr
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.constants.MapStyle
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.ui.theme.*
@@ -47,8 +48,13 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
-            locationReady.value = true
-            currentLocation.value = LatLng(it.latitude, it.longitude)
+            try {
+                locationReady.value = true
+                currentLocation.value = LatLng(it.latitude, it.longitude)
+            } catch (e:Exception){
+                currentLocation.value = LatLng(10.7589,78.8132)
+                mContext.toast("Turn On Location Service")
+            }
         }
     }
 
@@ -109,8 +115,9 @@ fun MapScreen(
     markerList: List<MarkerModel>,
     currentClue: String,
     currentClueLocation: LatLng,
-    currentglbUrl : String,
-    currentanchorHash : String
+    currentglbUrl: String,
+    currentanchorHash: String,
+    currentScale: Double
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
@@ -121,7 +128,7 @@ fun MapScreen(
 
     GoogleMapScreen(markerList = markerList)
 
-    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash)
+    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -134,7 +141,8 @@ fun TopBar (
     permissionState: PermissionState,
     currentClue: String,
     currentglbUrl: String,
-    currentanchorHash : String
+    currentanchorHash: String,
+    currentScale: Double
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -145,7 +153,7 @@ fun TopBar (
     ) {
         Button(
             onClick = {
-                openAr(permissionState, mContext, fusedLocationProviderClient, currentClueLocation,currentglbUrl,currentanchorHash)
+                openAr(permissionState, mContext, fusedLocationProviderClient, currentClueLocation,currentglbUrl,currentanchorHash,currentScale)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = yellow

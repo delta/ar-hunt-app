@@ -96,11 +96,12 @@ fun openAr(
     fusedLocationProviderClient: FusedLocationProviderClient,
     currentClueLocation: LatLng,
     glbUrl: String,
-    anchorHash : String,
+    anchorHash: String,
+    currentScale: Double,
 ) {
     when{
         permissionState.hasPermission -> {
-            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash)
+            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash,currentScale)
         }
         permissionState.shouldShowRationale -> {
             mContext.toast("Camera Access is required for AR Explore.")
@@ -218,8 +219,9 @@ fun distanceCalculator(
     fusedLocationProviderClient: FusedLocationProviderClient,
     mContext: Context,
     currentClueLocation: LatLng,
-    glbUrl:String,
-    anchorHash: String
+    glbUrl: String,
+    anchorHash: String,
+    currentScale: Double
 ){
     val radius = 20
     if (
@@ -227,25 +229,29 @@ fun distanceCalculator(
     ) {
         val location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
-            val results = FloatArray(1)
-            Location.distanceBetween(
-                it.latitude,
-                it.longitude,
-                currentClueLocation.latitude,
-                currentClueLocation.longitude,
-                results
-            )
-            val distanceInMeters = results[0]
-            Log.d("DIST", distanceInMeters.toString())
-            if (distanceInMeters <= radius){
-                val intent = Intent(mContext, ArActivity::class.java)
-                intent.putExtra("glb",glbUrl)
-                intent.putExtra("anchorHash",anchorHash)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                mContext.startActivity(intent)
-            }
-            else {
-                mContext.toast("You are too far from your current clue.")
+            try {
+                val results = FloatArray(1)
+                Location.distanceBetween(
+                    it.latitude,
+                    it.longitude,
+                    currentClueLocation.latitude,
+                    currentClueLocation.longitude,
+                    results
+                )
+                val distanceInMeters = results[0]
+                Log.d("DIST", distanceInMeters.toString())
+                if (distanceInMeters <= radius) {
+                    val intent = Intent(mContext, ArActivity::class.java)
+                    intent.putExtra("glb", glbUrl)
+                    intent.putExtra("anchorHash", anchorHash)
+                    intent.putExtra("anchorScale", currentScale)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mContext.startActivity(intent)
+                } else {
+                    mContext.toast("You are too far from your current clue.")
+                }
+            } catch (e:Exception){
+                mContext.toast("Turn On Location Service")
             }
         }
     }

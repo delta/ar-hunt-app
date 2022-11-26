@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.google.ar.sceneform.animation.ModelAnimator
 import dagger.hilt.android.AndroidEntryPoint
+import dev.romainguy.kotlin.math.Float3
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
@@ -47,12 +48,13 @@ class ArActivity : ComponentActivity() {
                 val currentLevel = mapStateViewModel.currentState.value
                 val glbUrl = intent.getStringExtra("glb")!!
                 val anchorHash = intent.getStringExtra("anchorHash")!!
+                val scale = intent.getDoubleExtra("anchorScale", 0.5)
                 Log.d("Resolve",anchorHash)
                 Log.d("Resolve",glbUrl)
                 ArScreen(updateSceneView = {arSceneView ->
                     this.arSceneView =arSceneView
                     cloudAnchorNode = ArModelNode(placementMode = PlacementMode.PLANE_HORIZONTAL)
-                    setUpEnvironment(glbUrl)
+                    setUpEnvironment(glbUrl, scale)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer)
                 }, currentLevel = currentLevel, routeList = routeList, onResolve = {
@@ -63,10 +65,15 @@ class ArActivity : ComponentActivity() {
         }
     }
 
-    private fun setUpEnvironment( glbUrl:String){
+    private fun setUpEnvironment( glbUrl:String, scale: Double){
         arSceneView.lightEstimationMode= LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity =DEFAULT_LIGHT_INTENSITY
         arSceneView.cloudAnchorEnabled=true
+        cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
+        cloudAnchorNode.isScaleEditable = false
+        cloudAnchorNode.isPositionEditable = false
+        cloudAnchorNode.isRotationEditable = false
+        Log.d("Scale", scale.toFloat().toString())
         Log.d("Resolve glb",glbUrl)
         viewModel.doAction(
             ArAction.LoadModel(
