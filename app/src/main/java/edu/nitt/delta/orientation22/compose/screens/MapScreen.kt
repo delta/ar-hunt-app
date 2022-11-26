@@ -117,7 +117,8 @@ fun MapScreen(
     currentClueLocation: LatLng,
     currentglbUrl: String,
     currentanchorHash: String,
-    currentScale: Double
+    currentScale: Double,
+    currentLevel: Int
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
@@ -128,7 +129,7 @@ fun MapScreen(
 
     GoogleMapScreen(markerList = markerList)
 
-    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale)
+    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale,currentLevel)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -142,7 +143,8 @@ fun TopBar (
     currentClue: String,
     currentglbUrl: String,
     currentanchorHash: String,
-    currentScale: Double
+    currentScale: Double,
+    currentLevel: Int
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -153,7 +155,20 @@ fun TopBar (
     ) {
         Button(
             onClick = {
-                openAr(permissionState, mContext, fusedLocationProviderClient, currentClueLocation,currentglbUrl,currentanchorHash,currentScale)
+                if (currentLevel > 5){
+                    mContext.toast("Congratulations, you have completed the AR Hunt!")
+                }
+                else {
+                    openAr(
+                        permissionState,
+                        mContext,
+                        fusedLocationProviderClient,
+                        currentClueLocation,
+                        currentglbUrl,
+                        currentanchorHash,
+                        currentScale
+                    )
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = yellow
@@ -168,10 +183,18 @@ fun TopBar (
         }
 
         if (showDialog.value) {
-            ClueAlertBox(clueName = "Current Clue",
-                clueDescription = currentClue,
-                showDialog = showDialog.value,
-                onDismiss = {showDialog.value = false})
+            if (currentLevel > 5){
+                ClueAlertBox(clueName = "Congratulations",
+                    clueDescription = "You have completed the AR Hunt. Visit the leaderboard page to check your team score. We hope you enjoyed the game!",
+                    showDialog = showDialog.value,
+                    onDismiss = { showDialog.value = false })
+            }
+            else {
+                ClueAlertBox(clueName = "Current Clue",
+                    clueDescription = currentClue,
+                    showDialog = showDialog.value,
+                    onDismiss = { showDialog.value = false })
+            }
         }
         Button( onClick = {
             showDialog.value = true

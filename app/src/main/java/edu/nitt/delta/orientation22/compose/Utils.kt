@@ -239,7 +239,7 @@ fun distanceCalculator(
                     results
                 )
                 val distanceInMeters = results[0]
- //               mContext.toast(distanceInMeters.toString())
+//                mContext.toast(distanceInMeters.toString())
                 if (distanceInMeters <= radius) {
                     val intent = Intent(mContext, ArActivity::class.java)
                     intent.putExtra("glb", glbUrl)
