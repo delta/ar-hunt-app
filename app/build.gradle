@@ -7,14 +7,6 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('/media/nitish/Education/Linux/Coding/Delta/debug-keystore1.jks')
-            storePassword 'test123'
-            keyAlias 'key2'
-            keyPassword 'test123'
-        }
-    }
     namespace 'edu.nitt.delta.orientation22'
     compileSdk 33
 
