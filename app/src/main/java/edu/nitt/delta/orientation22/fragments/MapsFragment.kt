@@ -51,6 +51,6 @@ fun MapFragment(
                 currentScale = marker.scale
             }
         }
-        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash, currentScale)
+        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash, currentScale, currentLevel)
     }
 }
