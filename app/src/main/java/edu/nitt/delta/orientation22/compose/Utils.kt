@@ -227,25 +227,28 @@ fun distanceCalculator(
     ) {
         val location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
-            val results = FloatArray(1)
-            Location.distanceBetween(
-                it.latitude,
-                it.longitude,
-                currentClueLocation.latitude,
-                currentClueLocation.longitude,
-                results
-            )
-            val distanceInMeters = results[0]
-            Log.d("DIST", distanceInMeters.toString())
-            if (distanceInMeters <= radius){
-                val intent = Intent(mContext, ArActivity::class.java)
-                intent.putExtra("glb",glbUrl)
-                intent.putExtra("anchorHash",anchorHash)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                mContext.startActivity(intent)
-            }
-            else {
-                mContext.toast("You are too far from your current clue.")
+            try {
+                val results = FloatArray(1)
+                Location.distanceBetween(
+                    it.latitude,
+                    it.longitude,
+                    currentClueLocation.latitude,
+                    currentClueLocation.longitude,
+                    results
+                )
+                val distanceInMeters = results[0]
+                Log.d("DIST", distanceInMeters.toString())
+                if (distanceInMeters <= radius) {
+                    val intent = Intent(mContext, ArActivity::class.java)
+                    intent.putExtra("glb", glbUrl)
+                    intent.putExtra("anchorHash", anchorHash)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mContext.startActivity(intent)
+                } else {
+                    mContext.toast("You are too far from your current clue.")
+                }
+            } catch (e:Exception){
+                mContext.toast("Turn On Location Service")
             }
         }
     }

@@ -10,6 +10,7 @@ import edu.nitt.delta.orientation22.di.viewModel.repository.MapRepository
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.game.LocationData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +37,7 @@ class MapStateViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentLevel() = launch {
+    private fun getCurrentLevel() = launch(Dispatchers.IO) {
         when(val res=mapRepository.getCurrentLevel()){
             is Result.Value -> currentState.value = res.value
             is Result.Error -> mutableError.value= res.exception.message

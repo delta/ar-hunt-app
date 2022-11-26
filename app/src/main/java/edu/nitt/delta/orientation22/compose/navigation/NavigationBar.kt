@@ -119,7 +119,9 @@ fun BottomBar(
                     if (!checkedState.value) {
                         checkedState.value = !checkedState.value
                     }
-                    locationPermissionCheck(navController, permissionState, mContext)
+                    if (checkedState.value){
+                        locationPermissionCheck(navController, permissionState, mContext)
+                    }
                 }
             },
             modifier = Modifier

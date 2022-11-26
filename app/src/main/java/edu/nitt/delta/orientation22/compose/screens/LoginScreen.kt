@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.ar.core.ArCoreApk
 import edu.nitt.delta.orientation22.compose.*
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginState
@@ -94,8 +95,13 @@ fun LoginScreen(
                 .width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
             = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
             ),onClick = {
-                if (state == LoginState.IDLE)
-                     navController.navigate(NavigationRoutes.DAuthWebView.route)
+                if (ArCoreApk.getInstance().checkAvailability(mContext).isSupported) {
+                    if (state == LoginState.IDLE)
+                        navController.navigate(NavigationRoutes.DAuthWebView.route)
+                }
+                else {
+                    mContext.toast("Your device doesn't support Google AR Services, please try with a different device.")
+                }
             }) {
                 if(state==LoginState.IDLE)
                     Text(text = "LOGIN WITH \n DAUTH", fontSize = 20.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), textAlign = TextAlign.Center, letterSpacing = 0.09.em, lineHeight = 24.sp)
