@@ -24,6 +24,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
+import dev.romainguy.kotlin.math.Float3
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
 import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
@@ -156,6 +157,8 @@ class ArHostActivity: ComponentActivity() {
         arSceneView.lightEstimationMode= LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity =DEFAULT_LIGHT_INTENSITY
         arSceneView.cloudAnchorEnabled=true
+        cloudAnchorNode.scale = Float3(anchorScale, anchorScale, anchorScale)
+        cloudAnchorNode.isScaleEditable = false
         viewModel.doAction(
             ArAction.LoadModel(
                 this,
