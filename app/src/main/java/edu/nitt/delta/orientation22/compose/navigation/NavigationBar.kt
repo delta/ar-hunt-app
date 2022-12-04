@@ -12,6 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -24,6 +25,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.LocationPermissionGetter
 import edu.nitt.delta.orientation22.compose.locationPermissionCheck
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.black
 import edu.nitt.delta.orientation22.ui.theme.peach
 import edu.nitt.delta.orientation22.ui.theme.white
@@ -84,6 +86,8 @@ fun BottomBar(
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     val mContext = LocalContext.current
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+    val screenWidth = LocalConfiguration.current.screenWidthDp
 
     val permissionState = rememberMultiplePermissionsState(permissions = listOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -93,7 +97,7 @@ fun BottomBar(
     LocationPermissionGetter(permissionState)
 
     Box(
-        modifier = Modifier.fillMaxHeight(0.12f)
+        modifier = Modifier.height((screenWidth/3.5).dp)
     ) {
         BottomNavBar(
             items = NavigationList.NavList.navList,
@@ -115,13 +119,15 @@ fun BottomBar(
                     if (!checkedState.value) {
                         checkedState.value = !checkedState.value
                     }
-                    locationPermissionCheck(navController, permissionState, mContext)
+                    if (checkedState.value){
+                        locationPermissionCheck(navController, permissionState, mContext)
+                    }
                 }
             },
             modifier = Modifier
                 .then(
                     Modifier
-                        .size(90.dp)
+                        .size((screenWidth/4.5).dp)
                         .align(Alignment.TopCenter)
                 )
                 .clip(
@@ -138,7 +144,7 @@ fun BottomBar(
                     painterResource(R.drawable.map_screen_unselected),
                 contentDescription = "Map Screen",
                 tint = black,
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size((screenWidth/15).dp)
             )
         }
     }

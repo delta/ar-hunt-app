@@ -21,7 +21,7 @@ fun LeaderBoardFragment(
         color = MaterialTheme.colorScheme.background
     ){
         leaderBoardViewModel.doAction(LeaderBoardAction.GetLeaderBoard)
-        val leaderBoardData = leaderBoardViewModel.leaderBoardData
+        val leaderBoardData = leaderBoardViewModel.leaderBoardData.value
         LeaderBoardScreen(leaderBoardData = leaderBoardData,
             painter = painterResource(id = R.drawable.background_image),
             contentDescription = "LeaderBoard")

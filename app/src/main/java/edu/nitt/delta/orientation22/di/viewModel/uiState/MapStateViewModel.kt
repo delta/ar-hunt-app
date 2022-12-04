@@ -10,6 +10,7 @@ import edu.nitt.delta.orientation22.di.viewModel.repository.MapRepository
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.game.LocationData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +22,8 @@ class MapStateViewModel @Inject constructor(
     private val routeListSample: List<LocationData> = listOf()
 
     var markerListData by mutableStateOf<List<MarkerModel>>(markerListSample)
-    var routeListData by mutableStateOf<List<LocationData>>(routeListSample)
-
+    var routeListData = mutableStateOf<List<LocationData>>(routeListSample)
+    var currentState = mutableStateOf<Int>(-1)
     override fun doAction(action: MapAction): Any = when(action) {
         is MapAction.GetAllMarkers -> getAllMarkers()
         is MapAction.GetRoute -> getRoute()
@@ -36,17 +37,15 @@ class MapStateViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentLevel() = launch {
-        val token = ""
-        when(val res=mapRepository.getCurrentLevel(token)){
-            is Result.Value -> mutableSuccess.value = res.value.toString()
+    private fun getCurrentLevel() = launch(Dispatchers.IO) {
+        when(val res=mapRepository.getCurrentLevel()){
+            is Result.Value -> currentState.value = res.value
             is Result.Error -> mutableError.value= res.exception.message
         }
     }
     private fun getRoute() = launch {
-        val token = ""
-        when(val res=mapRepository.getRoutes(token)){
-            is Result.Value -> markerListData = res.value
+        when(val res=mapRepository.getRoutes()){
+            is Result.Value -> routeListData.value = res.value
             is Result.Error -> mutableError.value= res.exception.message
         }
     }

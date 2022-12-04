@@ -1,6 +1,6 @@
 package edu.nitt.delta.orientation22.compose.screens
 
-import android.content.Intent
+import android.util.Log
 import edu.nitt.delta.orientation22.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +21,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -31,22 +30,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import edu.nitt.delta.orientation22.MainActivity
-import edu.nitt.delta.orientation22.compose.getAnnotatedString
+import com.google.ar.core.ArCoreApk
+import edu.nitt.delta.orientation22.compose.*
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginState
 import edu.nitt.delta.orientation22.ui.theme.*
 
 
 @Composable
 fun LoginScreen(
-    painter: Painter, contentDescription: String, modifier: Modifier =Modifier, navController : NavController
+    painter: Painter,
+    contentDescription: String,
+    modifier: Modifier =Modifier,
+    navController : NavController,
+    state:LoginState,
+    onSuccess:()->Unit,
+    onFailure:()->String,
 )
 {
     val mContext= LocalContext.current
     val fontFamily= FontFamily(
         Font(R.font.montserrat_regular)
     )
-
+    if (state==LoginState.SUCCESS) onSuccess()
+    else if (state==LoginState.ERROR) {
+        val err=onFailure()
+        Log.d("Login",err)
+        mContext.toast(err)
+        mContext.SnackShowSuccess(errorMessage = err, modifier = Modifier.fillMaxSize())
+    }
 
     val configuration= LocalConfiguration.current
     val screenHeight=configuration.screenHeightDp
@@ -72,7 +84,9 @@ fun LoginScreen(
                     ), letterSpacing = 0.1.em
 
 
-                ),modifier=Modifier.padding(top=(screenHeight/5).dp).blur(0.5.dp)
+                ),modifier= Modifier
+                    .padding(top = (screenHeight / 5).dp)
+                    .blur(0.5.dp)
             )
                 }
             Spacer(modifier = Modifier.height(120.dp))
@@ -81,11 +95,18 @@ fun LoginScreen(
                 .width(261.dp),colors= ButtonDefaults.buttonColors(containerColor
             = Color.hsl(0f,0f,0f,0.25f), contentColor = Color.hsl(47f,1f,0.61f,1f)
             ),onClick = {
-                val intent : Intent = Intent(mContext,MainActivity::class.java)
-                mContext.startActivity(intent)
-//                navController.navigate(NavigationRoutes.TeamDetails.route)
+                if (ArCoreApk.getInstance().checkAvailability(mContext).isSupported) {
+                    if (state == LoginState.IDLE)
+                        navController.navigate(NavigationRoutes.DAuthWebView.route)
+                }
+                else {
+                    mContext.toast("Google AR Services is not supported. Please use a different device.")
+                }
             }) {
+                if(state==LoginState.IDLE)
                     Text(text = "LOGIN WITH \n DAUTH", fontSize = 20.sp, fontFamily = fontFamily,fontWeight = FontWeight(400), textAlign = TextAlign.Center, letterSpacing = 0.09.em, lineHeight = 24.sp)
+                if(state==LoginState.LOADING)
+                    LoadingIcon()
             }
             Spacer(modifier = Modifier.fillMaxSize(0.87f))
             Row(
@@ -105,9 +126,3 @@ fun LoginScreen(
     }
 }
 
-@Composable
-fun LoginScreenPreview(navController: NavController) {
-    Orientation22androidTheme{
-        LoginScreen(painterResource(id = R.drawable.background_image),"background", navController = navController)
-    }
-}

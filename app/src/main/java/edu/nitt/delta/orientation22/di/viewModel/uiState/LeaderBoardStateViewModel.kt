@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.di.viewModel.uiState
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,16 +17,15 @@ import javax.inject.Inject
 class LeaderBoardStateViewModel @Inject constructor(
     private val leaderBoardRepository: LeaderBoardRepository
 ):BaseViewModel<LeaderBoardAction>() {
-    private val leaderBoardSample: List<LeaderboardData> = listOf()
-    var leaderBoardData by mutableStateOf<List<LeaderboardData>>(leaderBoardSample)
+    private val leaderBoardSample: List<LeaderboardData> = listOf(LeaderboardData(teamName = "", score = 0, avatar = 0))
+    var leaderBoardData = mutableStateOf<List<LeaderboardData>>(leaderBoardSample)
     override fun doAction(action: LeaderBoardAction): Any =when(action){
         is LeaderBoardAction.GetLeaderBoard -> getLeaderBoard()
     }
 
     private fun getLeaderBoard()=launch {
-        val token = ""
-        when(val res = leaderBoardRepository.getLeaderBoard(token)){
-            is Result.Value-> leaderBoardData = res.value
+        when(val res = leaderBoardRepository.getLeaderBoard()){
+            is Result.Value-> leaderBoardData.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }
     }

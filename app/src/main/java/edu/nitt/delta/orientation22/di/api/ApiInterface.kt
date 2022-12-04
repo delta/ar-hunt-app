@@ -1,48 +1,59 @@
 package edu.nitt.delta.orientation22.di.api
 
-import edu.nitt.delta.orientation22.models.auth.RegisterTeamResponse
-import edu.nitt.delta.orientation22.models.auth.TeamDataResponse
+import edu.nitt.delta.orientation22.models.IsLiveResponse
+import edu.nitt.delta.orientation22.models.IsRegisteredResponse
+import edu.nitt.delta.orientation22.models.auth.*
 import edu.nitt.delta.orientation22.models.game.AnswerResponse
 import edu.nitt.delta.orientation22.models.game.CurrentLocationResponse
 import edu.nitt.delta.orientation22.models.game.RouteResponse
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardResponse
-import retrofit2.http.Field
-import retrofit2.http.FieldMap
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiInterface {
 
     @POST(ApiRoutes.LEADERBOARD)
-    fun getLeaderBord(
-        @Field("user_token") token: String,
+    suspend fun getLeaderBord(
+        @Body body: TokenRequestModel
     ):LeaderboardResponse
 
+
     @POST(ApiRoutes.REGISTER_TEAM)
-    fun registerTeam(
-        @Field("user_token") token: String,
-        @FieldMap parameters: Map<String, String>
+    suspend fun registerTeam(
+        @Body registerTeamBody : RegisterTeamRequest
     ):RegisterTeamResponse
 
-    @GET(ApiRoutes.TEAM)
-    fun getTeam(
-        @Field("user_token") token: String,
+    @POST(ApiRoutes.TEAM)
+    suspend fun getTeam(
+        @Body teamBody: TokenRequestModel
     ):TeamDataResponse
 
-    @GET(ApiRoutes.ROUTE)
-    fun getRoute(
-        @Field("user_token") token: String,
+    @POST(ApiRoutes.ROUTE)
+    suspend fun getRoute(
+        @Body routeBody: TokenRequestModel
     ):RouteResponse
 
-    @GET(ApiRoutes.CURRENT_STATE)
-    fun getCurrentLevel(
-        @Field("user_token") token: String,
+    @POST(ApiRoutes.CURRENT_STATE)
+    suspend fun getCurrentLevel(
+        @Body currentLevelBody: TokenRequestModel
     ):CurrentLocationResponse
 
     @POST(ApiRoutes.NEXT_STATE)
-    fun postAnswer(
-        @Field("user_token") token: String,
+    suspend fun postAnswer(
+        @Body postAnswerBody: TokenRequestModel
     ):AnswerResponse
 
+    @GET(ApiRoutes.AUTH_CALLBACK)
+    suspend fun login(
+        @Query("code") code:String
+    ):LoginResponse
 
+    @POST(ApiRoutes.IS_REGISTERED)
+    suspend fun isRegistered(
+        @Body token:TokenRequestModel
+    ):IsRegisteredResponse
+
+    @POST(ApiRoutes.IS_LIVE)
+    suspend fun isLive(
+        @Body token: TokenRequestModel
+    ):IsLiveResponse
 }

@@ -15,10 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.navigation.BottomBar
 import edu.nitt.delta.orientation22.compose.navigation.NavigationInner
-import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.*
 import edu.nitt.delta.orientation22.ui.theme.*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -29,7 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val mapViewModel by viewModels<MapStateViewModel>()
         val teamViewModel by viewModels<TeamStateViewModel>()
-        val arViewModel by viewModels<ArStateViewModel>()
+        val loginViewModel by viewModels<LoginStateViewModel>()
         val leaderBoardViewModel by viewModels<LeaderBoardStateViewModel>()
         setContent {
             val navController = rememberNavController()
@@ -40,9 +38,16 @@ class MainActivity : ComponentActivity() {
                         BottomBar(checkedState = checkedState, navController = navController)
                     }
                 ) {
-                    NavigationInner(navController = navController, mapviewModel = mapViewModel, arStateViewModel = arViewModel, leaderBoardStateViewModel = leaderBoardViewModel, teamStateViewModel = teamViewModel )
+                    NavigationInner(navController = navController, mapviewModel = mapViewModel, loginStateViewModel = loginViewModel, leaderBoardStateViewModel = leaderBoardViewModel, teamStateViewModel = teamViewModel )
                 }
             }
         }
     }
+
+    override fun onBackPressed() {
+        finishAffinity()
+        return
+        super.onBackPressed()
+    }
+
 }

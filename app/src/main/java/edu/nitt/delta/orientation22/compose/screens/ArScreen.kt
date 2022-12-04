@@ -1,24 +1,28 @@
 package edu.nitt.delta.orientation22.compose.screens
 
-
+import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.toast
+import edu.nitt.delta.orientation22.models.game.LocationData
 import edu.nitt.delta.orientation22.ui.theme.*
 import io.github.sceneview.ar.ArSceneView
 
@@ -26,6 +30,10 @@ import io.github.sceneview.ar.ArSceneView
 fun ArScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
     updateSceneView:(ArSceneView)->Unit,
+    onClick : ()->Unit,
+    currentLevel: Int,
+    onResolve:()->Unit,
+    routeList: List<LocationData>,
 ){
     AndroidView(factory = {
         context ->
@@ -33,9 +41,11 @@ fun ArScreen(
             context,
         ).apply {
             updateSceneView(this)
+            Log.d("Resolve","About to resolve")
         }
     }
     )
+    val mContext = LocalContext.current
     val isPopUp = remember { mutableStateOf(false) }
     Box(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxSize()) {
@@ -50,32 +60,33 @@ fun ArScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = {
-                        //call AR Reset
+                        onResolve()
                     },
                     modifier = Modifier.padding(15.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = yellow, contentColor = black),
                     shape = RoundedCornerShape(5.dp),
                 ) {
-                    Text(text = "Reset", fontFamily = FontFamily(Font(R.font.montserrat_regular)))
+                    Text(text = "Resolve", fontFamily = FontFamily(Font(R.font.montserrat_regular)))
                 }
             }
         }
     }
     if (isPopUp.value) {
         Dialog(onDismissRequest = { isPopUp.value = false }){
-            SubmitPopUp(isPopUp = isPopUp)
+            SubmitPopUp(isPopUp = isPopUp,onClick, currentLevel = currentLevel, routeList = routeList)
         }
     }
 }
 
 @Composable
-fun SubmitPopUp(isPopUp : MutableState<Boolean>) {
+fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, routeList: List<LocationData>, currentLevel: Int) {
     var text by remember { mutableStateOf("") }
+    val mContext = LocalContext.current
+
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
-            .padding(10.dp, 5.dp, 5.dp, 10.dp)
-            .size(400.dp, 200.dp),
+            .padding(10.dp, 5.dp, 5.dp, 10.dp),
         elevation = 10.dp,
         ) {
         Column(
@@ -110,8 +121,8 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>) {
             Text(
                 "Hint: Check out the object to find the answer",
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                color = brightYellow,
-                modifier = Modifier.padding(5.dp)
+                color = peach,
+                modifier = Modifier.padding(10.dp)
             )
             Row(
                 modifier = Modifier.padding(all = 8.dp),
@@ -133,7 +144,20 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>) {
                         .fillMaxWidth()
                         .padding(5.dp),
                     onClick = {
-                        isPopUp.value = false
+                        Log.d("ans",currentLevel.toString())
+                        routeList.forEach(
+                        ){
+                            if (it.position == currentLevel){
+                                if (it.answer.equals(text, ignoreCase = true)){
+                                    isPopUp.value = false
+                                    mContext.toast("Congratulations!! You completed this level")
+                                    onClick()
+                                }
+                                else{
+                                    mContext.toast("Wrong code. Please check and try again!")
+                                }
+                            }
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = yellow)
                 ) {

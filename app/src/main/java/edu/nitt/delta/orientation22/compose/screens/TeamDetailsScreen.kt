@@ -3,6 +3,7 @@ package edu.nitt.delta.orientation22.compose.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
@@ -38,9 +39,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.LoadingIcon
+import edu.nitt.delta.orientation22.compose.avatarList
+import edu.nitt.delta.orientation22.compose.reverseAvatarList
 import edu.nitt.delta.orientation22.compose.toast
+import edu.nitt.delta.orientation22.di.viewModel.uiState.RegistrationState
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
+import edu.nitt.delta.orientation22.models.auth.Member
 import edu.nitt.delta.orientation22.models.auth.RegisterTeamRequest
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import edu.nitt.delta.orientation22.ui.theme.*
@@ -51,7 +57,8 @@ import edu.nitt.delta.orientation22.ui.theme.*
 fun TeamDetails(
     mContext: Context,
     teamDetails: TeamModel,
-    registerTeam: (Map<String, String>) -> Unit,
+    registerTeam: (TeamModel) -> Unit,
+    state: RegistrationState
 ) {
     var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
     var rollNumberLeader by rememberSaveable {mutableStateOf(if (teamDetails.members[0].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
@@ -64,7 +71,7 @@ fun TeamDetails(
     var nameMember3 by rememberSaveable { mutableStateOf(teamDetails.members[3].name) }
     var rollNumberMember3 by rememberSaveable {mutableStateOf(if (teamDetails.members[3].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
 
-    var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
+    var selectedAvatar by remember { mutableStateOf<Int>(R.drawable.ic_action_name) }
 
     TeamNameHeader(teamName = teamName, onValueChange = {teamName = it})
 
@@ -86,7 +93,8 @@ fun TeamDetails(
         rollNumberMembers = listOf(rollNumberMember1, rollNumberMember2, rollNumberMember3),
         mContext = mContext,
         registerTeam = registerTeam,
-        selectedAvatar = selectedAvatar
+        selectedAvatar = reverseAvatarList[selectedAvatar]?:1,
+        state = state
     )
 }
 
@@ -94,13 +102,14 @@ fun TeamDetails(
 @Composable
 fun TeamDetailsScreen(
     teamDetails: TeamModel,
-    registerTeam: (Map<String, String>) -> Unit,
+    registerTeam: (TeamModel) -> Unit,
+    state :RegistrationState
 ){
     Orientation22androidTheme {
         val mContext = LocalContext.current
         val painter = painterResource(id = R.drawable.background_image)
         var chooseAvatar by remember { mutableStateOf(false) }
-        var selectedAvatar by remember { mutableStateOf(R.drawable.ic_action_name) }
+        var selectedAvatar by remember { mutableStateOf<Int>(R.drawable.ic_action_name) }
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painter,
@@ -164,7 +173,7 @@ fun TeamDetailsScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                TeamDetails(mContext = mContext, teamDetails, registerTeam)
+                TeamDetails(mContext = mContext, teamDetails, registerTeam,state)
             }
             if (chooseAvatar) {
                 Dialog(
@@ -172,14 +181,7 @@ fun TeamDetailsScreen(
                         chooseAvatar = false
                                        },
                     content = {
-                        val avatarList = mapOf(
-                            "duck" to R.drawable.duck,
-                            "frog" to R.drawable.frog,
-                            "giraffe" to R.drawable.giraffe,
-                            "elephant" to R.drawable.elephant,
-                            "horse" to R.drawable.horse,
-                            "monkey" to R.drawable.monkey
-                        )
+
                         val state = rememberLazyListState()
                         val layoutInfo = remember { derivedStateOf { state.layoutInfo } }
 
@@ -284,8 +286,9 @@ fun SubmitButton(
     nameMembers: List<String>,
     rollNumberMembers: List<String>,
     mContext: Context,
-    registerTeam: (Map<String, String>) -> Unit,
-    selectedAvatar : Int
+    registerTeam: (TeamModel) -> Unit,
+    selectedAvatar : Int,
+    state: RegistrationState
 ){
 
     Button(
@@ -300,24 +303,21 @@ fun SubmitButton(
 
             if (validate(team, mContext)){
 
-                val registerData = RegisterTeamRequest(
+                val registerData = TeamModel(
                     teamName = team.teamName,
-                    member2Name = team.members[0].name,
-                    member2RollNo = team.members[0].rollNo.toInt(),
-                    member3Name = team.members[1].name,
-                    member3RollNo = team.members[1].rollNo.toInt(),
-                    member4Name = team.members[2].name,
-                    member4RollNo = team.members[2].rollNo.toInt(),
+                    members = listOf<Member>(Member(name =team.members[0].name, rollNo =team.members[0].rollNo.toInt()),
+                        Member(name =team.members[1].name, rollNo =team.members[1].rollNo.toInt()),
+                        Member(name =team.members[2].name, rollNo =team.members[2].rollNo.toInt())),
+                    avatar = selectedAvatar
                 )
-                registerTeam(registerData.toMap())
+                registerTeam(registerData)
 
-                val intent = Intent(mContext, MainActivity::class.java)
-                mContext.startActivity(intent)
 
             }
         },
         content = {
-            Text(
+            if (state == RegistrationState.LOADING) LoadingIcon()
+            else Text(
                 text = "Submit",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,

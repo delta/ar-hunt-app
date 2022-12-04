@@ -17,16 +17,22 @@ data class RegisterTeamRequest(
     val member4RollNo:Int,
     @SerializedName("member4Name")
     val member4Name:String,
-) {
-    fun toMap(): Map<String, String> =
+    @SerializedName("avatar")
+    val avatar : Int,
+    @SerializedName("user_token")
+    val token : String
+){
+    fun toMap(): Map<String, Any> =
         mapOf(
             "teamName" to teamName,
-            "member2RollNo" to member2Name,
-            "member2Name" to member2RollNo.toString(),
-            "member3RollNo" to member3Name,
-            "member3Name" to member3RollNo.toString(),
-            "member4RollNo" to member4Name,
-            "member4Name" to member4RollNo.toString(),
+            "member2RollNo" to member2RollNo,
+            "member2Name" to member2Name,
+            "member3RollNo" to member3RollNo,
+            "member3Name" to member3Name,
+            "member4RollNo" to member4RollNo,
+            "member4Name" to member4Name,
+            "avatar" to avatar,
+            "user_token" to token,
         )
 }
 

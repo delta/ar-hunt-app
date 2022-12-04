@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -95,11 +94,14 @@ fun openAr(
     permissionState: PermissionState,
     mContext: Context,
     fusedLocationProviderClient: FusedLocationProviderClient,
-    currentClueLocation: MutableState<LatLng>,
+    currentClueLocation: LatLng,
+    glbUrl: String,
+    anchorHash: String,
+    currentScale: Double,
 ) {
     when{
         permissionState.hasPermission -> {
-            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation)
+            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash,currentScale)
         }
         permissionState.shouldShowRationale -> {
             mContext.toast("Camera Access is required for AR Explore.")
@@ -216,32 +218,40 @@ fun ClueAlertBox(clueName: String,
 fun distanceCalculator(
     fusedLocationProviderClient: FusedLocationProviderClient,
     mContext: Context,
-    currentClueLocation: MutableState<LatLng>,
+    currentClueLocation: LatLng,
+    glbUrl: String,
+    anchorHash: String,
+    currentScale: Double
 ){
-    val radius = 116
+    val radius = 10
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {
         val location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
-            mContext.toast("Latitude: ${it.latitude}, Longitude: ${it.longitude}")
-            val results = FloatArray(1)
-            Location.distanceBetween(
-                it.latitude,
-                it.longitude,
-                currentClueLocation.value.latitude,
-                currentClueLocation.value.longitude,
-                results
-            )
-            val distanceInMeters = results[0]
-            Log.d("DIST", distanceInMeters.toString())
-            if (distanceInMeters <= radius){
-                val intent = Intent(mContext, ArActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                mContext.startActivity(intent)
-            }
-            else {
-                mContext.toast("You are too far from your current clue.")
+            try {
+                val results = FloatArray(1)
+                Location.distanceBetween(
+                    it.latitude,
+                    it.longitude,
+                    currentClueLocation.latitude,
+                    currentClueLocation.longitude,
+                    results
+                )
+                val distanceInMeters = results[0]
+//                mContext.toast(distanceInMeters.toString())
+                if (distanceInMeters <= radius) {
+                    val intent = Intent(mContext, ArActivity::class.java)
+                    intent.putExtra("glb", glbUrl)
+                    intent.putExtra("anchorHash", anchorHash)
+                    intent.putExtra("anchorScale", currentScale)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mContext.startActivity(intent)
+                } else {
+                    mContext.toast("You are too far from your current clue.")
+                }
+            } catch (e:Exception){
+                mContext.toast("Turn On Location Service")
             }
         }
     }
@@ -345,3 +355,28 @@ fun Context.SnackShowSuccess(errorMessage : String, modifier: Modifier) {
 fun LoadingIcon() {
     CircularProgressIndicator(color = yellow)
 }
+
+val avatarList = mapOf(
+    1 to R.drawable.bear,
+    2 to R.drawable.cat,
+    3 to R.drawable.dog,
+    4 to R.drawable.giraffe,
+    5 to R.drawable.panda,
+)
+
+val reverseAvatarList = mapOf(
+    R.drawable.bear to 1,
+    R.drawable.cat to 2,
+    R.drawable.dog to 3,
+    R.drawable.giraffe to 4,
+    R.drawable.panda to 5,
+)
+
+val markerImages = mapOf(
+    0 to R.drawable.one,
+    1 to R.drawable.two,
+    2 to R.drawable.three,
+    3 to R.drawable.four,
+    4 to R.drawable.five,
+    5 to R.drawable.six,
+)

@@ -1,13 +1,16 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
 import android.content.Context
+import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.Lifecycle
 import com.google.ar.core.Anchor
 import com.google.ar.core.Session
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
+import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.Result
+import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
@@ -16,7 +19,8 @@ import javax.inject.Inject
 class ArRepository@Inject constructor(
     private val apiInterface: ApiInterface
 ) {
-
+    @Inject
+    lateinit var sharedPrefHelper: SharedPrefHelper
     fun hostAnchor(cloudAnchorNode: ArModelNode?,sceneView: ArSceneView?):Result<String> {
         try {
             var anchorId = ""
@@ -27,21 +31,24 @@ class ArRepository@Inject constructor(
             if (sceneView.arSession?.estimateFeatureMapQualityForHosting(frame!!.camera.pose) == Session.FeatureMapQuality.INSUFFICIENT) {
                 return Result.build<String> { throw Exception("Unable To Host Anchor") }
             }
-            cloudAnchorNode.hostCloudAnchor(10) { anchor: Anchor, success: Boolean ->
+            cloudAnchorNode.hostCloudAnchor{ anchor: Anchor, success: Boolean ->
                 if (success)
                     anchorId = anchor.cloudAnchorId
             }
             if (anchorId.isEmpty()) Result.build<String> { throw Exception("Unable To Host Anchor") }
             return Result.build { anchorId }
         } catch (e: Exception) {
-            return Result.build<String> { throw e }
+            return Result.build<String> { throw Exception(ResponseConstants.ERROR) }
         }
     }
 
     fun resolveAnchor(cloudAnchorNode: ArModelNode?,code : String):Result<String> = try {
         var isResolved = false
+        Log.d("Resolve","inside repo")
         cloudAnchorNode?.resolveCloudAnchor(code){ _, success: Boolean ->
+            Log.d("Resolve","Inside cloudanchor resolve")
             if(success){
+                Log.d("Resolve","Done resolving")
                 cloudAnchorNode.isVisible = true
                 isResolved = true
             }
@@ -50,7 +57,8 @@ class ArRepository@Inject constructor(
             Result.build { throw Exception("Error occurred while resolving cloud anchor") }
         Result.build{ "Cloud Anchor resolved successfully" }
         } catch (e: Exception) {
-            Result.build<String> { throw e }
+            Log.d("Resolve",e.message.toString())
+            Result.build<String> { throw Exception(ResponseConstants.ERROR) }
     }
 
 
@@ -62,7 +70,7 @@ class ArRepository@Inject constructor(
         }
             Result.build { "Cloud anchor detached successfully" }
         }catch (e:Exception){
-            Result.build<String> { throw e }
+            Result.build<String> { throw Exception(ResponseConstants.ERROR) }
     }
 
     fun loadModel(
@@ -71,16 +79,21 @@ class ArRepository@Inject constructor(
         onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         context:Context,
         lifecycle: Lifecycle?,
+        glbUrl : String
     ):Result<ArModelNode> = try{
         Result.build{
             cloudAnchorNode.apply {
                 parent = arSceneView
                 isSmoothPoseEnable = false
-                isVisible = true
+                isVisible = false
+                isRotationEditable = false
+                isScaleEditable = false
+                isPositionEditable = false
                 loadModelAsync(
                     context = context,
                     lifecycle = lifecycle,
-                    glbFileLocation = "miyawaki.glb",
+                    glbFileLocation = glbUrl,
+                    autoAnimate = false,
                     onLoaded ={
                         cloudAnchorNode.anchor()
                         onTap =onTapModel
@@ -89,17 +102,20 @@ class ArRepository@Inject constructor(
             }
         }
     } catch (e: Exception){
-        Result.build<ArModelNode> { throw e }
+        Result.build<ArModelNode> { throw Exception(ResponseConstants.ERROR) }
     }
 
-    fun postAnswer(token:String) : Result<String> = try {
-        val response = apiInterface.postAnswer(token)
+    suspend fun postAnswer() : Result<String> = try {
+        val token = sharedPrefHelper.token.toString()
+        val response = apiInterface.postAnswer(TokenRequestModel(token))
         if (response.message == ResponseConstants.SUCCESS){
             Result.build { "Level Completed" }
         }
-        Result.build { throw Exception(ResponseConstants.ERROR) }
+        else {
+            Result.build { throw Exception(ResponseConstants.ERROR) }
+        }
 
     }catch (e:Exception){
-       Result.build { throw e }
+       Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 }

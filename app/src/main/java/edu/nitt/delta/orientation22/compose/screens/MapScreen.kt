@@ -28,22 +28,19 @@ import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
 import edu.nitt.delta.orientation22.compose.openAr
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.constants.MapStyle
 import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
 @Composable
 fun GoogleMapScreen(markerList: List<MarkerModel>) {
-
-    val lectureHallComplex = LatLng(10.7614246, 78.8139187)
-
     val currentLocation = remember {
         mutableStateOf(LatLng(0.0, 0.0))
     }
     val locationReady = remember {
         mutableStateOf(false)
     }
-
     val mContext = LocalContext.current
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
@@ -51,8 +48,13 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
-            locationReady.value = true
-            currentLocation.value = LatLng(it.latitude, it.longitude)
+            try {
+                locationReady.value = true
+                currentLocation.value = LatLng(it.latitude, it.longitude)
+            } catch (e:Exception){
+                currentLocation.value = LatLng(10.7589,78.8132)
+                mContext.toast("Turn On Location Service")
+            }
         }
     }
 
@@ -99,7 +101,8 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
                     title = markers.markerTitle,
                     snippet = markers.markerDescription,
                     flat = false,
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.twooo)
+                    icon = BitmapDescriptorFactory.fromResource(markers.markerImage),
+                    visible = markers.isVisible
                 )
             }
         }
@@ -110,12 +113,15 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
 @Composable
 fun MapScreen(
     markerList: List<MarkerModel>,
+    currentClue: String,
+    currentClueLocation: LatLng,
+    currentglbUrl: String,
+    currentanchorHash: String,
+    currentScale: Double,
+    currentLevel: Int
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
-    val currentClueLocation = remember {
-        mutableStateOf(LatLng(10.7614246, 78.8139187))
-    }
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
@@ -123,7 +129,7 @@ fun MapScreen(
 
     GoogleMapScreen(markerList = markerList)
 
-    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState)
+    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale,currentLevel)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -132,8 +138,13 @@ fun TopBar (
     mContext: Context,
     fusedLocationProviderClient: FusedLocationProviderClient,
     showDialog: MutableState<Boolean>,
-    currentClueLocation: MutableState<LatLng>,
+    currentClueLocation: LatLng,
     permissionState: PermissionState,
+    currentClue: String,
+    currentglbUrl: String,
+    currentanchorHash: String,
+    currentScale: Double,
+    currentLevel: Int
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -144,7 +155,20 @@ fun TopBar (
     ) {
         Button(
             onClick = {
-                openAr(permissionState, mContext, fusedLocationProviderClient, currentClueLocation)
+                if (currentLevel > 5){
+                    mContext.toast("Congratulations, you have completed the AR Hunt!")
+                }
+                else {
+                    openAr(
+                        permissionState,
+                        mContext,
+                        fusedLocationProviderClient,
+                        currentClueLocation,
+                        currentglbUrl,
+                        currentanchorHash,
+                        currentScale
+                    )
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = yellow
@@ -159,10 +183,18 @@ fun TopBar (
         }
 
         if (showDialog.value) {
-            ClueAlertBox(clueName = "Current Clue",
-                clueDescription = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                showDialog = showDialog.value,
-                onDismiss = {showDialog.value = false})
+            if (currentLevel > 5){
+                ClueAlertBox(clueName = "Congratulations",
+                    clueDescription = "You have completed the AR Hunt. Visit the leaderboard page to check your team score. We hope you enjoyed the game!",
+                    showDialog = showDialog.value,
+                    onDismiss = { showDialog.value = false })
+            }
+            else {
+                ClueAlertBox(clueName = "Current Clue",
+                    clueDescription = currentClue,
+                    showDialog = showDialog.value,
+                    onDismiss = { showDialog.value = false })
+            }
         }
         Button( onClick = {
             showDialog.value = true

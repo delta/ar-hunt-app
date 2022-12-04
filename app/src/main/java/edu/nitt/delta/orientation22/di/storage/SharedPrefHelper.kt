@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-class SharedPrefHelper@Inject constructor(context: Context) {
+class SharedPrefHelper @Inject constructor(context: Context) {
 
     private val sharedPreferences: SharedPreferences
 
@@ -21,6 +21,9 @@ class SharedPrefHelper@Inject constructor(context: Context) {
         const val TEAM ="TEAM"
         const val USER_ROUTE = "ROUTE_NAME"
         const val TOKEN = "TOKEN"
+        const val USER = "USER"
+        const val LEADER ="LEADER"
+        const val ROLL = "ROLL"
     }
 
     object Default {
@@ -28,6 +31,9 @@ class SharedPrefHelper@Inject constructor(context: Context) {
         val USER_ROUTE= ""
         val TEAM_MEMBERS = ""
         val TOKEN = ""
+        val USER =""
+        val LEADER =""
+        val ROLL = -1
     }
 
     var team : String?
@@ -44,6 +50,13 @@ class SharedPrefHelper@Inject constructor(context: Context) {
         )
         set(value) = sharedPreferences.edit().putString(Key.USER_ROUTE,value).apply()
 
+    var user: String?
+        get() = sharedPreferences.getString(
+            Key.USER,
+            Default.USER
+        )
+        set(value) = sharedPreferences.edit().putString(Key.USER,value).apply()
+
 
     var token : String?
         get() = sharedPreferences.getString(
@@ -51,5 +64,22 @@ class SharedPrefHelper@Inject constructor(context: Context) {
             Default.TOKEN
         )
         set(value) = sharedPreferences.edit().putString(Key.TOKEN,value).apply()
+
+    var leaderName : String?
+        get() = sharedPreferences.getString(
+            Key.LEADER,
+            Default.LEADER
+        )
+        set(value) = sharedPreferences.edit().putString(Key.LEADER,value).apply()
+
+    var rollNo : Int
+        get() = sharedPreferences.getInt(
+            Key.ROLL,
+            Default.ROLL
+        )
+        set(value) = sharedPreferences.edit().putInt(Key.ROLL,value).apply()
+    fun clear() {
+        sharedPreferences.edit().clear().apply()
+    }
 }
 

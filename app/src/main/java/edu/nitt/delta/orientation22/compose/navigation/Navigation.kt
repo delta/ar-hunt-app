@@ -1,45 +1,51 @@
 package edu.nitt.delta.orientation22.compose.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
+import edu.nitt.delta.orientation22.LoginActivity
 import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
+import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.*
 import edu.nitt.delta.orientation22.fragments.*
 
 @Composable
-fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel){
+fun NavigationOuter(navController: NavHostController,teamStateViewModel:TeamStateViewModel,loginStateViewModel: LoginStateViewModel){
     NavHost(
         navController = navController,
-        startDestination = NavigationRoutes.Login.route,
+        startDestination = LoginActivity.startDestination
     ) {
         composable(route = NavigationRoutes.Login.route){
-            LoginFragment(navController)
-        }
-        composable(route = NavigationRoutes.Dashboard.route){
-            DashboardFragment(teamStateViewModel)
+            LoginFragment(navController,loginStateViewModel)
         }
         composable(route = NavigationRoutes.TeamDetails.route){
-            TeamDetailsFragment(teamStateViewModel)
+            TeamDetailsFragment(teamStateViewModel,loginStateViewModel)
         }
         composable(route = NavigationRoutes.DAuthWebView.route) {
-            DAuthWebView()
+            DAuthWebView(onSuccess = {
+                loginStateViewModel.doAction(LoginAction.Login(it))
+                navController.popBackStack()
+            })
         }
     }
 }
 
 @Composable
-fun NavigationInner(navController: NavHostController,mapviewModel: MapStateViewModel, arStateViewModel: ArStateViewModel,leaderBoardStateViewModel: LeaderBoardStateViewModel,teamStateViewModel: TeamStateViewModel){
+fun NavigationInner(navController: NavHostController,
+                    mapviewModel: MapStateViewModel,
+                    leaderBoardStateViewModel: LeaderBoardStateViewModel,
+                    teamStateViewModel: TeamStateViewModel,
+                    loginStateViewModel: LoginStateViewModel
+){
     NavHost(
         navController = navController,
         startDestination = NavigationRoutes.Dashboard.route,
     ) {
         composable(route = NavigationRoutes.Dashboard.route){
-            DashboardFragment(teamStateViewModel = teamStateViewModel)
+            DashboardFragment(teamStateViewModel = teamStateViewModel,loginStateViewModel)
         }
         composable(route = NavigationRoutes.Map.route){
             MapFragment(mapviewModel = mapviewModel)
