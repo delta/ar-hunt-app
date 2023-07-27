@@ -37,13 +37,13 @@ class MapStateViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentLevel() = launch(Dispatchers.IO) {
+    private fun getCurrentLevel() = launch(Dispatchers.Main) {
         when(val res=mapRepository.getCurrentLevel()){
             is Result.Value -> currentState.value = res.value
             is Result.Error -> mutableError.value= res.exception.message
         }
     }
-    private fun getRoute() = launch {
+    private fun getRoute() = launch(Dispatchers.Main) {
         when(val res=mapRepository.getRoutes()){
             is Result.Value -> routeListData.value = res.value
             is Result.Error -> mutableError.value= res.exception.message

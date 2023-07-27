@@ -89,9 +89,9 @@ class ArRepository@Inject constructor(
                 isRotationEditable = false
                 isScaleEditable = false
                 isPositionEditable = false
-                loadModelAsync(
-                    context = context,
-                    lifecycle = lifecycle,
+                loadModelGlbAsync(
+//                    context = context,
+//                    lifecycle = lifecycle,
                     glbFileLocation = glbUrl,
                     autoAnimate = false,
                     onLoaded ={
