@@ -85,18 +85,18 @@ class ArRepository@Inject constructor(
             cloudAnchorNode.apply {
                 parent = arSceneView
                 isSmoothPoseEnable = false
-                isVisible = false
+                isVisible = true
                 isRotationEditable = false
                 isScaleEditable = false
                 isPositionEditable = false
                 loadModelGlbAsync(
-//                    context = context,
+                    context = context,
 //                    lifecycle = lifecycle,
                     glbFileLocation = glbUrl,
                     autoAnimate = false,
                     onLoaded ={
                         cloudAnchorNode.anchor()
-                        onTap =onTapModel
+                        onTap = onTapModel
                     }
                 )
             }

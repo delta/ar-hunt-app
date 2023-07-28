@@ -1,13 +1,10 @@
 package edu.nitt.delta.orientation22
 
-//import io.github.sceneview.ar.arcore.LightEstimationMode
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.google.android.filament.Engine
-import com.google.ar.core.Config
 import dagger.hilt.android.AndroidEntryPoint
 import dev.romainguy.kotlin.math.Float3
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
@@ -17,6 +14,7 @@ import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import io.github.sceneview.ar.ArSceneView
+import io.github.sceneview.ar.arcore.LightEstimationMode
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.PlacementMode
 import io.github.sceneview.light.intensity
@@ -30,6 +28,7 @@ class ArActivity : ComponentActivity() {
     private val mapStateViewModel: MapStateViewModel by viewModels()
     private val DEFAULT_LIGHT_INTENSITY=0.3f
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
             Orientation22androidTheme {
@@ -45,28 +44,30 @@ class ArActivity : ComponentActivity() {
                 Log.d("Resolve",glbUrl)
                 ArScreen(updateSceneView = {arSceneView ->
                     this.arSceneView = arSceneView
-                    cloudAnchorNode = ArModelNode(Engine.create(), placementMode = PlacementMode.PLANE_HORIZONTAL)
+                    cloudAnchorNode = ArModelNode(placementMode = PlacementMode.PLANE_HORIZONTAL)
                     setUpEnvironment(glbUrl, scale)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer)
                 }, currentLevel = currentLevel, routeList = routeList, onResolve = {
                     Log.d("Resolve","Called")
-                    viewModel.doAction(ArAction.ResolveAnchor(cloudAnchorNode,anchorHash))
+                    viewModel.doAction(ArAction.ResolveAnchor(cloudAnchorNode, anchorHash))
                 })
             }
         }
     }
 
     private fun setUpEnvironment( glbUrl:String, scale: Double){
-        arSceneView.lightEstimationMode= Config.LightEstimationMode.DISABLED
-        arSceneView.mainLight?.intensity =DEFAULT_LIGHT_INTENSITY
-        arSceneView.cloudAnchorEnabled=true
+        arSceneView.lightEstimationMode = LightEstimationMode.DISABLED
+        arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
+        arSceneView.cloudAnchorEnabled = true
         cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
         cloudAnchorNode.isScaleEditable = false
         cloudAnchorNode.isPositionEditable = false
         cloudAnchorNode.isRotationEditable = false
+
         Log.d("Scale", scale.toFloat().toString())
         Log.d("Resolve glb",glbUrl)
+
         viewModel.doAction(
             ArAction.LoadModel(
                 this,
@@ -79,7 +80,6 @@ class ArActivity : ComponentActivity() {
                 glbUrl
             )
         )
-
     }
 
     private fun tapModel(){
