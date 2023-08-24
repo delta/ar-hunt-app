@@ -3,6 +3,7 @@ package edu.nitt.delta.orientation22.di.viewModel.repository
 import android.content.Context
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import com.google.ar.core.Anchor
 import com.google.ar.core.Session
@@ -84,19 +85,28 @@ class ArRepository@Inject constructor(
         Result.build{
             cloudAnchorNode.apply {
                 parent = arSceneView
-                isSmoothPoseEnable = false
-                isVisible = true
-                isRotationEditable = false
                 isScaleEditable = false
                 isPositionEditable = false
+                isRotationEditable = false
+                isVisible = false
+                isSmoothPoseEnable = true
                 loadModelGlbAsync(
                     context = context,
-//                    lifecycle = lifecycle,
+//                  lifecycle = lifecycle,
                     glbFileLocation = glbUrl,
                     autoAnimate = false,
-                    onLoaded ={
-                        cloudAnchorNode.anchor()
+                    onLoaded = {
+                        cloudAnchorNode.onPoseChanged = { node, _ ->
+                            node.isVisible = node.isAnchored
+
+                            // The below line doesn't work as expected.
+                            // Comment it to view plane dot mesh all the time
+                            arSceneView!!.planeRenderer.isVisible = !node.isVisible
+                        }
                         onTap = onTapModel
+                    },
+                    onError = {
+                        Toast.makeText(context, "Error Loading Model", Toast.LENGTH_SHORT).show()
                     }
                 )
             }

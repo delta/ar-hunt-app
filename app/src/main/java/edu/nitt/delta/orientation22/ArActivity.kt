@@ -2,9 +2,11 @@ package edu.nitt.delta.orientation22
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.google.ar.core.Config
 import dagger.hilt.android.AndroidEntryPoint
 import dev.romainguy.kotlin.math.Float3
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
@@ -26,7 +28,7 @@ class ArActivity : ComponentActivity() {
     private lateinit var cloudAnchorNode: ArModelNode
     private val viewModel:ArStateViewModel by viewModels()
     private val mapStateViewModel: MapStateViewModel by viewModels()
-    private val DEFAULT_LIGHT_INTENSITY=0.3f
+    private val DEFAULT_LIGHT_INTENSITY = 0.3f
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -34,7 +36,7 @@ class ArActivity : ComponentActivity() {
             Orientation22androidTheme {
 
                 mapStateViewModel.doAction(MapAction.GetRoute)
-                var routeList = mapStateViewModel.routeListData.value
+                val routeList = mapStateViewModel.routeListData.value
                 mapStateViewModel.doAction(MapAction.GetCurrentLevel)
                 val currentLevel = mapStateViewModel.currentState.value
                 val glbUrl = intent.getStringExtra("glb")!!
@@ -44,14 +46,23 @@ class ArActivity : ComponentActivity() {
                 Log.d("Resolve",glbUrl)
                 ArScreen(updateSceneView = {arSceneView ->
                     this.arSceneView = arSceneView
-                    cloudAnchorNode = ArModelNode(placementMode = PlacementMode.PLANE_HORIZONTAL)
-                    setUpEnvironment(glbUrl, scale)
+                    cloudAnchorNode = ArModelNode(
+                        placementMode = PlacementMode.PLANE_HORIZONTAL,
+                        hitPosition = Float3(0f, 0f, 0f),
+                        followHitPosition = true,
+                        instantAnchor = true
+                    )
+
+                    // Check if scale value from backend is proper
+                    setUpEnvironment(glbUrl, 0.5)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer)
-                }, currentLevel = currentLevel, routeList = routeList, onResolve = {
-                    Log.d("Resolve","Called")
-                    viewModel.doAction(ArAction.ResolveAnchor(cloudAnchorNode, anchorHash))
-                })
+                }, currentLevel = currentLevel, routeList = routeList,
+                    onReset = {
+                        Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()
+                        viewModel.doAction(ArAction.ResetAnchor(cloudAnchorNode))
+                 }
+                )
             }
         }
     }
@@ -59,14 +70,12 @@ class ArActivity : ComponentActivity() {
     private fun setUpEnvironment( glbUrl:String, scale: Double){
         arSceneView.lightEstimationMode = LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
-        arSceneView.cloudAnchorEnabled = true
         cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
-        cloudAnchorNode.isScaleEditable = false
-        cloudAnchorNode.isPositionEditable = false
-        cloudAnchorNode.isRotationEditable = false
 
         Log.d("Scale", scale.toFloat().toString())
         Log.d("Resolve glb",glbUrl)
+
+        Toast.makeText(applicationContext,"Scan the surroundings for flat surfaces.",Toast.LENGTH_SHORT).show()
 
         viewModel.doAction(
             ArAction.LoadModel(
