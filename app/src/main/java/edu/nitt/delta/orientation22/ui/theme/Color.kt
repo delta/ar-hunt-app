@@ -9,6 +9,7 @@ val white = Color.White
 val brightYellow = Color(0xFFFFD338)
 val yellow = Color(0xFFFFB703)
 val peach = Color(0xFFFFEFC6)
+val cyan = Color(0xFF1AE2FD)
 val transparent = Color.Transparent
 val translucentBox = Color.hsl(0f,0f,0f,0.2f)
 val translucentBackground = Color.hsl(0f, 0f, 0f, 0.3f)
