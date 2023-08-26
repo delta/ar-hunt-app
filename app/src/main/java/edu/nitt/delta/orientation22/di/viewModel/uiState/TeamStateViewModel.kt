@@ -12,6 +12,7 @@ import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.auth.Member
 import edu.nitt.delta.orientation22.models.auth.TeamModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class TeamStateViewModel @Inject constructor(
         is TeamAction.RegisterTeam->registerTeam(action.teamData)
         is TeamAction.GetLeader -> register()
     }
-    private fun getTeam() =launch{
+    private fun getTeam() = launch(Dispatchers.Main){
         when(val res = teamRepository.getTeam()){
             is Result.Value -> {
                 Log.d("Dashboard",res.value.toString())

@@ -10,6 +10,7 @@ import edu.nitt.delta.orientation22.di.viewModel.actions.LeaderBoardAction
 import edu.nitt.delta.orientation22.di.viewModel.repository.LeaderBoardRepository
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,11 +20,11 @@ class LeaderBoardStateViewModel @Inject constructor(
 ):BaseViewModel<LeaderBoardAction>() {
     private val leaderBoardSample: List<LeaderboardData> = listOf(LeaderboardData(teamName = "", score = 0, avatar = 0))
     var leaderBoardData = mutableStateOf<List<LeaderboardData>>(leaderBoardSample)
-    override fun doAction(action: LeaderBoardAction): Any =when(action){
+    override fun doAction(action: LeaderBoardAction): Any = when(action){
         is LeaderBoardAction.GetLeaderBoard -> getLeaderBoard()
     }
 
-    private fun getLeaderBoard()=launch {
+    private fun getLeaderBoard() = launch(Dispatchers.Main) {
         when(val res = leaderBoardRepository.getLeaderBoard()){
             is Result.Value-> leaderBoardData.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
