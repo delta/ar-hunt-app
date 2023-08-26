@@ -6,6 +6,7 @@ val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 val white = Color.White
+val yellowStart = Color(0xFFFFE500)
 val brightYellow = Color(0xFFFFC700)
 val yellow = Color(0xFFFFB703)
 val peach = Color(0xFFFFEFC6)

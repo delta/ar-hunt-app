@@ -1,7 +1,7 @@
 package edu.nitt.delta.orientation22.constants
 
 object MapStyle {
-    val mapStyleJson = """
+    const val mapStyleJson = """
 
 
 [
@@ -28,7 +28,7 @@ object MapStyle {
         "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#0c6700"
+                "color": "#f1c232"
             }
         ]
     },
@@ -37,7 +37,7 @@ object MapStyle {
         "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#784b00"
+                "color": "#101F44"
             }
         ]
     },
@@ -46,7 +46,7 @@ object MapStyle {
         "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#810095"
+                "color": "#808080"
             }
         ]
     }

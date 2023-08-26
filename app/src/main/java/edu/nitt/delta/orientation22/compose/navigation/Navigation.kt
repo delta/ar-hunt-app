@@ -48,7 +48,7 @@ fun NavigationInner(navController: NavHostController,
             DashboardFragment(teamStateViewModel = teamStateViewModel,loginStateViewModel)
         }
         composable(route = NavigationRoutes.Map.route){
-            MapFragment(mapviewModel = mapviewModel)
+            MapFragment(mapviewModel = mapviewModel, teamStateViewModel = teamStateViewModel)
         }
         composable(route = NavigationRoutes.LeaderBoard.route){
             LeaderBoardFragment(teamStateViewModel = teamStateViewModel, leaderBoardViewModel = leaderBoardStateViewModel)
