@@ -51,7 +51,7 @@ fun BottomNavBar (
                     Icon(
                         painter = painterResource(it.icon),
                         contentDescription = it.name,
-                        modifier = modifier.scale(2f)
+                        modifier = modifier.scale(if (selected) 2.4f else 2.0f)
                     )
                 }
             )

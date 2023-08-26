@@ -44,6 +44,9 @@ class ArActivity : ComponentActivity() {
                 val scale = intent.getDoubleExtra("anchorScale", 0.5)
                 Log.d("Resolve",anchorHash)
                 Log.d("Resolve",glbUrl)
+
+                val answer: String? = routeList.firstOrNull { it.position == currentLevel }?.answer
+
                 ArScreen(updateSceneView = {arSceneView ->
                     this.arSceneView = arSceneView
                     cloudAnchorNode = ArModelNode(
@@ -57,7 +60,7 @@ class ArActivity : ComponentActivity() {
                     setUpEnvironment(glbUrl, 0.5)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer)
-                }, currentLevel = currentLevel, routeList = routeList,
+                }, answer = answer ?: "",
                     onReset = {
                         Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()
                         viewModel.doAction(ArAction.ResetAnchor(cloudAnchorNode))

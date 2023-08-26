@@ -8,13 +8,25 @@ import android.location.Location
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,11 +52,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -179,16 +194,20 @@ fun ClueAlertBox(clueName: String,
     if (showDialog) {
         Dialog(onDismissRequest = onDismiss) {
             Column(
-                modifier = Modifier.clip(RoundedCornerShape(5)).paint(
-                    painter = painterResource(id = R.drawable.dialog_background),
-                    contentScale = ContentScale.FillBounds
-                ),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(5))
+                    .paint(
+                        painter = painterResource(id = R.drawable.dialog_background),
+                        contentScale = ContentScale.FillBounds
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                     Image(
                         painter = painterResource(id = R.drawable.skull_banner),
                         contentDescription = "Skull Banner",
-                        modifier = Modifier.height((screenHeight / 10).dp).width((screenHeight / 10).dp),
+                        modifier = Modifier
+                            .height((screenHeight / 10).dp)
+                            .width((screenHeight / 10).dp),
                         contentScale = ContentScale.FillHeight
                     )
 //                }
@@ -357,6 +376,187 @@ fun Context.SnackShowSuccess(errorMessage : String, modifier: Modifier) {
     }
     showSnack()
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T : SpeedDialData> SpeedDialFloatingActionButton(
+    modifier: Modifier = Modifier,
+    initialExpanded: Boolean = false,
+    animationDuration: Int = 300,
+    animationDelayPerSelection: Int = 100,
+    speedDialData: List<T>,
+    onClick: (T?) -> Unit = {},
+    showLabels: Boolean = false,
+    fabBackgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    fabContentColor: Color = contentColorFor(fabBackgroundColor),
+    speedDialBackgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    speedDialContentColor: Color = contentColorFor(speedDialBackgroundColor),
+) {
+    var expanded by remember { mutableStateOf(initialExpanded) }
+
+    val transition = updateTransition(label = "multiSelectionExpanded", targetState = expanded)
+
+    val speedDialAlpha = mutableListOf<State<Float>>()
+    val speedDialScale = mutableListOf<State<Float>>()
+
+    speedDialData.forEachIndexed { index, _ ->
+
+        speedDialAlpha.add(
+            transition.animateFloat(
+                label = "multiSelectionAlpha",
+                transitionSpec = {
+                    tween(
+                        delayMillis = index * animationDelayPerSelection,
+                        durationMillis = animationDuration
+                    )
+                }
+            ) {
+                if (it) 1f else 0f
+            }
+        )
+
+        speedDialScale.add(
+            transition.animateFloat(
+                label = "multiSelectionScale",
+                transitionSpec = {
+                    tween(
+                        delayMillis = index * animationDelayPerSelection,
+                        durationMillis = animationDuration
+                    )
+                }
+            ) {
+                if (it) 1f else 0f
+            }
+        )
+    }
+
+    val fabIconRotation by transition.animateFloat(
+        label = "fabIconRotation",
+        transitionSpec = {
+            tween(durationMillis = animationDuration)
+        }
+    ) {
+        if (it) 90f else 0f
+    }
+    val fabBackgroundColorAnimated by transition.animateColor(
+        label = "fabBackgroundColor",
+        transitionSpec = {
+            tween(durationMillis = animationDuration)
+        }
+    ) {
+        if (it) black else fabBackgroundColor
+    }
+
+    val fabContentColorAnimated by transition.animateColor(
+        label = "fabContentColor",
+        transitionSpec = {
+            tween(durationMillis = animationDuration)
+        }
+    ) {
+        if (it) white else fabContentColor
+    }
+
+    Layout(
+        modifier = modifier,
+        content = {
+            FloatingActionButton(
+                onClick = {
+                    expanded = !expanded
+
+                    if (speedDialData.isEmpty()) {
+                        onClick(null)
+                    }
+                },
+                containerColor = fabBackgroundColorAnimated,
+                contentColor = fabContentColorAnimated
+            ) {
+                Icon(
+                    modifier = Modifier.rotate(fabIconRotation),
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = null,
+                )
+            }
+
+            speedDialData.forEachIndexed { index, data ->
+
+                val correctIndex =
+                    if (expanded) index else speedDialData.size - 1 - index
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val interactionSource = remember { MutableInteractionSource() }
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .alpha(speedDialAlpha[correctIndex].value)
+                            .scale(speedDialScale[correctIndex].value)
+                    ) {
+                        ExtendedFloatingActionButton(
+                            text = {
+                                Text(
+                                    text = data.label,
+                                    color = speedDialContentColor,
+                                    maxLines = 1,
+                                    fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                                    fontSize = 15.sp
+                                ) },
+                            icon = { Icon(
+                                painter = painterResource(id = data.painterResource),
+                                tint = speedDialContentColor,
+                                contentDescription = null,
+                                modifier = Modifier.size(40.dp)
+                            ) },
+                            onClick = {
+                                onClick(data)
+                                data.onClick()
+                            },
+                            interactionSource = interactionSource,
+                            containerColor = speedDialBackgroundColor,
+                            contentColor = speedDialContentColor,
+                        )
+                    }
+                    Spacer(modifier = Modifier.requiredWidth(10.dp))
+                }
+            }
+        }
+    ) { measurables, constraints ->
+
+        val fab = measurables[0]
+        val subFabs = measurables.subList(1, measurables.count())
+
+        val fabPlacable = fab.measure(constraints)
+
+        val subFabPlacables = subFabs.map {
+            it.measure(constraints)
+        }
+
+        layout(
+            width = fabPlacable.width,
+            height = fabPlacable.height
+        ) {
+            fabPlacable.placeRelative(0, 0)
+
+            subFabPlacables.forEachIndexed { index, placeable ->
+
+                if (transition.isRunning or transition.currentState) {
+                    placeable.placeRelative(
+                        x = fabPlacable.width - placeable.width,
+                        y = -index * placeable.height - (fabPlacable.height * 1.25f).toInt()
+                    )
+                }
+            }
+        }
+    }
+}
+
+open class SpeedDialData(
+    val label: String,
+    @DrawableRes
+    val painterResource: Int,
+    val scale: Float,
+    val onClick: () -> Unit,
+)
 
 @Composable
 fun LoadingIcon() {
