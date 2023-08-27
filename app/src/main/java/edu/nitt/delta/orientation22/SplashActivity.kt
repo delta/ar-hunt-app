@@ -49,8 +49,6 @@ import edu.nitt.delta.orientation22.ui.theme.cyan
 import edu.nitt.delta.orientation22.ui.theme.white
 
 
-
-
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
     private val loginStateViewModel by viewModels<LoginStateViewModel> ()
@@ -179,7 +177,7 @@ fun SplashContent(
 fun SetBackGround(
     loginStateViewModel: LoginStateViewModel,
     onCompleted:() ->Unit
-    ) {
+) {
     val mContext = LocalContext.current
     val scale = remember {
         Animatable(0f)
@@ -202,31 +200,23 @@ fun SetBackGround(
             targetValue = 1f,
             animationSpec = FloatTweenSpec(5000, 0, hesitateEasing)
         )
-            if (loginStateViewModel.isLoggedIn) {
-                if (loginStateViewModel.isRegistered.value.isRegistered) {
-                    if(loginStateViewModel.isLive.value) {
-                        mContext.startActivity(Intent(mContext, MainActivity::class.java))
-                    }
-                    else {
-                        val intent = Intent(mContext,LiveActivity::class.java)
-                        mContext.startActivity(intent)
-                    }
-                } else {
-                    LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
-                    mContext.startActivity(Intent(mContext, LoginActivity::class.java))
+        if (loginStateViewModel.isLoggedIn) {
+            if (loginStateViewModel.isRegistered.value.isRegistered) {
+                if(loginStateViewModel.isLive.value) {
+                    mContext.startActivity(Intent(mContext, MainActivity::class.java))
                 }
-            } else{
+                else {
+                    val intent = Intent(mContext,LiveActivity::class.java)
+                    mContext.startActivity(intent)
+                }
+            } else {
                 LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
                 mContext.startActivity(Intent(mContext, LoginActivity::class.java))
             }
+        } else{
+            LoginActivity.startDestination = NavigationRoutes.Login.route
+            mContext.startActivity(Intent(mContext,LoginActivity::class.java))
+        }
     }
     SplashContent(scale = scale.value, progress = progress.value)
 }
-
-
-
-
-
-
-
-

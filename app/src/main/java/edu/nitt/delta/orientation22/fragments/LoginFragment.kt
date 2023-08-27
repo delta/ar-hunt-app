@@ -46,7 +46,7 @@ fun LoginFragment(
             state = state.value,
             onSuccess = {
                 if(!isReg.value.isRegistered) {
-                    navController.navigate(NavigationRoutes.Dashboard.route) {
+                    navController.navigate(NavigationRoutes.TeamDetails.route) {
                         popUpTo(NavigationRoutes.Login.route) { inclusive = true }
                     }
                 } else {

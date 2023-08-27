@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.android.filament.utils.Utils
 import com.google.ar.sceneform.rendering.ViewRenderable.HorizontalAlignment
@@ -80,8 +79,7 @@ class LiveActivity : ComponentActivity() {
 fun liveScreen(
     loginStateViewModel: LoginStateViewModel,
 
-
-) {
+    ) {
     val boat= painterResource(id = R.drawable.sailboat)
     val skull = painterResource(id = R.drawable.skull)
     val configuration = LocalConfiguration.current
@@ -95,17 +93,17 @@ fun liveScreen(
 
     )
     {
-                Image(
-                    painter = skull,
-                    contentDescription = "skull",
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.Crop
-                )
-        }
-        Column(modifier= Modifier
-            .fillMaxSize()
-            .background(translucentBackground), horizontalAlignment = Alignment.CenterHorizontally,) {}
+        Image(
+            painter = skull,
+            contentDescription = "skull",
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentScale = ContentScale.Crop
+        )
+    }
+    Column(modifier= Modifier
+        .fillMaxSize()
+        .background(translucentBackground), horizontalAlignment = Alignment.CenterHorizontally,) {}
     Column(
 
         modifier = Modifier
@@ -158,7 +156,7 @@ fun liveScreen(
     }
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(top = (screenHeight / 3).dp),
+        .padding(top=(screenHeight/3).dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -182,7 +180,7 @@ fun liveScreen(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(1==1)
+        if(loginStateViewModel.isLive.value)
         {
             Button()
         }
@@ -195,7 +193,7 @@ fun liveScreen(
             ),)
         }
     }
-    }
+}
 
 @Composable
 fun Button()
@@ -210,7 +208,7 @@ fun Button()
             .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
-                        val intent=Intent(mContext,LoginActivity::class.java)
+                        val intent = Intent(mContext, LoginActivity::class.java)
                         mContext.startActivity(intent)
                     }
                 )
@@ -218,7 +216,7 @@ fun Button()
             .fillMaxWidth()
             .height((screenHeight / 10).dp)
             .padding((screenHeight / 60).dp)
-            ,
+        ,
 
         shape = RoundedCornerShape(4.dp),
     ){
@@ -227,21 +225,20 @@ fun Button()
                 .fillMaxSize()
                 .background(brush)
         ){
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Play",
-                style = TextStyle(
-                    fontSize = 38.sp,
-                    color = white,
-                    fontFamily = FontFamily(Font(R.font.daysone_regular)),
-                ),
-            )
-        }
-    }}
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Play",
+                    style = TextStyle(
+                        fontSize = 38.sp,
+                        color = white,
+                        fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                    ),
+                )
+            }
+        }}
 }
-
 
