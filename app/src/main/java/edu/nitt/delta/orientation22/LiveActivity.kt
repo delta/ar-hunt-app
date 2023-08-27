@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.android.filament.utils.Utils
 import com.google.ar.sceneform.rendering.ViewRenderable.HorizontalAlignment
@@ -78,6 +79,7 @@ class LiveActivity : ComponentActivity() {
 @Composable
 fun liveScreen(
     loginStateViewModel: LoginStateViewModel,
+
 
 ) {
     val boat= painterResource(id = R.drawable.sailboat)
@@ -156,7 +158,7 @@ fun liveScreen(
     }
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(top=(screenHeight/3).dp),
+        .padding(top = (screenHeight / 3).dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -180,7 +182,7 @@ fun liveScreen(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(loginStateViewModel.isLive.value)
+        if(1==1)
         {
             Button()
         }
@@ -208,7 +210,7 @@ fun Button()
             .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
-                        val intent = Intent(mContext, LoginActivity::class.java)
+                        val intent=Intent(mContext,LoginActivity::class.java)
                         mContext.startActivity(intent)
                     }
                 )

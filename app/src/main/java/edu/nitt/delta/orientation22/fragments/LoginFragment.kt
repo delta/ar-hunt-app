@@ -7,28 +7,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import edu.nitt.delta.orientation22.LiveActivity
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
+import edu.nitt.delta.orientation22.compose.CustomItem
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.compose.screens.LoginScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginState
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
+import edu.nitt.delta.orientation22.models.Person
 
 @Composable
 fun LoginFragment(
     navController: NavController,
     loginStateViewModel: LoginStateViewModel
 ){
-    val painter= painterResource(id = R.drawable.background_image)
+    val painter= painterResource(id = R.drawable.bg)
     val description="Background"
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = Color.Black
     ){
         val state= loginStateViewModel.uiState
         val isReg =loginStateViewModel.isRegistered
@@ -42,7 +46,7 @@ fun LoginFragment(
             state = state.value,
             onSuccess = {
                 if(!isReg.value.isRegistered) {
-                    navController.navigate(NavigationRoutes.TeamDetails.route) {
+                    navController.navigate(NavigationRoutes.Dashboard.route) {
                         popUpTo(NavigationRoutes.Login.route) { inclusive = true }
                     }
                 } else {
@@ -62,3 +66,7 @@ fun LoginFragment(
         )
     }
 }
+
+
+
+

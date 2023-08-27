@@ -49,6 +49,8 @@ import edu.nitt.delta.orientation22.ui.theme.cyan
 import edu.nitt.delta.orientation22.ui.theme.white
 
 
+
+
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
     private val loginStateViewModel by viewModels<LoginStateViewModel> ()
@@ -214,9 +216,17 @@ fun SetBackGround(
                     mContext.startActivity(Intent(mContext, LoginActivity::class.java))
                 }
             } else{
-                LoginActivity.startDestination = NavigationRoutes.Login.route
-                mContext.startActivity(Intent(mContext,LoginActivity::class.java))
+                LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
+                mContext.startActivity(Intent(mContext, LoginActivity::class.java))
             }
     }
     SplashContent(scale = scale.value, progress = progress.value)
 }
+
+
+
+
+
+
+
+

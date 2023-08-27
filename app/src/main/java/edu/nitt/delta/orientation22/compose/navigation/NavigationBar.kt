@@ -127,7 +127,7 @@ fun BottomBar(
             modifier = Modifier
                 .then(
                     Modifier
-                        .size((screenWidth/4.5).dp)
+                        .size((screenWidth / 4.5).dp)
                         .align(Alignment.TopCenter)
                 )
                 .clip(
@@ -149,3 +149,8 @@ fun BottomBar(
         }
     }
 }
+
+
+
+
+

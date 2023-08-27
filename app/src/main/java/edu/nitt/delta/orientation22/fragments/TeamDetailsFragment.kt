@@ -28,7 +28,8 @@ fun TeamDetailsFragment(
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
+
     ){
         teamStateViewModel.doAction(TeamAction.GetLeader)
         var teamData=teamStateViewModel.teamData.value

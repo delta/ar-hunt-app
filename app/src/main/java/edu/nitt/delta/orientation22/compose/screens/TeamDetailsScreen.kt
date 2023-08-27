@@ -2,16 +2,8 @@ package edu.nitt.delta.orientation22.compose.screens
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -35,19 +27,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
-import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.LoadingIcon
-import edu.nitt.delta.orientation22.compose.avatarList
 import edu.nitt.delta.orientation22.compose.reverseAvatarList
 import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.viewModel.uiState.RegistrationState
 import edu.nitt.delta.orientation22.models.Team
 import edu.nitt.delta.orientation22.models.TeamMember
 import edu.nitt.delta.orientation22.models.auth.Member
-import edu.nitt.delta.orientation22.models.auth.RegisterTeamRequest
 import edu.nitt.delta.orientation22.models.auth.TeamModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
@@ -60,7 +48,9 @@ fun TeamDetails(
     registerTeam: (TeamModel) -> Unit,
     state: RegistrationState
 ) {
+
     var nameLeader by rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
+
     var rollNumberLeader by rememberSaveable {mutableStateOf(if (teamDetails.members[0].rollNo != -1) teamDetails.members[0].rollNo.toString() else "")}
     var teamName by rememberSaveable { mutableStateOf(teamDetails.teamName) }
 
@@ -75,15 +65,15 @@ fun TeamDetails(
 
     TeamNameHeader(teamName = teamName, onValueChange = {teamName = it})
 
-    TextInput(title = "Team Leader", isEnabled = false, data = nameLeader, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameLeader = it})
-    TextInput(title = "Team Leader", isEnabled = false, data = rollNumberLeader, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberLeader = it})
+   TeamLeader(title = "Team Leader", isEnabled = true, data = nameLeader, header = "Name",keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameLeader = it})
+    TeamLeader(title = "Team Leader", isEnabled = true, data = rollNumberLeader, header = "Roll Number",keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {rollNumberLeader = it})
 
-    TextInput(title = "Member - 1", isEnabled = true, data = nameMember1, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember1 = it})
-    TextInput(title = "Member - 1", isEnabled = true, data = rollNumberMember1, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember1 = it})
-    TextInput(title = "Member - 2", isEnabled = true, data = nameMember2, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember2 = it})
-    TextInput(title = "Member - 2", isEnabled = true, data = rollNumberMember2, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember2 = it})
-    TextInput(title = "Member - 3", isEnabled = true, data = nameMember3, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember3 = it})
-    TextInput(title = "Member - 3", isEnabled = true, data = rollNumberMember3, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember3 = it})
+    TextInput(title = "ONBOARD PIRATES", isEnabled = true, data = nameMember1, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember1 = it})
+    TextInput(title = "", isEnabled = true, data = rollNumberMember1, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember1 = it})
+    TextInput(title = "", isEnabled = true, data = nameMember2, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember2 = it})
+    TextInput(title = "", isEnabled = true, data = rollNumberMember2, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember2 = it})
+    TextInput(title = "", isEnabled = true, data = nameMember3, header = "Name", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text), onValueChange = {nameMember3 = it})
+    TextInput(title = "", isEnabled = true, data = rollNumberMember3, header = "Roll Number", keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number), onValueChange = {rollNumberMember3 = it})
 
     SubmitButton(
         teamName = teamName,
@@ -106,132 +96,64 @@ fun TeamDetailsScreen(
     state :RegistrationState
 ){
     Orientation22androidTheme {
-        val mContext = LocalContext.current
-        val painter = painterResource(id = R.drawable.background_image)
-        var chooseAvatar by remember { mutableStateOf(false) }
-        var selectedAvatar by remember { mutableStateOf<Int>(R.drawable.ic_action_name) }
+       val mContext = LocalContext.current
+        val painter = painterResource(id = R.drawable.bg)
         Box(modifier = Modifier.fillMaxSize()) {
+            Spacer(
+
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+
+                )
             Image(
                 painter = painter,
                 contentDescription = "background",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .background(
-                        translucentBackground
-                    ),
+                    .background(transparent)
+                    ,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                Text(
-                    text = "AR HUNT",
-                    fontSize = 45.sp,
-                    letterSpacing = 0.15.em,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(all = 30.dp),
-                    color = brightYellow,
-                    fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    text = "Team Details",
-                    fontSize = 30.sp,
-                    letterSpacing = 0.08.em,
-                    fontWeight = FontWeight.Light,
-                    modifier = Modifier.padding(all = 15.dp),
-                    color = brightYellow,
-                    fontFamily = FontFamily(Font(R.font.montserrat_regular))
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .height((0.5).dp)
-                        .background(
-                            color = white,
-                        )
-                )
-                Spacer(modifier = Modifier.height(30.dp))
-
-                Card(
-                    modifier = Modifier.size(150.dp),
-                    elevation = 0.dp,
-                    backgroundColor = Color.Transparent
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.Top
                 ) {
-                    Row() {
-                        Image(
-                            painter = painterResource(selectedAvatar),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clickable { chooseAvatar = true }
+                    Column (
+                        horizontalAlignment = Alignment.Start
+                    ){
+                        Text(
+                            text = "PIRATES",
+                            fontSize = 45.sp,
+                            letterSpacing = 0.15.em,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 30.dp),
+                            color = white,
+                            fontFamily = FontFamily(Font(R.font.fiddlerscovecondital))
                         )
-                    }
-                }
+                        Text(
+                            text = "REGISTRATION",
+                            fontSize = 45.sp,
+                            letterSpacing = 0.15.em,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 30.dp),
+                            color = white,
+                            fontFamily = FontFamily(Font(R.font.fiddlerscovecondital))
+                        )
 
-                Spacer(modifier = Modifier.height(30.dp))
+                    }
+
+
+                    Image(painter = painterResource(id = R.drawable.skull_reg), contentDescription = "icon", modifier = Modifier.size(200.dp))
+            }
 
                 TeamDetails(mContext = mContext, teamDetails, registerTeam,state)
-            }
-            if (chooseAvatar) {
-                Dialog(
-                    onDismissRequest = {
-                        chooseAvatar = false
-                                       },
-                    content = {
-
-                        val state = rememberLazyListState()
-                        val layoutInfo = remember { derivedStateOf { state.layoutInfo } }
-
-                        layoutInfo.value.afterContentPadding
-
-                        Card(
-                            elevation = 0.dp,
-                            modifier = Modifier
-                                .height(150.dp)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(15.dp),
-                            border = BorderStroke(3.dp, yellow),
-                            content = {
-                                LazyRow(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(brown),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    state = state,
-                                    flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
-                                    contentPadding = PaddingValues(10.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                                ) {
-                                    items(avatarList.values.toList()) { avatar ->
-                                        Card(
-                                            modifier = Modifier.size(100.dp),
-                                            shape = CircleShape,
-                                            backgroundColor = brown
-                                        ) {
-                                            Image(
-                                                painterResource(avatar),
-                                                contentDescription = "",
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .selectable(
-                                                        selected = false,
-                                                        onClick = {
-                                                            selectedAvatar = avatar
-                                                            chooseAvatar = false
-                                                        }
-                                                    )
-                                                    .size(50.dp)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                    }
-                )
             }
         }
     }
@@ -243,41 +165,47 @@ fun TeamNameHeader(
     teamName: String,
     onValueChange: (String) -> Unit,
 ){
-    Text(
-        text = "Team Name",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
-        color = brightYellow,
-        fontFamily = FontFamily(Font(R.font.montserrat_regular))
-    )
-    TextField(
-        value = teamName,
-        onValueChange = onValueChange,
-        label = { Text("Team Name") },
-        maxLines = 1,
-        enabled = true,
-        singleLine = true,
-        textStyle = TextStyle(color = white, fontWeight = FontWeight.Normal,
-            fontFamily = FontFamily(Font(R.font.montserrat_regular))
-        ),
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth(0.85f),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = translucentBox,
-            focusedIndicatorColor = transparent,
-            unfocusedIndicatorColor = transparent,
-            disabledIndicatorColor = transparent,
-            textColor = yellow,
-            cursorColor = yellow,
-            focusedLabelColor = yellow,
-            unfocusedLabelColor = peach,
+    Row(){
+        Text(
+            text = "SHIP NAME",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
+            color = white,
+            fontFamily = FontFamily(Font(R.font.fiddlerscovecondital))
         )
-    )
-}
+        TextField(
+            value = teamName,
+            onValueChange = onValueChange,
+            label = { Text("ENTER NAME", fontFamily = FontFamily(Font(R.font.fiddlerscovecondital)))},
+            maxLines = 1,
+            enabled = true,
+            singleLine = true,
+            textStyle = TextStyle(color = black, fontWeight = FontWeight.Normal, fontSize = 30.sp,
+                fontFamily = FontFamily(Font(R.font.fiddlerscovecondital))
+            ),
 
+
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxSize()
+                .padding(start = 10.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = cyan,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                textColor = black,
+                cursorColor = black,
+                focusedLabelColor = black,
+                unfocusedLabelColor = black,
+            )
+        )
+
+    }
+
+}
 @Composable
 fun SubmitButton(
     teamName: String,
@@ -318,22 +246,69 @@ fun SubmitButton(
         content = {
             if (state == RegistrationState.LOADING) LoadingIcon()
             else Text(
-                text = "Submit",
-                fontSize = 20.sp,
+                text = "Register",
+                fontSize = 30.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(5.dp),
-                color = brightYellow,
-                fontFamily = FontFamily(Font(R.font.montserrat_regular))
+                color = black,
+                fontFamily = FontFamily(Font(R.font.daysone_regular))
             )
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = black,
-            contentColor = brightYellow,
+            containerColor = darkpink,
+            contentColor = black,
         ),
         modifier = Modifier
             .padding(20.dp)
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TeamLeader(
+    title: String,
+    isEnabled : Boolean,
+    data: String,
+    header: String,
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions
+) {
+    Column (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start){
+        if (header == "Name"){
+            Text(
+                text = title,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
+                color = white,
+                fontFamily = FontFamily(Font(R.font.fiddlerscovecondital)),
+            )
+        }
+        Column {
+            TextField(
+                value = data,
+                onValueChange = onValueChange,
+                label = { Text(header) },
+                maxLines = 1,
+                enabled = isEnabled,
+                singleLine = true,
+                textStyle = TextStyle(color = black, fontWeight = FontWeight.Normal,
+                    fontFamily = FontFamily(Font(R.font.fiddlerscovecondital)), fontSize = 30.sp
+                ),
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(0.85f),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = white,
+                )
+            )
+
+        }
+        }
+    }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -348,11 +323,11 @@ fun TextInput(
     if (header == "Name"){
         Text(
             text = title,
-            fontSize = 20.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
-            color = brightYellow,
-            fontFamily = FontFamily(Font(R.font.montserrat_regular))
+            color = white,
+            fontFamily = FontFamily(Font(R.font.fiddlerscovecondital))
         )
     }
     TextField(
@@ -362,8 +337,8 @@ fun TextInput(
         maxLines = 1,
         enabled = isEnabled,
         singleLine = true,
-        textStyle = TextStyle(color = peach, fontWeight = FontWeight.Normal,
-            fontFamily = FontFamily(Font(R.font.montserrat_regular))
+        textStyle = TextStyle(color = black, fontWeight = FontWeight.Normal,
+            fontFamily = FontFamily(Font(R.font.fiddlerscovecondital)), fontSize = 30.sp
             ),
         keyboardOptions = keyboardOptions,
         shape = RoundedCornerShape(20.dp),
@@ -371,17 +346,19 @@ fun TextInput(
             .padding(10.dp)
             .fillMaxWidth(0.85f),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = translucentBox,
+            containerColor = white,
             focusedIndicatorColor = transparent,
             unfocusedIndicatorColor = transparent,
             disabledIndicatorColor = transparent,
-            textColor = yellow,
-            cursorColor = yellow,
-            focusedLabelColor = yellow,
-            unfocusedLabelColor = peach,
+            textColor = transparent,
+            cursorColor = black,
+            focusedLabelColor = transparent,
+            unfocusedLabelColor = transparent,
         )
     )
 }
+
+
 
 fun validate(team: Team, mContext: Context): Boolean {
     if (team.teamName.trim() == ""){
