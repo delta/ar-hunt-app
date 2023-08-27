@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.navigation.BottomBar
 import edu.nitt.delta.orientation22.compose.navigation.NavigationInner
-import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
+import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.di.viewModel.uiState.*
 import edu.nitt.delta.orientation22.ui.theme.*
 @AndroidEntryPoint
@@ -32,13 +32,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             Orientation22androidTheme() {
+                val destination = intent.getStringExtra("destination")?: NavigationRoutes.Dashboard.route
                 val checkedState = remember { mutableStateOf(false) }
                 Scaffold(
                     bottomBar = {
                         BottomBar(checkedState = checkedState, navController = navController)
                     }
                 ) {
-                    NavigationInner(navController = navController, mapviewModel = mapViewModel, loginStateViewModel = loginViewModel, leaderBoardStateViewModel = leaderBoardViewModel, teamStateViewModel = teamViewModel )
+                    NavigationInner(navController = navController, mapviewModel = mapViewModel, loginStateViewModel = loginViewModel, leaderBoardStateViewModel = leaderBoardViewModel, teamStateViewModel = teamViewModel, startDestination = destination)
                 }
             }
         }

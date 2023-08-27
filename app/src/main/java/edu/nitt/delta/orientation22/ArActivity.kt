@@ -1,14 +1,15 @@
 package edu.nitt.delta.orientation22
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.google.ar.core.Config
 import dagger.hilt.android.AndroidEntryPoint
 import dev.romainguy.kotlin.math.Float3
+import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.compose.screens.ArScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.ArAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
@@ -34,7 +35,6 @@ class ArActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Orientation22androidTheme {
-
                 mapStateViewModel.doAction(MapAction.GetRoute)
                 val routeList = mapStateViewModel.routeListData.value
                 mapStateViewModel.doAction(MapAction.GetCurrentLevel)
@@ -64,7 +64,12 @@ class ArActivity : ComponentActivity() {
                     onReset = {
                         Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()
                         viewModel.doAction(ArAction.ResetAnchor(cloudAnchorNode))
-                 }
+                 }, onBack = {
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.putExtra("destination", NavigationRoutes.Map.route)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
                 )
             }
         }

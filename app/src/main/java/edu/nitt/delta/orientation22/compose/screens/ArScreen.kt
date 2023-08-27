@@ -1,6 +1,8 @@
 package edu.nitt.delta.orientation22.compose.screens
 
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +19,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -43,12 +46,13 @@ fun ArScreen(
     updateSceneView:(ArSceneView)->Unit,
     onClick : ()->Unit,
     onReset:()->Unit,
+    onBack: () -> Unit,
     answer: String,
 ){
 
     val isPopUp = remember { mutableStateOf(false) }
     val isCorrect = remember { mutableStateOf(false) }
-
+    BackHandler(onBack = onBack)
     Scaffold(
         modifier = modifier,
         content = {
@@ -280,5 +284,30 @@ private fun CharView(
         textAlign = TextAlign.Center,
         fontFamily = FontFamily(Font(R.font.fiddlerscove)),
     )
+}
+
+@Composable
+fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
+    val currentOnBack by rememberUpdatedState(onBack)
+    val backCallback = remember {
+        object : OnBackPressedCallback(enabled) {
+            override fun handleOnBackPressed() {
+                currentOnBack()
+            }
+        }
+    }
+    SideEffect {
+        backCallback.isEnabled = enabled
+    }
+    val backDispatcher = checkNotNull(LocalOnBackPressedDispatcherOwner.current) {
+        "No OnBackPressedDispatcherOwner was provided via LocalOnBackPressedDispatcherOwner"
+    }.onBackPressedDispatcher
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, backDispatcher) {
+        backDispatcher.addCallback(lifecycleOwner, backCallback)
+        onDispose {
+            backCallback.remove()
+        }
+    }
 }
 
