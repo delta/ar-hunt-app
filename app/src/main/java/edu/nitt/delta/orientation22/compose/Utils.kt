@@ -223,7 +223,7 @@ fun distanceCalculator(
     anchorHash: String,
     currentScale: Double
 ){
-    val radius = 10
+    val radius = 10000000000
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {

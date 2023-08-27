@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import com.google.ar.core.Config
 import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.toast
@@ -32,7 +33,7 @@ fun ArScreen(
     updateSceneView:(ArSceneView)->Unit,
     onClick : ()->Unit,
     currentLevel: Int,
-    onResolve:()->Unit,
+    onReset:()->Unit,
     routeList: List<LocationData>,
 ){
     AndroidView(factory = {
@@ -60,13 +61,13 @@ fun ArScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = {
-                        onResolve()
+                        onReset()
                     },
                     modifier = Modifier.padding(15.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = yellow, contentColor = black),
                     shape = RoundedCornerShape(5.dp),
                 ) {
-                    Text(text = "Resolve", fontFamily = FontFamily(Font(R.font.montserrat_regular)))
+                    Text(text = "Reset", fontFamily = FontFamily(Font(R.font.montserrat_regular)))
                 }
             }
         }
