@@ -84,7 +84,7 @@ fun LeaderBoardScreen(
 
             Spacer(modifier=Modifier.height((screenHeight/45).dp))
             LazyColumn(contentPadding = PaddingValues(start = (screenWidth/20).dp, end =(screenWidth/20).dp, bottom = 4.dp ),
-            verticalArrangement = Arrangement.spacedBy((screenHeight/35).dp),
+            verticalArrangement = Arrangement.spacedBy((screenHeight/100).dp),
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(bottom = (screenWidth / 3.5).dp)){

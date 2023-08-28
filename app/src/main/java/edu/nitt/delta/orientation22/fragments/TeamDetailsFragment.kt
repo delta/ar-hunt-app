@@ -36,14 +36,14 @@ fun TeamDetailsFragment(
         loginStateViewModel.doAction(LoginAction.IsLive)
         if (state==RegistrationState.SUCCESS){
             state = RegistrationState.IDLE
-            if(loginStateViewModel.isLive.value) {
-                val intent = Intent(LocalContext.current, MainActivity::class.java)
-                LocalContext.current.startActivity(intent)
-            }
-            else{
+//            if(loginStateViewModel.isLive.value) {
+//                val intent = Intent(LocalContext.current, MainActivity::class.java)
+//                LocalContext.current.startActivity(intent)
+//            }
+//            else{
                 val intent = Intent(LocalContext.current, LiveActivity::class.java)
                 LocalContext.current.startActivity(intent)
-            }
+//            }
         } else if(state==RegistrationState.ERROR){
             state = RegistrationState.IDLE
             LocalContext.current.toast("Unable To Register Team")

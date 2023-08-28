@@ -545,19 +545,17 @@ fun LoadingIcon() {
 }
 
 val avatarList = mapOf(
-    1 to R.drawable.bear,
-    2 to R.drawable.cat,
-    3 to R.drawable.dog,
-    4 to R.drawable.giraffe,
-    5 to R.drawable.panda,
+    1 to R.drawable.avatar1,
+    2 to R.drawable.avatar2,
+    3 to R.drawable.avatar3,
+    4 to R.drawable.avatar4,
 )
 
 val reverseAvatarList = mapOf(
-    R.drawable.bear to 1,
-    R.drawable.cat to 2,
-    R.drawable.dog to 3,
-    R.drawable.giraffe to 4,
-    R.drawable.panda to 5,
+    R.drawable.avatar1 to 1,
+    R.drawable.avatar2 to 2,
+    R.drawable.avatar3 to 3,
+    R.drawable.avatar4 to 4,
 )
 
 val markerImages = mapOf(
