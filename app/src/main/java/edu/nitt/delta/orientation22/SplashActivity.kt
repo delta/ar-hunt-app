@@ -202,13 +202,8 @@ fun SetBackGround(
         )
         if (loginStateViewModel.isLoggedIn) {
             if (loginStateViewModel.isRegistered.value.isRegistered) {
-                if(loginStateViewModel.isLive.value) {
-                    mContext.startActivity(Intent(mContext, MainActivity::class.java))
-                }
-                else {
                     val intent = Intent(mContext,LiveActivity::class.java)
                     mContext.startActivity(intent)
-                }
             } else {
                 LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
                 mContext.startActivity(Intent(mContext, LoginActivity::class.java))

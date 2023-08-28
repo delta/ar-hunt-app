@@ -285,24 +285,23 @@ fun distanceCalculator(
 
 fun Context.getAnnotatedString(color: Color) : AnnotatedString {
     val annotatedString = buildAnnotatedString {
-        val str = "MADE WITH ❤ BY DELTA FORCE AND ORIENTATION"
+        val str = "MADE WITH ❤ BY DELTA FORCE"
         val indexStartDelta = str.indexOf("DELTA FORCE")
-        val indexStartOrientation = str.indexOf("ORIENTATION")
         append(str)
         addStyle(
             style = SpanStyle(
-                color = color,
-                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                color = white,
+                fontFamily = FontFamily(Font(R.font.daysone_regular)),
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.sp
             ),
             start = 0,
-            end = 42
+            end = str.length - 1
         )
         addStyle(
             style = SpanStyle(
                 color = color,
-                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontFamily = FontFamily(Font(R.font.daysone_regular)),
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.sp
@@ -311,29 +310,11 @@ fun Context.getAnnotatedString(color: Color) : AnnotatedString {
             start = indexStartDelta,
             end = indexStartDelta+11
         )
-        addStyle(
-            style = SpanStyle(
-                color = color,
-                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold,
-                fontSize = 10.sp
-
-            ),
-            start = indexStartOrientation,
-            end = indexStartOrientation + 11
-        )
         addStringAnnotation(
             tag = "URL",
             annotation = "https://delta.nitt.edu/",
             start = indexStartDelta,
             end = indexStartDelta + 11
-        )
-        addStringAnnotation(
-            tag = "URL",
-            annotation = "https://www.instagram.com/nitt.orientation/",
-            start = indexStartOrientation,
-            end = indexStartOrientation + 11
         )
     }
     return annotatedString

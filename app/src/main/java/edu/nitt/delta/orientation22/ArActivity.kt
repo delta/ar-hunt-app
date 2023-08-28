@@ -65,8 +65,8 @@ class ArActivity : ComponentActivity() {
                         Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()
                         viewModel.doAction(ArAction.ResetAnchor(cloudAnchorNode))
                  }, onBack = {
+                        MainActivity.startDestination = NavigationRoutes.Map.route
                         val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra("destination", NavigationRoutes.Map.route)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                     }

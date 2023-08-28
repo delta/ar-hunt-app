@@ -5,6 +5,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import edu.nitt.delta.orientation22.LoginActivity
+import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.*
@@ -37,11 +38,10 @@ fun NavigationInner(navController: NavHostController,
                     leaderBoardStateViewModel: LeaderBoardStateViewModel,
                     teamStateViewModel: TeamStateViewModel,
                     loginStateViewModel: LoginStateViewModel,
-                    startDestination: String
 ){
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = MainActivity.startDestination,
     ) {
         composable(route = NavigationRoutes.Dashboard.route){
             DashboardFragment(teamStateViewModel = teamStateViewModel,loginStateViewModel)

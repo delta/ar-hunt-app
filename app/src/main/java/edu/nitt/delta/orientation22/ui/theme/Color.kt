@@ -14,6 +14,7 @@ val cyan = Color(0xFF1AE2FD)
 val lightCyan = Color(0xFF1AFDFD)
 val red = Color(0xFFFE014F)
 val grey = Color(0x32F8F8F8)
+val lightGrey = Color(0x77F8F8F8)
 val darkBlue = Color(0xFF2E50A6)
 val transparent = Color.Transparent
 val translucentBox = Color.hsl(0f,0f,0f,0.2f)
@@ -35,3 +36,5 @@ val colour_Login_AR=Color.hsl(43f,0.52f,0.54f,1f)
 val shadow1=Color.hsl(54f,1f,0.61f,0.15f)
 val peach_version2= Color(0xFFFD7F7F)
 val pink= Color(0xFFFD1A79)
+val lightGreen = Color(0xFF89FD7F)
+
