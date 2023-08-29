@@ -20,7 +20,7 @@ class LeaderBoardRepository @Inject constructor(
         Log.d("LeaderBoard",token)
         val response = apiInterface.getLeaderBord(TokenRequestModel(token))
         Log.d("LeaderBoard",response.toString())
-        if (response.message == ResponseConstants.SUCCESS) {
+        if (response.message == ResponseConstants.LEADERBOARD_SUCCESS) {
            Result.build { response.leaderboard }
         }
         else {

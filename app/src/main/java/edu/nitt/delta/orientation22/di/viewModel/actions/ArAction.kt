@@ -20,5 +20,5 @@ sealed class ArAction {
         val cloudAnchorNode: ArModelNode,
         val glbUrl : String
     ) : ArAction()
-    object PostAnswer : ArAction()
+    data class PostAnswer(val currentLevel: Int) : ArAction()
 }

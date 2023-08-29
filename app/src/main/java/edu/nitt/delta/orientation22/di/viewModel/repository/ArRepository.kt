@@ -11,7 +11,7 @@ import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.Result
-import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
+import edu.nitt.delta.orientation22.models.game.PostAnswerRequest
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
@@ -115,14 +115,14 @@ class ArRepository@Inject constructor(
         Result.build<ArModelNode> { throw Exception(ResponseConstants.ERROR) }
     }
 
-    suspend fun postAnswer() : Result<String> = try {
+    suspend fun postAnswer(currentLevel: Int) : Result<String> = try {
         val token = sharedPrefHelper.token.toString()
-        val response = apiInterface.postAnswer(TokenRequestModel(token))
-        if (response.message == ResponseConstants.SUCCESS){
+        val response = apiInterface.postAnswer(PostAnswerRequest(token, currentLevel))
+        if (response.message == ResponseConstants.GET_USER_RESPONSE_SUCCESS){
             Result.build { "Level Completed" }
         }
         else {
-            Result.build { throw Exception(ResponseConstants.ERROR) }
+            Result.build { response.message?: throw Exception(ResponseConstants.ERROR) }
         }
 
     }catch (e:Exception){

@@ -59,7 +59,7 @@ class ArActivity : ComponentActivity() {
                     // Check if scale value from backend is proper
                     setUpEnvironment(glbUrl, 0.5)
                 }, onClick = {
-                    viewModel.doAction(ArAction.PostAnswer)
+                    viewModel.doAction(ArAction.PostAnswer(currentLevel))
                 }, answer = answer ?: "",
                     onReset = {
                         Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()

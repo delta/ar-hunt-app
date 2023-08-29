@@ -35,7 +35,9 @@ class ArStateViewModel @Inject constructor(
             action.sceneView,
             action.glbUrl
         )
-        is ArAction.PostAnswer -> postAnswer()
+        is ArAction.PostAnswer -> postAnswer(
+            action.currentLevel
+        )
     }
 
     private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode) = launch {
@@ -72,8 +74,8 @@ class ArStateViewModel @Inject constructor(
         }
     }
 
-    private fun postAnswer() = launch {
-        when(val res =  arRepository.postAnswer()){
+    private fun postAnswer(currentLevel: Int) = launch {
+        when(val res =  arRepository.postAnswer(currentLevel)){
             is Result.Value -> mutableSuccess.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }

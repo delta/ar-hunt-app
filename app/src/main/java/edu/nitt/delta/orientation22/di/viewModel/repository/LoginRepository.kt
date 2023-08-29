@@ -49,7 +49,7 @@ class LoginRepository @Inject constructor(
         val token = sharedPrefHelper.token
         val response = apiInterface.isRegistered(TokenRequestModel(token.toString()))
         Log.d("isRegistered",response.toString())
-        if(response.message == ResponseConstants.SUCCESS){
+        if(response.message == ResponseConstants.IS_REGISTERED_SUCCESS){
             Log.d("isRegistered",response.toString())
             Result.build { response }
         } else{
@@ -70,7 +70,7 @@ class LoginRepository @Inject constructor(
         val token = sharedPrefHelper.token.toString()
         val response = apiInterface.isLive(TokenRequestModel(token))
         Log.d("isLive",response.live.toString())
-        if (response.message == ResponseConstants.SUCCESS){
+        if (response.message == ResponseConstants.LIVE_SUCCESS1 || response.message == ResponseConstants.LIVE_SUCCESS2){
             Result.build { response.live }
         }
         else{

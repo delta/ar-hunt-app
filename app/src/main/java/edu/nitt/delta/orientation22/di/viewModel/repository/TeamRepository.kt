@@ -24,17 +24,17 @@ class TeamRepository @Inject constructor(
 
         val response = apiInterface.registerTeam(RegisterTeamRequest(token = token,
             teamName = teamData.teamName,
-            member2Name = teamData.members[0].name,
-            member2RollNo = teamData.members[0].rollNo,
-            member3Name = teamData.members[1].name,
-            member3RollNo = teamData.members[1].rollNo,
-            member4Name = teamData.members[2].name,
-            member4RollNo = teamData.members[2].rollNo,
+            member2Name = if (teamData.members.isNotEmpty()) teamData.members[0].name else "",
+            member2RollNo = if (teamData.members.isNotEmpty()) teamData.members[0].rollNo else 0,
+            member3Name = if (teamData.members.size > 1) teamData.members[1].name else "",
+            member3RollNo = if (teamData.members.size > 1) teamData.members[1].rollNo else 0,
+            member4Name = if (teamData.members.size > 2) teamData.members[2].name else "",
+            member4RollNo = if (teamData.members.size > 2) teamData.members[2].rollNo else 0,
             avatar = teamData.avatar
             ))
         Log.d("TeamDetails",response.message.toString())
 
-        if (response.message == ResponseConstants.SUCCESS){
+        if (response.message == ResponseConstants.REGISTRATION_SUCCESS){
             Result.build { response.message.toString() }
         } else {
             Result.build { throw Exception(ResponseConstants.ERROR) }
@@ -48,7 +48,7 @@ class TeamRepository @Inject constructor(
         var token = sharedPrefHelper.token
         val response = apiInterface.getTeam(TokenRequestModel(token.toString()))
         Log.v("123",response.toString())
-        if (response.message == ResponseConstants.SUCCESS) {
+        if (response.message == ResponseConstants.GET_TEAM_DETAILS_SUCCESS) {
             val team = TeamModel(teamName = response.teamName,
                 members = response.members,
                 avatar = response.avatar,

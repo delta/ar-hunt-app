@@ -210,7 +210,6 @@ fun ClueAlertBox(clueName: String,
                             .width((screenHeight / 10).dp),
                         contentScale = ContentScale.FillHeight
                     )
-//                }
                 Spacer(modifier = Modifier.height((screenHeight / 30).dp))
                 Text(
                     text = clueDescription,
