@@ -1,13 +1,17 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
+import android.app.DownloadManager
+import android.content.Context
 import android.util.Log
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
+import edu.nitt.delta.orientation22.di.storage.Downloader
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import edu.nitt.delta.orientation22.models.auth.UserModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class LoginRepository @Inject constructor(
@@ -76,6 +80,61 @@ class LoginRepository @Inject constructor(
         else{
             Result.build { false }
         }
+    }catch (e:Exception){
+        Result.build { throw e }
+    }
+
+    suspend fun downloadAssets(urls: List<String>, context: Context): Result<Boolean> = try {
+        if (sharedPrefHelper.isAssetReady) {
+            Result.build { true }
+        }
+
+        val downloader = Downloader(context)
+        val assetIDs = downloader.downloadAsset(urls)
+        val downloadManager = context.getSystemService(DownloadManager::class.java)
+
+        delay(1000)
+
+        var count = 0
+        var allDownloadsCompleted = false
+
+        while (!allDownloadsCompleted && count < 4) {
+            allDownloadsCompleted = true
+
+            for (id in assetIDs) {
+                val query = DownloadManager.Query().setFilterById(id)
+                val cursor = downloadManager.query(query)
+
+                if (cursor != null && cursor.moveToFirst()) {
+                    val downloaded = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                    val total = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+
+                    val percentage: Long = (downloaded * 100) / total
+                    if (percentage != 100L) {
+                        allDownloadsCompleted = false
+                    }
+                }
+            }
+
+            if (!allDownloadsCompleted) {
+                count ++
+                delay(1000)
+            }
+        }
+
+        if (allDownloadsCompleted){
+            sharedPrefHelper.isAssetReady = true
+            Result.build { true }
+        } else {
+            Result.build { throw Exception("Download is incomplete, please try again.") }
+        }
+    } catch (e: Exception) {
+        Result.build { throw e }
+    }
+
+
+    fun isDownloaded():Result<Boolean> = try {
+        Result.build { sharedPrefHelper.isAssetReady }
     }catch (e:Exception){
         Result.build { throw e }
     }

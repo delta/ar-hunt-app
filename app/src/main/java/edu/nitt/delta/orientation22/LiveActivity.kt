@@ -1,7 +1,11 @@
 package edu.nitt.delta.orientation22
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -15,6 +19,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -32,22 +37,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
+import edu.nitt.delta.orientation22.compose.LoadingIcon
 import edu.nitt.delta.orientation22.compose.getAnnotatedString
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.DownloadState
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.*
 
 @AndroidEntryPoint
 class LiveActivity : ComponentActivity() {
-    private val loginStateViewModel by viewModels<LoginStateViewModel> ()
-
+    private val loginStateViewModel by viewModels<LoginStateViewModel>()
+    private val mapStateViewModel by viewModels<MapStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loginStateViewModel.doAction(LoginAction.IsLive)
+        mapStateViewModel.doAction(MapAction.GetRoute)
+        loginStateViewModel.doAction(LoginAction.IsDownloaded)
+
         setContent {
             Orientation22androidTheme {
-                LiveScreen(loginStateViewModel.isLive.value)
+                val context = LocalContext.current
+
+                LiveScreen(
+                    isLive = loginStateViewModel.isLive.value,
+                    download = {
+                        val routesData = mapStateViewModel.routeListData.value
+
+                        Log.d("Download1", routesData.toString())
+                        val urls = routesData.map { it.glbUrl }
+                        Log.d("Download2", urls.toString())
+
+                        loginStateViewModel.doAction(LoginAction.DownloadAssets(urls, context))
+                    },
+                    downloadState = loginStateViewModel.downloadState,
+                    isDownloaded = loginStateViewModel.isAssetsDownloaded
+                )
             }
         }
     }
@@ -55,8 +84,11 @@ class LiveActivity : ComponentActivity() {
 
 @Composable
 fun LiveScreen(
-    isLive: Boolean
-    ) {
+    isLive: Boolean,
+    download: PressGestureScope.(Offset) -> Unit,
+    downloadState: MutableState<DownloadState>,
+    isDownloaded: Boolean
+) {
 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
@@ -64,6 +96,16 @@ fun LiveScreen(
     val annotatedString = LocalContext.current.getAnnotatedString(lightGreen)
     val uriHandler = LocalUriHandler.current
     val mContext = LocalContext.current
+
+    val activity = mContext as Activity
+    ActivityCompat.requestPermissions(
+        activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 23
+    )
+
+    if (downloadState.value == DownloadState.ERROR){
+        Toast.makeText(mContext, "Download failed. Check your network connection and try again.", Toast.LENGTH_SHORT).show()
+        downloadState.value = DownloadState.IDLE
+    }
 
     Box(
         modifier = Modifier
@@ -146,20 +188,39 @@ fun LiveScreen(
     ) {
         if(isLive)
         {
-            LandingButton(
-                onClick = {
-                    val intent = Intent(mContext, MainActivity::class.java)
-                    mContext.startActivity(intent)
-                },
-                Content = {Text(
-                    text = "Play",
-                    style = TextStyle(
-                        fontSize = 30.sp,
-                        color = black,
-                        fontFamily = FontFamily(Font(R.font.daysone_regular)),
-                    ),
-                )}
-            )
+            if (isDownloaded || (downloadState.value == DownloadState.SUCCESS)){
+                LandingButton(
+                    onClick = {
+                        val intent = Intent(mContext, MainActivity::class.java)
+                        mContext.startActivity(intent)
+                    },
+                    Content = {Text(
+                        text = "Play",
+                        style = TextStyle(
+                            fontSize = 30.sp,
+                            color = black,
+                            fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                        ),
+                    )}
+                )
+            } else if (downloadState.value == DownloadState.IDLE){
+                LandingButton(
+                    onClick = download,
+                    Content = {Text(
+                        text = "Download Content",
+                        style = TextStyle(
+                            fontSize = 25.sp,
+                            color = black,
+                            fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                        ),
+                    )}
+                )
+            } else if (downloadState.value == DownloadState.DOWNLOADING){
+                LandingButton(
+                    onClick = {  },
+                    Content = { LoadingIcon() }
+                )
+            }
         }
         else
         {

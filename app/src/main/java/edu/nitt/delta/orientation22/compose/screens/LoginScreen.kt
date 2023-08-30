@@ -153,9 +153,9 @@ fun LoginScreen(
             LandingButton(
                 onClick = onClick,
                 Content = {Text(
-                    text = "LOGIN",
+                    text = "Login With DAuth",
                     style = TextStyle(
-                        fontSize = 30.sp,
+                        fontSize = 25.sp,
                         color = black,
                         fontFamily = FontFamily(Font(R.font.daysone_regular)),
                     ),
@@ -164,7 +164,7 @@ fun LoginScreen(
         }
         if (state == LoginState.LOADING){
             LandingButton(
-                onClick = onClick,
+                onClick = {  },
                 Content = { LoadingIcon() }
             )
         }

@@ -38,10 +38,11 @@ class ArActivity : ComponentActivity() {
                 mapStateViewModel.doAction(MapAction.GetRoute)
                 val routeList = mapStateViewModel.routeListData.value
                 mapStateViewModel.doAction(MapAction.GetCurrentLevel)
-                val currentLevel = mapStateViewModel.currentState.value
+
                 val glbUrl = intent.getStringExtra("glb")!!
                 val anchorHash = intent.getStringExtra("anchorHash")!!
                 val scale = intent.getDoubleExtra("anchorScale", 0.5)
+                val currentLevel = intent.getIntExtra("level", 0)
                 Log.d("Resolve",anchorHash)
                 Log.d("Resolve",glbUrl)
 
@@ -57,7 +58,7 @@ class ArActivity : ComponentActivity() {
                     )
 
                     // Check if scale value from backend is proper
-                    setUpEnvironment(glbUrl, 0.5)
+                    setUpEnvironment(currentLevel, 0.5)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer(currentLevel))
                 }, answer = answer ?: "",
@@ -75,13 +76,13 @@ class ArActivity : ComponentActivity() {
         }
     }
 
-    private fun setUpEnvironment( glbUrl:String, scale: Double){
+    private fun setUpEnvironment( index: Int, scale: Double){
         arSceneView.lightEstimationMode = LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
         cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
 
         Log.d("Scale", scale.toFloat().toString())
-        Log.d("Resolve glb",glbUrl)
+        Log.d("Resolve glb",index.toString())
 
         Toast.makeText(applicationContext,"Scan the surroundings for flat surfaces.",Toast.LENGTH_SHORT).show()
 
@@ -94,7 +95,7 @@ class ArActivity : ComponentActivity() {
                 },
                 arSceneView,
                 cloudAnchorNode,
-                glbUrl
+                index
             )
         )
     }

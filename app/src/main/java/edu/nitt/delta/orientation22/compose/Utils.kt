@@ -122,10 +122,11 @@ fun openAr(
     glbUrl: String,
     anchorHash: String,
     currentScale: Double,
+    currentLevel: Int,
 ) {
     when{
         permissionState.hasPermission -> {
-            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash,currentScale)
+            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash,currentScale, currentLevel)
         }
         permissionState.shouldShowRationale -> {
             mContext.toast("Camera Access is required for AR Explore.")
@@ -165,7 +166,7 @@ fun LocationPermissionGetter(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraPermissionGetter(
+fun PermissionGetter(
     permissionState: PermissionState,
 ){
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -246,7 +247,8 @@ fun distanceCalculator(
     currentClueLocation: LatLng,
     glbUrl: String,
     anchorHash: String,
-    currentScale: Double
+    currentScale: Double,
+    currentLevel: Int,
 ){
     val radius = 10000000000
     if (
@@ -270,6 +272,7 @@ fun distanceCalculator(
                     intent.putExtra("glb", glbUrl)
                     intent.putExtra("anchorHash", anchorHash)
                     intent.putExtra("anchorScale", currentScale)
+                    intent.putExtra("level", currentLevel)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     mContext.startActivity(intent)
                 } else {

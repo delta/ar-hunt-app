@@ -45,12 +45,7 @@ fun LoginFragment(
                         popUpTo(NavigationRoutes.Login.route) { inclusive = true }
                     }
                 } else {
-                    if(isLive) {
-                        mContext.startActivity(Intent(mContext, MainActivity::class.java))
-                    }
-                    else{
                         mContext.startActivity(Intent(mContext, LiveActivity::class.java))
-                    }
                 }
                 loginStateViewModel.uiState.value=LoginState.IDLE
             },

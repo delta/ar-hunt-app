@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.maps.android.compose.*
 import edu.nitt.delta.orientation22.R
-import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
+import edu.nitt.delta.orientation22.compose.PermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
 import edu.nitt.delta.orientation22.compose.openAr
 import edu.nitt.delta.orientation22.compose.toast
@@ -139,7 +139,7 @@ fun MapScreen(
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-    CameraPermissionGetter(permissionState = permissionState)
+    PermissionGetter(permissionState = permissionState)
 
     TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale,currentLevel, currentPoints)
     GoogleMapScreen(markerList = markerList)
@@ -214,7 +214,8 @@ fun TopBar (
                         currentClueLocation,
                         currentglbUrl,
                         currentanchorHash,
-                        currentScale
+                        currentScale,
+                        currentLevel
                     )
                 }
             },

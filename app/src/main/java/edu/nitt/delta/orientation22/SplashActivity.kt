@@ -42,7 +42,9 @@ import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import edu.nitt.delta.orientation22.ui.theme.black
 import edu.nitt.delta.orientation22.ui.theme.cyan
@@ -51,11 +53,13 @@ import edu.nitt.delta.orientation22.ui.theme.white
 
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
-    private val loginStateViewModel by viewModels<LoginStateViewModel> ()
+    private val loginStateViewModel by viewModels<LoginStateViewModel>()
+    private val mapStateViewModel by viewModels<MapStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loginStateViewModel.doAction(LoginAction.IsLoggedIn)
         loginStateViewModel.doAction(LoginAction.IsLive)
+        mapStateViewModel.doAction(MapAction.GetRoute)
         setContent {
             Orientation22androidTheme {
                 // A surface container using the 'background' color from the theme

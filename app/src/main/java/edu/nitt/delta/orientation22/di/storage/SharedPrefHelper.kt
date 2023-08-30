@@ -24,6 +24,7 @@ class SharedPrefHelper @Inject constructor(context: Context) {
         const val USER = "USER"
         const val LEADER ="LEADER"
         const val ROLL = "ROLL"
+        const val IS_ASSET_READY = "ASSET_READY_STATUS"
     }
 
     object Default {
@@ -34,6 +35,7 @@ class SharedPrefHelper @Inject constructor(context: Context) {
         val USER =""
         val LEADER =""
         val ROLL = -1
+        val IS_ASSET_READY = false
     }
 
     var team : String?
@@ -78,6 +80,13 @@ class SharedPrefHelper @Inject constructor(context: Context) {
             Default.ROLL
         )
         set(value) = sharedPreferences.edit().putInt(Key.ROLL,value).apply()
+
+    var isAssetReady: Boolean
+        get() = sharedPreferences.getBoolean(
+            Key.IS_ASSET_READY,
+            Default.IS_ASSET_READY
+        )
+        set(value) = sharedPreferences.edit().putBoolean(Key.IS_ASSET_READY, value).apply()
     fun clear() {
         sharedPreferences.edit().clear().apply()
     }
