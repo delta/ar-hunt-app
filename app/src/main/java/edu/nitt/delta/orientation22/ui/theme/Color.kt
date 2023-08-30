@@ -37,4 +37,3 @@ val shadow1=Color.hsl(54f,1f,0.61f,0.15f)
 val peach_version2= Color(0xFFFD7F7F)
 val pink= Color(0xFFFD1A79)
 val lightGreen = Color(0xFF89FD7F)
-

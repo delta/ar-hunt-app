@@ -57,8 +57,7 @@ class ArActivity : ComponentActivity() {
                         instantAnchor = true
                     )
 
-                    // Check if scale value from backend is proper
-                    setUpEnvironment(currentLevel, 0.5)
+                    setUpEnvironment(currentLevel, scale)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer(currentLevel))
                 }, answer = answer ?: "",

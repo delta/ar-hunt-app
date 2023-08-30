@@ -1,7 +1,6 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
 import android.util.Log
-import com.google.gson.Gson
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
@@ -37,7 +36,7 @@ class TeamRepository @Inject constructor(
         if (response.message == ResponseConstants.REGISTRATION_SUCCESS){
             Result.build { response.message.toString() }
         } else {
-            Result.build { throw Exception(ResponseConstants.ERROR) }
+            Result.build { throw Exception(response.message.toString()) }
         }
     }catch (e:Exception){
         Log.d("TeamDetails",e.message.toString())

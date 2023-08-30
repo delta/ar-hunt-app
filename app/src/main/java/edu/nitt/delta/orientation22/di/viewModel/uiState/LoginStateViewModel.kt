@@ -100,7 +100,6 @@ class LoginStateViewModel @Inject constructor(
         when(val res = loginRepository.isLive()){
             is Result.Value -> isLive.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
-
         }
     }
 

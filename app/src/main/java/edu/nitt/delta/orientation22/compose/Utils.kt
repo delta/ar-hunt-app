@@ -250,7 +250,9 @@ fun distanceCalculator(
     currentScale: Double,
     currentLevel: Int,
 ){
-    val radius = 10000000000
+    val innerRadius = 40
+    val outerRadius = 70
+
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {
@@ -267,7 +269,7 @@ fun distanceCalculator(
                 )
                 val distanceInMeters = results[0]
 //                mContext.toast(distanceInMeters.toString())
-                if (distanceInMeters <= radius) {
+                if (distanceInMeters <= innerRadius) {
                     val intent = Intent(mContext, ArActivity::class.java)
                     intent.putExtra("glb", glbUrl)
                     intent.putExtra("anchorHash", anchorHash)
@@ -275,6 +277,8 @@ fun distanceCalculator(
                     intent.putExtra("level", currentLevel)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     mContext.startActivity(intent)
+                } else if (distanceInMeters <= outerRadius){
+                    mContext.toast("You are almost there.")
                 } else {
                     mContext.toast("You are too far from your current clue.")
                 }
@@ -543,7 +547,7 @@ open class SpeedDialData(
 
 @Composable
 fun LoadingIcon() {
-    CircularProgressIndicator(color = yellow)
+    CircularProgressIndicator(color = black)
 }
 
 val avatarList = mapOf(

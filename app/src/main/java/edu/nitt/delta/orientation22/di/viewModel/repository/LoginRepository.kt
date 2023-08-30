@@ -89,6 +89,7 @@ class LoginRepository @Inject constructor(
             Result.build { true }
         }
 
+        Log.d("Download", urls.toString())
         val downloader = Downloader(context)
         val assetIDs = downloader.downloadAsset(urls)
         val downloadManager = context.getSystemService(DownloadManager::class.java)
@@ -131,7 +132,6 @@ class LoginRepository @Inject constructor(
     } catch (e: Exception) {
         Result.build { throw e }
     }
-
 
     fun isDownloaded():Result<Boolean> = try {
         Result.build { sharedPrefHelper.isAssetReady }

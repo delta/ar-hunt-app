@@ -93,12 +93,13 @@ class ArRepository@Inject constructor(
                 isRotationEditable = false
                 isVisible = false
                 isSmoothPoseEnable = true
-                    loadModelGlbAsync(
+                loadModelGlbAsync(
                         context = context,
 //                      lifecycle = lifecycle,
                         glbFileLocation = "file://" + Uri.fromFile(file).path,
                         autoAnimate = false,
                         onLoaded = {
+                            Toast.makeText(context, "Model Loaded successfully", Toast.LENGTH_LONG).show()
                             cloudAnchorNode.onPoseChanged = { node, _ ->
                                 node.isVisible = node.isAnchored
                                 // The below line doesn't work as expected.

@@ -60,6 +60,7 @@ class SplashActivity : ComponentActivity() {
         loginStateViewModel.doAction(LoginAction.IsLoggedIn)
         loginStateViewModel.doAction(LoginAction.IsLive)
         mapStateViewModel.doAction(MapAction.GetRoute)
+        loginStateViewModel.doAction(LoginAction.IsRegistered)
         setContent {
             Orientation22androidTheme {
                 // A surface container using the 'background' color from the theme
@@ -202,7 +203,7 @@ fun SetBackGround(
         )
         progress.animateTo(
             targetValue = 1f,
-            animationSpec = FloatTweenSpec(5000, 0, hesitateEasing)
+            animationSpec = FloatTweenSpec(1000, 0, hesitateEasing)
         )
         if (loginStateViewModel.isLoggedIn) {
             if (loginStateViewModel.isRegistered.value.isRegistered) {
