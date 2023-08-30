@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.di.viewModel.uiState
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,12 @@ enum class LoginState{
     SUCCESS,
 }
 
+enum class DownloadState {
+    IDLE,
+    DOWNLOADING,
+    ERROR,
+    SUCCESS,
+}
 
 
 @HiltViewModel
@@ -32,12 +39,16 @@ class LoginStateViewModel @Inject constructor(
         is LoginAction.IsLoggedOut -> isLoggedOut()
         is LoginAction.IsRegistered -> isRegistered()
         is LoginAction.IsLive -> isLive()
+        is LoginAction.DownloadAssets -> downloadAssets(action.urls, action.context)
+        is LoginAction.IsDownloaded -> isDownloaded()
     }
 
     var uiState = mutableStateOf(LoginState.IDLE)
     var isRegistered = mutableStateOf<IsRegisteredResponse>(IsRegisteredResponse(false,"",0))
     var isLoggedIn = false
+    var isAssetsDownloaded = false
     var isLive = mutableStateOf(false)
+    var downloadState = mutableStateOf(DownloadState.IDLE)
     private fun login(code:String)=launch {
         uiState.value=LoginState.LOADING
         when(val res = loginRepository.Login(code)){
@@ -61,6 +72,7 @@ class LoginStateViewModel @Inject constructor(
                 if(isLoggedIn){
                     isRegistered()
                     isLive()
+                    isDownloaded()
                 }
             }
             is Result.Error -> mutableError.value = res.exception.message
@@ -88,7 +100,36 @@ class LoginStateViewModel @Inject constructor(
         when(val res = loginRepository.isLive()){
             is Result.Value -> isLive.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
+        }
+    }
 
+    private fun isDownloaded() = launch {
+        when(val res = loginRepository.isDownloaded()){
+            is Result.Value -> {
+                isAssetsDownloaded = res.value
+                if(isAssetsDownloaded){
+                    downloadState.value = DownloadState.SUCCESS
+                }
+            }
+            is Result.Error -> downloadState.value = DownloadState.ERROR
+        }
+    }
+
+    private fun downloadAssets(urls: List<String>, context: Context) = launch {
+        downloadState.value = DownloadState.DOWNLOADING
+        isDownloaded()
+        if (isAssetsDownloaded){
+            downloadState.value = DownloadState.SUCCESS
+        } else {
+            when (val res = loginRepository.downloadAssets(urls, context)) {
+                is Result.Value -> {
+                    downloadState.value = DownloadState.SUCCESS
+                    isAssetsDownloaded = true
+                }
+                is Result.Error -> {
+                    downloadState.value = DownloadState.ERROR
+                }
+            }
         }
     }
 

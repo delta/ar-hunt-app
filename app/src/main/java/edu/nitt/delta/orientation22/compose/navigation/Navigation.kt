@@ -1,14 +1,13 @@
 package edu.nitt.delta.orientation22.compose.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import edu.nitt.delta.orientation22.LoginActivity
+import edu.nitt.delta.orientation22.MainActivity
 import edu.nitt.delta.orientation22.compose.screens.DAuthWebView
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
-import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.*
 import edu.nitt.delta.orientation22.fragments.*
 
@@ -38,20 +37,20 @@ fun NavigationInner(navController: NavHostController,
                     mapviewModel: MapStateViewModel,
                     leaderBoardStateViewModel: LeaderBoardStateViewModel,
                     teamStateViewModel: TeamStateViewModel,
-                    loginStateViewModel: LoginStateViewModel
+                    loginStateViewModel: LoginStateViewModel,
 ){
     NavHost(
         navController = navController,
-        startDestination = NavigationRoutes.Dashboard.route,
+        startDestination = MainActivity.startDestination,
     ) {
         composable(route = NavigationRoutes.Dashboard.route){
             DashboardFragment(teamStateViewModel = teamStateViewModel,loginStateViewModel)
         }
         composable(route = NavigationRoutes.Map.route){
-            MapFragment(mapviewModel = mapviewModel)
+            MapFragment(mapviewModel = mapviewModel, teamStateViewModel = teamStateViewModel)
         }
         composable(route = NavigationRoutes.LeaderBoard.route){
-            LeaderBoardFragment(leaderBoardViewModel = leaderBoardStateViewModel)
+            LeaderBoardFragment(teamStateViewModel = teamStateViewModel, leaderBoardViewModel = leaderBoardStateViewModel)
         }
     }
 }

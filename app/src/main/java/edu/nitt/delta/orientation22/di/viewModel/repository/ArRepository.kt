@@ -1,6 +1,7 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
@@ -11,10 +12,11 @@ import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
 import edu.nitt.delta.orientation22.models.Result
-import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
+import edu.nitt.delta.orientation22.models.game.PostAnswerRequest
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.renderable.Renderable
+import java.io.File
 import javax.inject.Inject
 
 class ArRepository@Inject constructor(
@@ -80,9 +82,10 @@ class ArRepository@Inject constructor(
         onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         context:Context,
         lifecycle: Lifecycle?,
-        glbUrl : String
+        index: Int
     ):Result<ArModelNode> = try{
         Result.build{
+            val file = File(context.getExternalFilesDir("GLBFile"), "model_${index}.glb")
             cloudAnchorNode.apply {
                 parent = arSceneView
                 isScaleEditable = false
@@ -91,38 +94,38 @@ class ArRepository@Inject constructor(
                 isVisible = false
                 isSmoothPoseEnable = true
                 loadModelGlbAsync(
-                    context = context,
-//                  lifecycle = lifecycle,
-                    glbFileLocation = glbUrl,
-                    autoAnimate = false,
-                    onLoaded = {
-                        cloudAnchorNode.onPoseChanged = { node, _ ->
-                            node.isVisible = node.isAnchored
-
-                            // The below line doesn't work as expected.
-                            // Comment it to view plane dot mesh all the time
-                            arSceneView!!.planeRenderer.isVisible = !node.isVisible
+                        context = context,
+//                      lifecycle = lifecycle,
+                        glbFileLocation = "file://" + Uri.fromFile(file).path,
+                        autoAnimate = false,
+                        onLoaded = {
+                            Toast.makeText(context, "Model Loaded successfully", Toast.LENGTH_LONG).show()
+                            cloudAnchorNode.onPoseChanged = { node, _ ->
+                                node.isVisible = node.isAnchored
+                                // The below line doesn't work as expected.
+                                // Comment it to view plane dot mesh all the time
+                                arSceneView!!.planeRenderer.isVisible = !node.isVisible
+                            }
+                            onTap = onTapModel
+                        },
+                        onError = {
+                            Toast.makeText(context, "Error Loading Model", Toast.LENGTH_LONG).show()
                         }
-                        onTap = onTapModel
-                    },
-                    onError = {
-                        Toast.makeText(context, "Error Loading Model", Toast.LENGTH_SHORT).show()
-                    }
-                )
+                    )
             }
         }
     } catch (e: Exception){
         Result.build<ArModelNode> { throw Exception(ResponseConstants.ERROR) }
     }
 
-    suspend fun postAnswer() : Result<String> = try {
+    suspend fun postAnswer(currentLevel: Int) : Result<String> = try {
         val token = sharedPrefHelper.token.toString()
-        val response = apiInterface.postAnswer(TokenRequestModel(token))
-        if (response.message == ResponseConstants.SUCCESS){
+        val response = apiInterface.postAnswer(PostAnswerRequest(token, currentLevel))
+        if (response.message == ResponseConstants.GET_USER_RESPONSE_SUCCESS){
             Result.build { "Level Completed" }
         }
         else {
-            Result.build { throw Exception(ResponseConstants.ERROR) }
+            Result.build { response.message?: throw Exception(ResponseConstants.ERROR) }
         }
 
     }catch (e:Exception){

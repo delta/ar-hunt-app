@@ -61,8 +61,8 @@ fun Orientation22androidTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = brown.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            (view.context as Activity).window.statusBarColor = black.toArgb()
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = false
         }
     }
 

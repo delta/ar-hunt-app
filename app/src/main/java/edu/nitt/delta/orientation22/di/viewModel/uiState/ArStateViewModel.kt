@@ -33,9 +33,11 @@ class ArStateViewModel @Inject constructor(
             action.lifecycle,
             action.cloudAnchorNode,
             action.sceneView,
-            action.glbUrl
+            action.index
         )
-        is ArAction.PostAnswer -> postAnswer()
+        is ArAction.PostAnswer -> postAnswer(
+            action.currentLevel
+        )
     }
 
     private fun hostModel(sceneView: ArSceneView, cloudAnchorNode: ArModelNode) = launch {
@@ -64,16 +66,16 @@ class ArStateViewModel @Inject constructor(
         lifecycle: Lifecycle?,
         cloudAnchorNode: ArModelNode,
         sceneView: ArSceneView,
-        glbUrl: String
+        index: Int,
     )= CoroutineScope(Dispatchers.Main).launch{
-        when (val res = arRepository.loadModel(sceneView,cloudAnchorNode, onTapModel, context, lifecycle,glbUrl)){
+        when (val res = arRepository.loadModel(sceneView,cloudAnchorNode, onTapModel, context, lifecycle,index)){
             is Result.Value -> Log.v(res.value.name,res.toString())
             is Result.Error -> Log.v("InArStateViewModel",res.exception.message.toString())
         }
     }
 
-    private fun postAnswer() = launch {
-        when(val res =  arRepository.postAnswer()){
+    private fun postAnswer(currentLevel: Int) = launch {
+        when(val res =  arRepository.postAnswer(currentLevel)){
             is Result.Value -> mutableSuccess.value = res.value
             is Result.Error -> mutableError.value = res.exception.message
         }

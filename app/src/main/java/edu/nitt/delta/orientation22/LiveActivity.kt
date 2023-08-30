@@ -1,109 +1,125 @@
 package edu.nitt.delta.orientation22
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentCompositionLocalContext
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.google.android.filament.utils.Utils
-import com.google.ar.sceneform.rendering.ViewRenderable.HorizontalAlignment
+import androidx.core.app.ActivityCompat
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.LoadingIcon
 import edu.nitt.delta.orientation22.compose.getAnnotatedString
-import edu.nitt.delta.orientation22.compose.navigation.NavigationOuter
-import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
-import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginState
+import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.DownloadState
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
-import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.*
-import okhttp3.internal.applyConnectionSpec
 
 @AndroidEntryPoint
 class LiveActivity : ComponentActivity() {
-    private val loginStateViewModel by viewModels<LoginStateViewModel> ()
-
+    private val loginStateViewModel by viewModels<LoginStateViewModel>()
+    private val mapStateViewModel by viewModels<MapStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loginStateViewModel.doAction(LoginAction.IsLive)
+        mapStateViewModel.doAction(MapAction.GetRoute)
+        loginStateViewModel.doAction(LoginAction.IsDownloaded)
+
         setContent {
             Orientation22androidTheme {
-                liveScreen(loginStateViewModel)
+                val context = LocalContext.current
+
+                LiveScreen(
+                    isLive = loginStateViewModel.isLive.value,
+                    download = {
+                        val routesData = mapStateViewModel.routeListData.value
+
+                        Log.d("Download1", routesData.toString())
+                        val urls = routesData.map { it.glbUrl }
+                        Log.d("Download2", urls.toString())
+
+                        loginStateViewModel.doAction(LoginAction.DownloadAssets(urls, context))
+                    },
+                    downloadState = loginStateViewModel.downloadState,
+                    isDownloaded = loginStateViewModel.isAssetsDownloaded
+                )
             }
         }
     }
 }
 
 @Composable
-fun liveScreen(
-    loginStateViewModel: LoginStateViewModel,
+fun LiveScreen(
+    isLive: Boolean,
+    download: PressGestureScope.(Offset) -> Unit,
+    downloadState: MutableState<DownloadState>,
+    isDownloaded: Boolean
+) {
 
-    ) {
-    val boat= painterResource(id = R.drawable.sailboat)
-    val skull = painterResource(id = R.drawable.skull)
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
     val screenWidth = configuration.screenWidthDp
+    val annotatedString = LocalContext.current.getAnnotatedString(lightGreen)
+    val uriHandler = LocalUriHandler.current
+    val mContext = LocalContext.current
+
+    val activity = mContext as Activity
+    ActivityCompat.requestPermissions(
+        activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 23
+    )
+
+    if (downloadState.value == DownloadState.ERROR){
+        Toast.makeText(mContext, "Download failed. Check your network connection and try again.", Toast.LENGTH_SHORT).show()
+        downloadState.value = DownloadState.IDLE
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
-
     )
     {
         Image(
-            painter = skull,
+            painter = painterResource(id = R.drawable.landing1),
             contentDescription = "skull",
             modifier = Modifier
                 .fillMaxWidth(),
             contentScale = ContentScale.Crop
         )
     }
-    Column(modifier= Modifier
-        .fillMaxSize()
-        .background(translucentBackground), horizontalAlignment = Alignment.CenterHorizontally,) {}
     Column(
 
         modifier = Modifier
@@ -131,7 +147,7 @@ fun liveScreen(
                 contentDescription = "AR Hunt Logo",
                 modifier = Modifier
                     .size((screenWidth / 4).dp, 70.dp)
-                    .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
             )
         }
 
@@ -146,17 +162,8 @@ fun liveScreen(
             )
     }
     Column(modifier = Modifier
-        .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
-
-    ){
-        Image(painter= boat, contentDescription = "logo", modifier = Modifier
-            .size(screenWidth.dp, (screenHeight / 2).dp)
-            .padding(top = (screenHeight / 50).dp))
-    }
-    Column(modifier = Modifier
         .fillMaxSize()
-        .padding(top=(screenHeight/3).dp),
+        .padding(top = (screenHeight / 3).dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -164,7 +171,7 @@ fun liveScreen(
         Text(
             text = "A Pirate’s Pride",
             style = TextStyle(
-                fontSize = 38.sp,
+                fontSize = 25.sp,
                 fontFamily = FontFamily(Font(R.font.pirataone_regular)),
                 fontWeight = FontWeight(400),
                 color = white,
@@ -175,50 +182,92 @@ fun liveScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = (screenHeight / 10).dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(loginStateViewModel.isLive.value)
+        if(isLive)
         {
-            Button()
+            if (isDownloaded || (downloadState.value == DownloadState.SUCCESS)){
+                LandingButton(
+                    onClick = {
+                        val intent = Intent(mContext, MainActivity::class.java)
+                        mContext.startActivity(intent)
+                    },
+                    Content = {Text(
+                        text = "Play",
+                        style = TextStyle(
+                            fontSize = 30.sp,
+                            color = black,
+                            fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                        ),
+                    )}
+                )
+            } else if (downloadState.value == DownloadState.IDLE){
+                LandingButton(
+                    onClick = download,
+                    Content = {Text(
+                        text = "Download Content",
+                        style = TextStyle(
+                            fontSize = 25.sp,
+                            color = black,
+                            fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                        ),
+                    )}
+                )
+            } else if (downloadState.value == DownloadState.DOWNLOADING){
+                LandingButton(
+                    onClick = {  },
+                    Content = { LoadingIcon() }
+                )
+            }
         }
         else
         {
-            Text(text = "Will be live Soon !",style = TextStyle(
-                fontSize = 34.sp,
-                color = peach_version2,
+            Text(text = "We'll be live soon!",style = TextStyle(
+                fontSize = 30.sp,
+                color = lightGrey,
                 fontFamily = FontFamily(Font(R.font.daysone_regular)),
-            ),)
+            ), modifier = Modifier.padding(bottom = (screenHeight / 15).dp)
+
+                )
         }
+        ClickableText(
+            text = annotatedString,
+            onClick = {
+                annotatedString.getStringAnnotations("URL", it, it).firstOrNull()?.let { stringAnnotation ->
+                    uriHandler.openUri(stringAnnotation.item)
+                }
+            },
+            modifier = Modifier.padding(bottom = (screenHeight / 35).dp, top = (screenHeight / 30).dp),
+        )
     }
 }
 
 @Composable
-fun Button()
+fun LandingButton(
+    onClick: PressGestureScope.(Offset) -> Unit,
+    Content: @Composable() () -> Unit
+)
 {
-    val mContext = LocalContext.current
     val configuration = LocalConfiguration.current
-    val screenHeight=configuration.screenHeightDp
-    val brush = Brush.linearGradient(listOf(peach_version2, pink))
+    val screenHeight = configuration.screenHeightDp
+    val screenWidth = configuration.screenWidthDp
+    val brush = Brush.verticalGradient(listOf(lightGreen, lightCyan))
+
     Card(
 
         modifier= Modifier
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onPress = {
-                        val intent = Intent(mContext, LoginActivity::class.java)
-                        mContext.startActivity(intent)
-                    }
+                    onPress = onClick
                 )
             }
-            .fillMaxWidth()
-            .height((screenHeight / 10).dp)
-            .padding((screenHeight / 60).dp)
+            .height((screenHeight / 15).dp)
+            .width((screenWidth * 0.8).dp)
         ,
 
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(25),
     ){
         Box(
             modifier = Modifier
@@ -230,14 +279,7 @@ fun Button()
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Play",
-                    style = TextStyle(
-                        fontSize = 38.sp,
-                        color = white,
-                        fontFamily = FontFamily(Font(R.font.daysone_regular)),
-                    ),
-                )
+                Content()
             }
         }}
 }

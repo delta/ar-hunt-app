@@ -2,7 +2,6 @@ package edu.nitt.delta.orientation22.fragments
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,16 +10,20 @@ import com.google.maps.android.compose.MarkerState
 import edu.nitt.delta.orientation22.compose.markerImages
 import edu.nitt.delta.orientation22.compose.screens.MapScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
 import edu.nitt.delta.orientation22.models.MarkerModel
+import edu.nitt.delta.orientation22.ui.theme.black
 
 @Composable
 fun MapFragment(
+    teamStateViewModel: TeamStateViewModel,
     mapviewModel: MapStateViewModel,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = black
     ){
         mapviewModel.doAction(MapAction.GetRoute)
         var routeList = mapviewModel.routeListData.value
@@ -51,6 +54,8 @@ fun MapFragment(
                 currentScale = marker.scale
             }
         }
-        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash, currentScale, currentLevel)
+        teamStateViewModel.doAction(TeamAction.GetTeam)
+        val currentPoints = teamStateViewModel.teamData.value.points
+        MapScreen(markerList, currentClue, currentClueLocation,currentglbUrl,currentanchorHash, currentScale, currentLevel, currentPoints)
     }
 }

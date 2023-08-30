@@ -1,10 +1,8 @@
 package edu.nitt.delta.orientation22.di.viewModel.repository
 
 import android.util.Log
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.google.maps.android.compose.MarkerState
 import edu.nitt.delta.orientation22.di.api.ApiInterface
 import edu.nitt.delta.orientation22.di.api.ResponseConstants
 import edu.nitt.delta.orientation22.di.storage.SharedPrefHelper
@@ -12,7 +10,6 @@ import edu.nitt.delta.orientation22.models.MarkerModel
 import edu.nitt.delta.orientation22.models.Result
 import edu.nitt.delta.orientation22.models.auth.TokenRequestModel
 import edu.nitt.delta.orientation22.models.game.LocationData
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 class MapRepository @Inject constructor(
@@ -43,7 +40,7 @@ class MapRepository @Inject constructor(
             Log.d("routes shared",routeList[0].glbUrl)
             Result.build { routeList }
         }else {
-            if (response.message == ResponseConstants.SUCCESS) {
+            if (response.message == ResponseConstants.GET_ROUTE_SUCCESS) {
                 val locationData: List<LocationData> = response.locations
                 Log.d("routes", locationData.toString())
                 locationData.sortedWith(compareBy { it.position })
@@ -60,7 +57,7 @@ class MapRepository @Inject constructor(
     suspend fun getCurrentLevel():Result<Int> = try {
         val token = sharedPrefHelper.token.toString()
         val response = apiInterface.getCurrentLevel(TokenRequestModel(token))
-        if(response.message == ResponseConstants.SUCCESS){
+        if(response.message == ResponseConstants.GET_CURRENT_STATE_SUCCESS){
             Result.build { response.currentLevel }
         }
         else {

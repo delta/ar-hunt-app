@@ -5,6 +5,7 @@ import edu.nitt.delta.orientation22.models.IsRegisteredResponse
 import edu.nitt.delta.orientation22.models.auth.*
 import edu.nitt.delta.orientation22.models.game.AnswerResponse
 import edu.nitt.delta.orientation22.models.game.CurrentLocationResponse
+import edu.nitt.delta.orientation22.models.game.PostAnswerRequest
 import edu.nitt.delta.orientation22.models.game.RouteResponse
 import edu.nitt.delta.orientation22.models.leaderboard.LeaderboardResponse
 import retrofit2.http.*
@@ -39,7 +40,7 @@ interface ApiInterface {
 
     @POST(ApiRoutes.NEXT_STATE)
     suspend fun postAnswer(
-        @Body postAnswerBody: TokenRequestModel
+        @Body postAnswerBody: PostAnswerRequest
     ):AnswerResponse
 
     @GET(ApiRoutes.AUTH_CALLBACK)

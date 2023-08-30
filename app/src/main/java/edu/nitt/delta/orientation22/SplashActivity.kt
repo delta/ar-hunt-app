@@ -42,7 +42,9 @@ import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
+import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
 import edu.nitt.delta.orientation22.ui.theme.black
 import edu.nitt.delta.orientation22.ui.theme.cyan
@@ -51,11 +53,14 @@ import edu.nitt.delta.orientation22.ui.theme.white
 
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
-    private val loginStateViewModel by viewModels<LoginStateViewModel> ()
+    private val loginStateViewModel by viewModels<LoginStateViewModel>()
+    private val mapStateViewModel by viewModels<MapStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loginStateViewModel.doAction(LoginAction.IsLoggedIn)
         loginStateViewModel.doAction(LoginAction.IsLive)
+        mapStateViewModel.doAction(MapAction.GetRoute)
+        loginStateViewModel.doAction(LoginAction.IsRegistered)
         setContent {
             Orientation22androidTheme {
                 // A surface container using the 'background' color from the theme
@@ -198,17 +203,12 @@ fun SetBackGround(
         )
         progress.animateTo(
             targetValue = 1f,
-            animationSpec = FloatTweenSpec(5000, 0, hesitateEasing)
+            animationSpec = FloatTweenSpec(1000, 0, hesitateEasing)
         )
         if (loginStateViewModel.isLoggedIn) {
             if (loginStateViewModel.isRegistered.value.isRegistered) {
-                if(loginStateViewModel.isLive.value) {
-                    mContext.startActivity(Intent(mContext, MainActivity::class.java))
-                }
-                else {
                     val intent = Intent(mContext,LiveActivity::class.java)
                     mContext.startActivity(intent)
-                }
             } else {
                 LoginActivity.startDestination = NavigationRoutes.TeamDetails.route
                 mContext.startActivity(Intent(mContext, LoginActivity::class.java))

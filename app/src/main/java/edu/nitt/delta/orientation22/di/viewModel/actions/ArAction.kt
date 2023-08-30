@@ -18,7 +18,7 @@ sealed class ArAction {
         val onTapModel:((MotionEvent, Renderable?) -> Unit)?,
         val sceneView: ArSceneView,
         val cloudAnchorNode: ArModelNode,
-        val glbUrl : String
+        val index : Int
     ) : ArAction()
-    object PostAnswer : ArAction()
+    data class PostAnswer(val currentLevel: Int) : ArAction()
 }

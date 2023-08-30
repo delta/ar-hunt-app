@@ -5,14 +5,24 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
@@ -25,7 +35,7 @@ import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.maps.android.compose.*
 import edu.nitt.delta.orientation22.R
-import edu.nitt.delta.orientation22.compose.CameraPermissionGetter
+import edu.nitt.delta.orientation22.compose.PermissionGetter
 import edu.nitt.delta.orientation22.compose.ClueAlertBox
 import edu.nitt.delta.orientation22.compose.openAr
 import edu.nitt.delta.orientation22.compose.toast
@@ -41,6 +51,7 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
     val locationReady = remember {
         mutableStateOf(false)
     }
+    val screenHeight = LocalConfiguration.current.screenHeightDp
     val mContext = LocalContext.current
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
@@ -87,7 +98,9 @@ fun GoogleMapScreen(markerList: List<MarkerModel>) {
                 .build()
         }
         GoogleMap(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = (screenHeight / 14).dp),
             cameraPositionState = cameraPositionState,
             properties = properties,
             uiSettings = uiSettings,
@@ -118,18 +131,18 @@ fun MapScreen(
     currentglbUrl: String,
     currentanchorHash: String,
     currentScale: Double,
-    currentLevel: Int
+    currentLevel: Int,
+    currentPoints: Int,
 ){
     val mContext = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
     val fusedLocationProviderClient : FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(mContext)
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-    CameraPermissionGetter(permissionState = permissionState)
+    PermissionGetter(permissionState = permissionState)
 
+    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale,currentLevel, currentPoints)
     GoogleMapScreen(markerList = markerList)
-
-    TopBar(mContext = mContext, fusedLocationProviderClient = fusedLocationProviderClient, showDialog = showDialog, currentClueLocation = currentClueLocation, permissionState = permissionState, currentClue = currentClue,currentglbUrl,currentanchorHash,currentScale,currentLevel)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -144,15 +157,50 @@ fun TopBar (
     currentglbUrl: String,
     currentanchorHash: String,
     currentScale: Double,
-    currentLevel: Int
+    currentLevel: Int,
+    currentPoints: Int
 ){
+    val screenHeight = LocalConfiguration.current.screenHeightDp
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .padding(end = 50.dp)
+            .height((screenHeight / 14).dp).padding(top = (screenHeight / 224).dp),
+        verticalAlignment = Alignment.Top
     ) {
+
+        Button(
+            onClick = {
+                showDialog.value = true
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = transparent
+            ),
+            shape = RoundedCornerShape(25),
+            modifier = Modifier.clip(RoundedCornerShape(25))
+                .background(Brush.linearGradient(
+                    0.0f to yellowStart,
+                    1.0f to brightYellow,
+                    start = Offset.Zero,
+                    end = Offset.Infinite
+                )).height((screenHeight/16).dp)
+        ){
+                Icon(
+                    painter = painterResource(id = R.drawable.clue),
+                    contentDescription = "Hint Symbol",
+                    modifier = Modifier.scale(2.5f),
+                    tint = Color.Unspecified
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    text = "HINT",
+                    fontSize = 15.sp,
+                    color = black,
+                    fontFamily = FontFamily(Font(R.font.daysone_regular))
+                )
+            }
+
+
         Button(
             onClick = {
                 if (currentLevel > 5){
@@ -166,20 +214,37 @@ fun TopBar (
                         currentClueLocation,
                         currentglbUrl,
                         currentanchorHash,
-                        currentScale
+                        currentScale,
+                        currentLevel
                     )
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = yellow
-            )){
-            Text(
-                text = "AR Explore",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = black,
-                fontFamily = FontFamily(Font(R.font.montserrat_regular))
+                containerColor = transparent
+            ),
+            shape = RoundedCornerShape(25),
+            modifier = Modifier.clip(RoundedCornerShape(25))
+                .background(grey).height((screenHeight/16).dp)
+            ){
+            Icon(
+                painter = painterResource(id = R.drawable.camera),
+                contentDescription = "Explore Symbol",
+                modifier = Modifier.scale(1.5f),
+                tint = white
             )
+            Spacer(modifier = Modifier.width(20.dp))
+            Text(
+                text = "EXPLORE",
+                fontSize = 14.sp,
+                color = white,
+                fontFamily = FontFamily(Font(R.font.daysone_regular))
+            )
+
+            Box(
+                modifier = Modifier,
+            ){
+
+            }
         }
 
         if (showDialog.value) {
@@ -196,17 +261,42 @@ fun TopBar (
                     onDismiss = { showDialog.value = false })
             }
         }
-        Button( onClick = {
-            showDialog.value = true
-        }, colors = ButtonDefaults.buttonColors(
-            containerColor = yellow
-        )){
+
+        Points(currentPoints)
+    }
+}
+
+@Composable
+fun Points(
+    currentPoints: Int
+){
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+    Box(
+        modifier = Modifier.clip(RoundedCornerShape(25))
+            .background(grey)
+            .fillMaxWidth(0.8f).height((screenHeight/16).dp)
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(end = 20.dp).align(Alignment.Center),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Text(
-                text = "Current Clue",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = black,
-                fontFamily = FontFamily(Font(R.font.montserrat_regular))
+                text = currentPoints.toString(),
+                modifier = Modifier.padding(end = 10.dp, start = 15.dp),
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    fontFamily = FontFamily(Font(R.font.daysone_regular)),
+                    color = white,
+                ),
+            )
+            Icon(
+                modifier = Modifier.scale(2f),
+                painter = painterResource(id = R.drawable.coins),
+                contentDescription = "Coins Icon",
+                tint = Color.Unspecified
             )
         }
     }

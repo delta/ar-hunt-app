@@ -11,19 +11,27 @@ import edu.nitt.delta.orientation22.compose.screens.LeaderBoardScreen
 import edu.nitt.delta.orientation22.di.viewModel.actions.LeaderBoardAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.TeamAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LeaderBoardStateViewModel
+import edu.nitt.delta.orientation22.di.viewModel.uiState.TeamStateViewModel
 
 @Composable
 fun LeaderBoardFragment(
-    leaderBoardViewModel : LeaderBoardStateViewModel
+    leaderBoardViewModel : LeaderBoardStateViewModel,
+    teamStateViewModel : TeamStateViewModel
 ){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ){
         leaderBoardViewModel.doAction(LeaderBoardAction.GetLeaderBoard)
+        teamStateViewModel.doAction(TeamAction.GetTeam)
         val leaderBoardData = leaderBoardViewModel.leaderBoardData.value
-        LeaderBoardScreen(leaderBoardData = leaderBoardData,
-            painter = painterResource(id = R.drawable.background_image),
-            contentDescription = "LeaderBoard")
+        val teamData = teamStateViewModel.teamData.value
+
+        LeaderBoardScreen(
+            leaderBoardData = leaderBoardData,
+            currentTeamData = teamData,
+            painter = painterResource(id = R.drawable.background),
+            contentDescription = "LeaderBoard"
+        )
     }
 }

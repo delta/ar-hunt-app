@@ -1,7 +1,7 @@
 package edu.nitt.delta.orientation22.di.api
 
 object ApiRoutes {
-    const val BASE_URL = "http://localhost:8000/"
+    const val BASE_URL = "https://utopia.nitt.edu/"
 
     const val LEADERBOARD = "api/leaderboard"
     const val REGISTER_TEAM ="api/registerTeam"
