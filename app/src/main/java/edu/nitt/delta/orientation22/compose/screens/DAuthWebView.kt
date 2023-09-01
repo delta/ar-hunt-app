@@ -34,7 +34,6 @@ fun DAuthWebView(
                 appendQueryParameter("scope", "email+openid+profile+user")
                 appendQueryParameter("nonce", ClientCredentials.Nonce.param)
             }.toString()
-            Log.v("url", url)
             AndroidView(
                 modifier = Modifier.padding(paddingValues),
                 factory = {

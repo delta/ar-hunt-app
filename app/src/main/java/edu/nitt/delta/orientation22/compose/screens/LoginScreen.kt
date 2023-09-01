@@ -139,7 +139,7 @@ fun LoginScreen(
                 navController.navigate(NavigationRoutes.DAuthWebView.route)
         }
         else {
-            mContext.toast("Google AR Services is not supported. Please use a different device.")
+            mContext.toast("Install Google Play Services for AR from Play Store or use a different device.")
         }
     }
     Column(
