@@ -60,7 +60,7 @@ class ArActivity : ComponentActivity() {
                     viewModel.doAction(ArAction.PostAnswer(currentLevel))
                 }, answer = answer ?: "",
                     onReset = {
-                        Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "AR Object has been reset.", Toast.LENGTH_SHORT).show()
                         viewModel.doAction(ArAction.ResetAnchor(cloudAnchorNode))
                  }, onBack = {
                         MainActivity.startDestination = NavigationRoutes.Map.route
