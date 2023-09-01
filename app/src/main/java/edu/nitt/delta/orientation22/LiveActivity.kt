@@ -41,6 +41,7 @@ import androidx.core.app.ActivityCompat
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.LoadingIcon
 import edu.nitt.delta.orientation22.compose.getAnnotatedString
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.DownloadState
@@ -67,9 +68,9 @@ class LiveActivity : ComponentActivity() {
                     download = {
                         val routesData = mapStateViewModel.routeListData.value
 
-                        Log.d("Download1", routesData.toString())
                         val urls = routesData.map { it.glbUrl }
-                        Log.d("Download2", urls.toString())
+                        Log.d("Download", urls.toString())
+                        context.toast("Please wait ...")
 
                         loginStateViewModel.doAction(LoginAction.DownloadAssets(urls, context))
                     },

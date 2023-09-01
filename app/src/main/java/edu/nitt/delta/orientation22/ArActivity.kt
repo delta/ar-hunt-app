@@ -81,7 +81,7 @@ class ArActivity : ComponentActivity() {
         Log.d("Scale", scale.toFloat().toString())
         Log.d("Resolve glb",index.toString())
 
-        Toast.makeText(applicationContext,"Scan the surroundings for flat surfaces.",Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext,"Scan the surroundings for flat surfaces.",Toast.LENGTH_LONG).show()
 
         viewModel.doAction(
             ArAction.LoadModel(
@@ -98,8 +98,10 @@ class ArActivity : ComponentActivity() {
     }
 
     private fun tapModel(animatable: String) {
-        if (animatable == "true"){
-            cloudAnchorNode.playAnimation(0, false)
-        }
+        try {
+            if (animatable == "true") {
+                cloudAnchorNode.playAnimation(0, false)
+            }
+        } catch (_: Exception){}
     }
 }
