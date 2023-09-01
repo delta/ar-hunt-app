@@ -36,7 +36,7 @@ fun TeamDetailsFragment(
                 LocalContext.current.startActivity(intent)
         } else if(state==RegistrationState.ERROR){
             state = RegistrationState.IDLE
-            LocalContext.current.toast("Unable To Register Team")
+            LocalContext.current.toast(teamStateViewModel.error.toString())
         }
         TeamDetailsScreen(teamDetails = teamData, state = state, registerTeam =  {
             teamStateViewModel.doAction(

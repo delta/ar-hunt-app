@@ -1,5 +1,6 @@
 package edu.nitt.delta.orientation22.compose.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -38,7 +39,7 @@ fun DashboardScreen(
 ) {
     Orientation22androidTheme() {
         val painter = painterResource(id = R.drawable.background)
-        val avatar = avatarList[team.avatar]
+        val avatar = avatarList[team.avatar] ?: avatarList[1]!!
 
         val screenHeight = LocalConfiguration.current.screenHeightDp
         val screenWidth = LocalConfiguration.current.screenWidthDp
@@ -80,7 +81,7 @@ fun DashboardScreen(
                 TeamCard (
                     teamName = team.teamName,
                     points = team.points,
-                    avatar = avatar!!,
+                    avatar = avatar,
                     screenHeight = screenHeight,
                     screenWidth = screenWidth
                 )

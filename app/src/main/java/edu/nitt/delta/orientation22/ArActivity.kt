@@ -40,10 +40,9 @@ class ArActivity : ComponentActivity() {
                 mapStateViewModel.doAction(MapAction.GetCurrentLevel)
 
                 val glbUrl = intent.getStringExtra("glb")!!
-                val anchorHash = intent.getStringExtra("anchorHash")!!
+                val animatable = intent.getStringExtra("anchorHash")?:"false"
                 val scale = intent.getDoubleExtra("anchorScale", 0.5)
                 val currentLevel = intent.getIntExtra("level", 0)
-                Log.d("Resolve",anchorHash)
                 Log.d("Resolve",glbUrl)
 
                 val answer: String? = routeList.firstOrNull { it.position == currentLevel }?.answer
@@ -56,8 +55,7 @@ class ArActivity : ComponentActivity() {
                         followHitPosition = true,
                         instantAnchor = true
                     )
-
-                    setUpEnvironment(currentLevel, scale)
+                    setUpEnvironment(currentLevel, scale, animatable)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer(currentLevel))
                 }, answer = answer ?: "",
@@ -75,7 +73,7 @@ class ArActivity : ComponentActivity() {
         }
     }
 
-    private fun setUpEnvironment( index: Int, scale: Double){
+    private fun setUpEnvironment(index: Int, scale: Double, animatable: String){
         arSceneView.lightEstimationMode = LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
         cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
@@ -90,7 +88,7 @@ class ArActivity : ComponentActivity() {
                 this,
                 lifecycle,
                 { _, _ ->
-                    tapModel()
+                    tapModel(animatable)
                 },
                 arSceneView,
                 cloudAnchorNode,
@@ -99,7 +97,9 @@ class ArActivity : ComponentActivity() {
         )
     }
 
-    private fun tapModel(){
-        cloudAnchorNode.playAnimation(0,false)
+    private fun tapModel(animatable: String) {
+        if (animatable == "true"){
+            cloudAnchorNode.playAnimation(0, false)
+        }
     }
 }

@@ -29,8 +29,7 @@ class LoginRepository @Inject constructor(
             sharedPrefHelper.rollNo = response.email.substring(0,9).toInt()
             Result.build { UserModel(name = response.name, email = response.email) }
         } else {
-            Log.d("Login", response.message.toString())
-            Result.build { throw Exception(ResponseConstants.ERROR) }
+            Result.build { throw Exception(response.message.toString()) }
         }
     }catch (e:Exception){
         Log.d("Login",e.message.toString())
@@ -99,7 +98,7 @@ class LoginRepository @Inject constructor(
         var count = 0
         var allDownloadsCompleted = false
 
-        while (!allDownloadsCompleted && count < 4) {
+        while (!allDownloadsCompleted && count < 60) {
             allDownloadsCompleted = true
 
             for (id in assetIDs) {
@@ -127,10 +126,10 @@ class LoginRepository @Inject constructor(
             sharedPrefHelper.isAssetReady = true
             Result.build { true }
         } else {
-            Result.build { throw Exception("Download is incomplete, please try again.") }
+            Result.build { throw Exception("Download is incomplete. Check your network and try again.") }
         }
     } catch (e: Exception) {
-        Result.build { throw e }
+        Result.build { throw Exception(ResponseConstants.ERROR) }
     }
 
     fun isDownloaded():Result<Boolean> = try {

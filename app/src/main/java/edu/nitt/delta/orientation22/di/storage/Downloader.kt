@@ -15,7 +15,7 @@ class Downloader(
         for (i in urls.indices) {
             val request = DownloadManager.Request(urls[i].toUri())
                 .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                 .setTitle("Downloading 3D Model - ${i + 1}")
                 .setDescription("Please wait till the download is complete.")
                 .setDestinationInExternalFilesDir(context, "GLBFile", "model_${i}.glb")

@@ -59,7 +59,8 @@ fun TeamDetails(
     mContext: Context,
     teamDetails: TeamModel,
     registerTeam: (TeamModel) -> Unit,
-    state: RegistrationState
+    state: RegistrationState,
+    selectedAvatar: Int
 ) {
     var nameLeader = rememberSaveable { mutableStateOf(teamDetails.members[0].name) }
     var rollNumberLeader = rememberSaveable {mutableStateOf(teamDetails.members[0].rollNo.toString())}
@@ -92,7 +93,6 @@ fun TeamDetails(
         )
     }
 
-    var selectedAvatar by remember { mutableStateOf<Int>(R.drawable.baseline_add_circle_24) }
     var memberCount by remember { mutableStateOf (0) }
 
     PlainInput(inputContent = teamName.value, field = "SHIP Name", onValueChange = {teamName.value = it})
@@ -193,7 +193,7 @@ fun ModifyMember(
 fun TeamDetailsScreen(
     teamDetails: TeamModel,
     registerTeam: (TeamModel) -> Unit,
-    state :RegistrationState
+    state :RegistrationState,
 ){
     Orientation22androidTheme {
         val mContext = LocalContext.current
@@ -269,7 +269,7 @@ fun TeamDetailsScreen(
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                TeamDetails(mContext = mContext, teamDetails, registerTeam,state)
+                TeamDetails(mContext = mContext, teamDetails, registerTeam, state, selectedAvatar = selectedAvatar)
             }
             if (chooseAvatar) {
                 Dialog(

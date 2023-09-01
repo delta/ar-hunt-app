@@ -38,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.LoadingIcon
 import edu.nitt.delta.orientation22.compose.getAnnotatedString
@@ -75,7 +74,8 @@ class LiveActivity : ComponentActivity() {
                         loginStateViewModel.doAction(LoginAction.DownloadAssets(urls, context))
                     },
                     downloadState = loginStateViewModel.downloadState,
-                    isDownloaded = loginStateViewModel.isAssetsDownloaded
+                    isDownloaded = loginStateViewModel.isAssetsDownloaded,
+                    error = loginStateViewModel.error,
                 )
             }
         }
@@ -87,7 +87,8 @@ fun LiveScreen(
     isLive: Boolean,
     download: PressGestureScope.(Offset) -> Unit,
     downloadState: MutableState<DownloadState>,
-    isDownloaded: Boolean
+    isDownloaded: Boolean,
+    error: String?
 ) {
 
     val configuration = LocalConfiguration.current
@@ -103,7 +104,7 @@ fun LiveScreen(
     )
 
     if (downloadState.value == DownloadState.ERROR){
-        Toast.makeText(mContext, "Download failed. Check your network connection and try again.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(mContext, error.toString(), Toast.LENGTH_SHORT).show()
         downloadState.value = DownloadState.IDLE
     }
 
