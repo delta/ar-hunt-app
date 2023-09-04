@@ -14,14 +14,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
@@ -38,10 +47,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.LoadingIcon
 import edu.nitt.delta.orientation22.compose.getAnnotatedString
+import edu.nitt.delta.orientation22.compose.screens.GameInfo
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
 import edu.nitt.delta.orientation22.di.viewModel.uiState.DownloadState
@@ -68,14 +78,15 @@ class LiveActivity : ComponentActivity() {
                     download = {
                         val routesData = mapStateViewModel.routeListData.value
 
-                        Log.d("Download1", routesData.toString())
                         val urls = routesData.map { it.glbUrl }
-                        Log.d("Download2", urls.toString())
+                        Log.d("Download", urls.toString())
+                        context.toast("Please wait ...")
 
                         loginStateViewModel.doAction(LoginAction.DownloadAssets(urls, context))
                     },
                     downloadState = loginStateViewModel.downloadState,
-                    isDownloaded = loginStateViewModel.isAssetsDownloaded
+                    isDownloaded = loginStateViewModel.isAssetsDownloaded,
+                    error = loginStateViewModel.error,
                 )
             }
         }
@@ -87,7 +98,8 @@ fun LiveScreen(
     isLive: Boolean,
     download: PressGestureScope.(Offset) -> Unit,
     downloadState: MutableState<DownloadState>,
-    isDownloaded: Boolean
+    isDownloaded: Boolean,
+    error: String?
 ) {
 
     val configuration = LocalConfiguration.current
@@ -96,6 +108,7 @@ fun LiveScreen(
     val annotatedString = LocalContext.current.getAnnotatedString(lightGreen)
     val uriHandler = LocalUriHandler.current
     val mContext = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
 
     val activity = mContext as Activity
     ActivityCompat.requestPermissions(
@@ -103,7 +116,7 @@ fun LiveScreen(
     )
 
     if (downloadState.value == DownloadState.ERROR){
-        Toast.makeText(mContext, "Download failed. Check your network connection and try again.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(mContext, error.toString(), Toast.LENGTH_SHORT).show()
         downloadState.value = DownloadState.IDLE
     }
 
@@ -119,6 +132,28 @@ fun LiveScreen(
                 .fillMaxWidth(),
             contentScale = ContentScale.Crop
         )
+
+        FilledIconButton(onClick = {
+            showDialog.value = true
+        },
+            modifier= Modifier.size(50.dp).offset(20.dp, 20.dp),
+            shape = CircleShape,
+            colors = IconButtonDefaults.iconButtonColors(containerColor = red)
+        ) {
+            Icon(
+                Icons.Default.Info,
+                modifier = Modifier.scale(2f),
+                contentDescription = "Info Icon",
+                tint = black
+            )
+        }
+
+        if (showDialog.value){
+            GameInfo (
+                showDialog = showDialog.value,
+                onDismiss = { showDialog.value = false }
+            )
+        }
     }
     Column(
 

@@ -19,7 +19,6 @@ class TeamRepository @Inject constructor(
     suspend fun registerTeam(teamData : TeamModel):Result<String> = try {
         Log.d("TeamDetails",teamData.toString())
         val token = sharedPrefHelper.token.toString()
-        Log.d("Team Details",token)
 
         val response = apiInterface.registerTeam(RegisterTeamRequest(token = token,
             teamName = teamData.teamName,

@@ -103,13 +103,13 @@ fun ArScreen(
     )
     if (isPopUp.value) {
         Dialog(onDismissRequest = { isPopUp.value = false }){
-            SubmitPopUp(isPopUp = isPopUp, onClick, answer = answer, isCorrect = isCorrect)
+            SubmitPopUp(isPopUp = isPopUp, onClick, answer = answer, isCorrect = isCorrect, onBack = onBack)
         }
     }
 }
 
 @Composable
-fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, answer: String, isCorrect: MutableState<Boolean>) {
+fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, answer: String, isCorrect: MutableState<Boolean>, onBack: () -> Unit) {
     var text by remember { mutableStateOf("") }
     val mContext = LocalContext.current
     val screenHeight = LocalConfiguration.current.screenHeightDp
@@ -164,11 +164,12 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, answer: St
                 onClick = {
                             if (answer.equals(text, ignoreCase = true)){
                                 isPopUp.value = false
-                                mContext.toast("Congratulations!! You completed this level")
+                                mContext.toast("Congratulations!! You've completed this level.")
                                 if (!isCorrect.value){
                                     onClick()
                                     isCorrect.value = true
                                 }
+                                onBack()
                             }
                             else{
                                 mContext.toast("Wrong code. Please check and try again!")

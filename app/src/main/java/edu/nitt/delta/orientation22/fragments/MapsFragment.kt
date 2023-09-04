@@ -28,7 +28,7 @@ fun MapFragment(
         mapviewModel.doAction(MapAction.GetRoute)
         var routeList = mapviewModel.routeListData.value
         var markerList : List<MarkerModel> = listOf()
-        var currentClue = "Default Clue"
+        var currentClue = ""
         var currentClueLocation = LatLng(10.7614246, 78.8139187)
         var currentglbUrl = "miyawaki.glb"
         var currentanchorHash="hello"
@@ -46,7 +46,6 @@ fun MapFragment(
             )
             markerList = markerList+markerModel
             if (marker.position == currentLevel){
-                Log.d("Resolve",marker.anchorHash)
                 currentClue = marker.clue
                 currentClueLocation = LatLng(marker.latitude, marker.longitude)
                 currentglbUrl = marker.glbUrl

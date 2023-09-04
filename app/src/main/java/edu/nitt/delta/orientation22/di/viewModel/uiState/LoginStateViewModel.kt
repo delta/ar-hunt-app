@@ -128,6 +128,7 @@ class LoginStateViewModel @Inject constructor(
                 }
                 is Result.Error -> {
                     downloadState.value = DownloadState.ERROR
+                    mutableError.value = res.exception.message
                 }
             }
         }

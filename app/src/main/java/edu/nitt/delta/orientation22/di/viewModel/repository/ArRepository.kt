@@ -99,7 +99,7 @@ class ArRepository@Inject constructor(
                         glbFileLocation = "file://" + Uri.fromFile(file).path,
                         autoAnimate = false,
                         onLoaded = {
-                            Toast.makeText(context, "Model Loaded successfully", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Surface Detected. Slowly look around to find the AR Model.", Toast.LENGTH_LONG).show()
                             cloudAnchorNode.onPoseChanged = { node, _ ->
                                 node.isVisible = node.isAnchored
                                 // The below line doesn't work as expected.
@@ -109,7 +109,7 @@ class ArRepository@Inject constructor(
                             onTap = onTapModel
                         },
                         onError = {
-                            Toast.makeText(context, "Error Loading Model", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Error Loading Model. Reload the app and try again.", Toast.LENGTH_LONG).show()
                         }
                     )
             }

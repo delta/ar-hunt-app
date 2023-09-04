@@ -23,7 +23,7 @@ class MapStateViewModel @Inject constructor(
 
     var markerListData by mutableStateOf<List<MarkerModel>>(markerListSample)
     var routeListData = mutableStateOf<List<LocationData>>(routeListSample)
-    var currentState = mutableStateOf<Int>(-1)
+    var currentState = mutableStateOf<Int>(0)
     override fun doAction(action: MapAction): Any = when(action) {
         is MapAction.GetAllMarkers -> getAllMarkers()
         is MapAction.GetRoute -> getRoute()

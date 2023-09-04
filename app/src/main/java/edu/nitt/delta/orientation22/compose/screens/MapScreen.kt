@@ -8,6 +8,8 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -165,7 +167,8 @@ fun TopBar (
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
-            .height((screenHeight / 14).dp).padding(top = (screenHeight / 224).dp),
+            .height((screenHeight / 14).dp)
+            .padding(top = (screenHeight / 224).dp),
         verticalAlignment = Alignment.Top
     ) {
 
@@ -177,13 +180,17 @@ fun TopBar (
                 containerColor = transparent
             ),
             shape = RoundedCornerShape(25),
-            modifier = Modifier.clip(RoundedCornerShape(25))
-                .background(Brush.linearGradient(
-                    0.0f to yellowStart,
-                    1.0f to brightYellow,
-                    start = Offset.Zero,
-                    end = Offset.Infinite
-                )).height((screenHeight/16).dp)
+            modifier = Modifier
+                .clip(RoundedCornerShape(25))
+                .background(
+                    Brush.linearGradient(
+                        0.0f to yellowStart,
+                        1.0f to brightYellow,
+                        start = Offset.Zero,
+                        end = Offset.Infinite
+                    )
+                )
+                .height((screenHeight / 16).dp)
         ){
                 Icon(
                     painter = painterResource(id = R.drawable.clue),
@@ -204,7 +211,7 @@ fun TopBar (
         Button(
             onClick = {
                 if (currentLevel > 5){
-                    mContext.toast("Congratulations, you have completed the AR Hunt!")
+                    mContext.toast("You've Explored all the locations!")
                 }
                 else {
                     openAr(
@@ -223,8 +230,10 @@ fun TopBar (
                 containerColor = transparent
             ),
             shape = RoundedCornerShape(25),
-            modifier = Modifier.clip(RoundedCornerShape(25))
-                .background(grey).height((screenHeight/16).dp)
+            modifier = Modifier
+                .clip(RoundedCornerShape(25))
+                .background(grey)
+                .height((screenHeight / 16).dp)
             ){
             Icon(
                 painter = painterResource(id = R.drawable.camera),
@@ -239,18 +248,12 @@ fun TopBar (
                 color = white,
                 fontFamily = FontFamily(Font(R.font.daysone_regular))
             )
-
-            Box(
-                modifier = Modifier,
-            ){
-
-            }
         }
 
         if (showDialog.value) {
             if (currentLevel > 5){
                 ClueAlertBox(clueName = "Congratulations",
-                    clueDescription = "You have completed the AR Hunt. Visit the leaderboard page to check your team score. We hope you enjoyed the game!",
+                    clueDescription = "Congratulations! \n You have completed AR Hunt. Visit the leaderboard page to check your team score. \n We hope you enjoyed the game!",
                     showDialog = showDialog.value,
                     onDismiss = { showDialog.value = false })
             }
@@ -262,41 +265,51 @@ fun TopBar (
             }
         }
 
-        Points(currentPoints)
+        Levels(currentLevel)
     }
 }
 
 @Composable
-fun Points(
-    currentPoints: Int
+fun Levels(
+    currentLevel: Int
 ){
     val screenHeight = LocalConfiguration.current.screenHeightDp
     Box(
-        modifier = Modifier.clip(RoundedCornerShape(25))
-            .background(grey)
-            .fillMaxWidth(0.8f).height((screenHeight/16).dp)
+        modifier = Modifier
+            .clip(RoundedCornerShape(25))
+            .background(
+                Brush.linearGradient(
+                    0.0f to yellowStart,
+                    1.0f to brightYellow,
+                    start = Offset.Zero,
+                    end = Offset.Infinite
+                )
+            )
+            .fillMaxWidth(0.8f)
+            .height((screenHeight / 16).dp)
     ){
         Row(
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .padding(end = 20.dp).align(Alignment.Center),
+                .padding(end = 20.dp)
+                .align(Alignment.Center),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = currentPoints.toString(),
-                modifier = Modifier.padding(end = 10.dp, start = 15.dp),
+                text = "$currentLevel/6",
+                modifier = Modifier.padding(end = 5.dp, start = 20.dp),
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontFamily = FontFamily(Font(R.font.daysone_regular)),
-                    color = white,
+                    color = black,
                 ),
             )
             Icon(
-                modifier = Modifier.scale(2f),
-                painter = painterResource(id = R.drawable.coins),
-                contentDescription = "Coins Icon",
-                tint = Color.Unspecified
+                Icons.Default.Place,
+                contentDescription = "Position Icon",
+                tint = black,
+                modifier = Modifier.scale(1.4f),
             )
         }
     }

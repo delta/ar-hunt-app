@@ -41,8 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
+import edu.nitt.delta.orientation22.compose.toast
 import edu.nitt.delta.orientation22.di.viewModel.actions.LoginAction
 import edu.nitt.delta.orientation22.di.viewModel.actions.MapAction
+import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginState
 import edu.nitt.delta.orientation22.di.viewModel.uiState.LoginStateViewModel
 import edu.nitt.delta.orientation22.di.viewModel.uiState.MapStateViewModel
 import edu.nitt.delta.orientation22.ui.theme.Orientation22androidTheme
@@ -60,7 +62,6 @@ class SplashActivity : ComponentActivity() {
         loginStateViewModel.doAction(LoginAction.IsLoggedIn)
         loginStateViewModel.doAction(LoginAction.IsLive)
         mapStateViewModel.doAction(MapAction.GetRoute)
-        loginStateViewModel.doAction(LoginAction.IsRegistered)
         setContent {
             Orientation22androidTheme {
                 // A surface container using the 'background' color from the theme
@@ -206,7 +207,13 @@ fun SetBackGround(
             animationSpec = FloatTweenSpec(1000, 0, hesitateEasing)
         )
         if (loginStateViewModel.isLoggedIn) {
-            if (loginStateViewModel.isRegistered.value.isRegistered) {
+            loginStateViewModel.doAction(LoginAction.IsRegistered)
+            if (loginStateViewModel.uiState.value == LoginState.ERROR){
+                loginStateViewModel.uiState.value = LoginState.IDLE
+                mContext.toast("Connect to the internet and reload the app.")
+                val intent = Intent(mContext,LiveActivity::class.java)
+                mContext.startActivity(intent)
+            } else if (loginStateViewModel.isRegistered.value.isRegistered) {
                     val intent = Intent(mContext,LiveActivity::class.java)
                     mContext.startActivity(intent)
             } else {

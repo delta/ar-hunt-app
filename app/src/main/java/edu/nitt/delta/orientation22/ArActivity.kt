@@ -40,10 +40,9 @@ class ArActivity : ComponentActivity() {
                 mapStateViewModel.doAction(MapAction.GetCurrentLevel)
 
                 val glbUrl = intent.getStringExtra("glb")!!
-                val anchorHash = intent.getStringExtra("anchorHash")!!
+                val animatable = intent.getStringExtra("anchorHash")?:"false"
                 val scale = intent.getDoubleExtra("anchorScale", 0.5)
                 val currentLevel = intent.getIntExtra("level", 0)
-                Log.d("Resolve",anchorHash)
                 Log.d("Resolve",glbUrl)
 
                 val answer: String? = routeList.firstOrNull { it.position == currentLevel }?.answer
@@ -56,13 +55,12 @@ class ArActivity : ComponentActivity() {
                         followHitPosition = true,
                         instantAnchor = true
                     )
-
-                    setUpEnvironment(currentLevel, scale)
+                    setUpEnvironment(currentLevel, scale, animatable)
                 }, onClick = {
                     viewModel.doAction(ArAction.PostAnswer(currentLevel))
                 }, answer = answer ?: "",
                     onReset = {
-                        Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "AR Object has been reset.", Toast.LENGTH_SHORT).show()
                         viewModel.doAction(ArAction.ResetAnchor(cloudAnchorNode))
                  }, onBack = {
                         MainActivity.startDestination = NavigationRoutes.Map.route
@@ -75,7 +73,7 @@ class ArActivity : ComponentActivity() {
         }
     }
 
-    private fun setUpEnvironment( index: Int, scale: Double){
+    private fun setUpEnvironment(index: Int, scale: Double, animatable: String){
         arSceneView.lightEstimationMode = LightEstimationMode.DISABLED
         arSceneView.mainLight?.intensity = DEFAULT_LIGHT_INTENSITY
         cloudAnchorNode.scale = Float3(scale.toFloat(), scale.toFloat(), scale.toFloat())
@@ -83,14 +81,14 @@ class ArActivity : ComponentActivity() {
         Log.d("Scale", scale.toFloat().toString())
         Log.d("Resolve glb",index.toString())
 
-        Toast.makeText(applicationContext,"Scan the surroundings for flat surfaces.",Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext,"Scan the surroundings for flat surfaces.",Toast.LENGTH_LONG).show()
 
         viewModel.doAction(
             ArAction.LoadModel(
                 this,
                 lifecycle,
                 { _, _ ->
-                    tapModel()
+                    tapModel(animatable)
                 },
                 arSceneView,
                 cloudAnchorNode,
@@ -99,7 +97,11 @@ class ArActivity : ComponentActivity() {
         )
     }
 
-    private fun tapModel(){
-        cloudAnchorNode.playAnimation(0,false)
+    private fun tapModel(animatable: String) {
+        try {
+            if (animatable == "true") {
+                cloudAnchorNode.playAnimation(0, false)
+            }
+        } catch (_: Exception){}
     }
 }
