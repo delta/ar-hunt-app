@@ -16,4 +16,7 @@ object ResponseConstants {
 //    const val CALLBACK_RESPONSE_SUCCESS = "User has been authenticated"
     const val GET_USER_RESPONSE_SUCCESS = "success"
     const val IS_REGISTERED_SUCCESS = "success"
+    const val NEAR_OBJECT = "success"
+    const val IN_RADIUS = "warning"
+    const val FAR_AWAY = "failure"
 }

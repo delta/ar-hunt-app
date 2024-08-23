@@ -1,6 +1,7 @@
 package edu.nitt.delta.orientation22.compose
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,6 +9,7 @@ import android.location.Location
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.animateFloat
@@ -56,6 +58,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
@@ -65,8 +68,18 @@ import com.google.android.gms.maps.model.LatLng
 import edu.nitt.delta.orientation22.ArActivity
 import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.navigation.NavigationRoutes
+import edu.nitt.delta.orientation22.di.api.ApiInterface
+import edu.nitt.delta.orientation22.di.api.ApiRoutes
+import edu.nitt.delta.orientation22.di.api.ResponseConstants
+import edu.nitt.delta.orientation22.di.viewModel.uiState.ArStateViewModel
+import edu.nitt.delta.orientation22.models.game.LocationRequest
 import edu.nitt.delta.orientation22.ui.theme.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 fun Context.toast(message: CharSequence)
@@ -122,7 +135,16 @@ fun openAr(
 ) {
     when{
         permissionState.hasPermission -> {
-            distanceCalculator(fusedLocationProviderClient, mContext, currentClueLocation,glbUrl,anchorHash,currentScale, currentLevel)
+            CoroutineScope(Dispatchers.IO).launch {
+                distanceCalculator(
+                    fusedLocationProviderClient,
+                    mContext,
+                    glbUrl,
+                    anchorHash,
+                    currentScale,
+                    currentLevel
+                )
+            }
         }
         permissionState.shouldShowRationale -> {
             mContext.toast("Camera Access is required for AR Explore.")
@@ -237,47 +259,49 @@ fun ClueAlertBox(clueName: String,
     }
 }
 
-fun distanceCalculator(
+@SuppressLint("SuspiciousIndentation")
+suspend fun distanceCalculator(
     fusedLocationProviderClient: FusedLocationProviderClient,
     mContext: Context,
-    currentClueLocation: LatLng,
     glbUrl: String,
     anchorHash: String,
     currentScale: Double,
     currentLevel: Int,
 ){
-    val innerRadius = 40
-    val outerRadius = 70
-
     if (
         ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     ) {
         val location = fusedLocationProviderClient.lastLocation
         location.addOnSuccessListener {
             try {
-                val results = FloatArray(1)
-                Location.distanceBetween(
-                    it.latitude,
-                    it.longitude,
-                    currentClueLocation.latitude,
-                    currentClueLocation.longitude,
-                    results
+                val retrofit=Retrofit.Builder()
+                    .client(OkHttpClient())
+                    .baseUrl(ApiRoutes.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val apiInterface=retrofit.create(ApiInterface::class.java)
+                val locationRequest = LocationRequest(
+                    latitude = it.latitude,
+                    longitude = it.longitude
                 )
-                val distanceInMeters = results[0]
-//                mContext.toast(distanceInMeters.toString())
-                if (distanceInMeters <= innerRadius) {
-                    val intent = Intent(mContext, ArActivity::class.java)
-                    intent.putExtra("glb", glbUrl)
-                    intent.putExtra("anchorHash", anchorHash)
-                    intent.putExtra("anchorScale", currentScale)
-                    intent.putExtra("level", currentLevel)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    mContext.startActivity(intent)
-                } else if (distanceInMeters <= outerRadius){
-                    mContext.toast("You are almost there.")
-                } else {
-                    mContext.toast("You are too far from your current clue.")
-                }
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response=apiInterface.checkDistance(locationRequest)
+                        if(response.message==ResponseConstants.NEAR_OBJECT){
+                            val intent = Intent(mContext, ArActivity::class.java)
+                            intent.putExtra("glb", glbUrl)
+                            intent.putExtra("anchorHash", anchorHash)
+                            intent.putExtra("anchorScale", currentScale)
+                            intent.putExtra("level", currentLevel)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            mContext.startActivity(intent)
+                        }
+                        else if(response.message==ResponseConstants.IN_RADIUS){
+                            mContext.toast("You are almost there. Keep looking!")
+                        }
+                        else {
+                            mContext.toast("You are too far from your current clue!")
+                        }
+                    }
             } catch (e:Exception){
                 mContext.toast("Turn On Location Service")
             }

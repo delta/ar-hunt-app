@@ -37,8 +37,17 @@ import edu.nitt.delta.orientation22.R
 import edu.nitt.delta.orientation22.compose.SpeedDialData
 import edu.nitt.delta.orientation22.compose.SpeedDialFloatingActionButton
 import edu.nitt.delta.orientation22.compose.toast
+import edu.nitt.delta.orientation22.di.api.ApiInterface
+import edu.nitt.delta.orientation22.di.api.ApiRoutes
+import edu.nitt.delta.orientation22.models.game.CheckAnswerRequest
 import edu.nitt.delta.orientation22.ui.theme.*
 import io.github.sceneview.ar.ArSceneView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun ArScreen(
@@ -162,18 +171,27 @@ fun SubmitPopUp(isPopUp : MutableState<Boolean>, onClick: () -> Unit, answer: St
             Spacer(modifier = Modifier.height((screenHeight / 40).dp))
             TextButton(
                 onClick = {
-                            if (answer.equals(text, ignoreCase = true)){
-                                isPopUp.value = false
-                                mContext.toast("Congratulations!! You've completed this level.")
-                                if (!isCorrect.value){
-                                    onClick()
-                                    isCorrect.value = true
-                                }
-                                onBack()
+                    val retrofit= Retrofit.Builder()
+                        .client(OkHttpClient())
+                        .baseUrl(ApiRoutes.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+                    val apiInterface = retrofit.create(ApiInterface::class.java)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response = apiInterface.checkAnswer(CheckAnswerRequest(text))
+                        if(response.message=="correct"){
+                            isPopUp.value = false
+                            mContext.toast("Congratulations! You've completed this level.")
+                            if (!isCorrect.value){
+                                onClick()
+                                isCorrect.value = true
                             }
-                            else{
-                                mContext.toast("Wrong code. Please check and try again!")
-                            }
+                            onBack()
+                        }
+                        else{
+                            mContext.toast("Wrong code. Please try again!")
+                        }
+                    }
                 },
                 shape = RoundedCornerShape(5.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = cyan)
